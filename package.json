@@ -1,0 +1,27 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "nookies": "^2.5.2",
+    "nuxt": "^3.14.159",
+    "vue": "latest",
+    "vue-router": "latest",
+    "youtubei.js": "^11.0.1"
+  },
+  "devDependencies": {
+    "@pinia/nuxt": "^0.8.0",
+    "vuetify-nuxt-module": "^0.18.3"
+  },
+  "overrides": {
+    "vue": "latest"
+  }
+}
