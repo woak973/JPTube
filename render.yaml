@@ -20,4 +20,4 @@ services:
     envVars:
     - key: BACKEND_URL
       value: https://{PROJECT_NAME}.onrender.com
-    startCommand: deno run --allow-net --allow-read deno.ts
+    dockerCommand: deno run --allow-net --allow-read deno.ts
