@@ -15,7 +15,7 @@ services:
     runtime: docker
     repo: https://github.com/woak973/JPTube-Server.git
     image:
-      name: denoland/deno
+      url: hub.docker.com/r/denoland/deno
     env:
       BACKEND_URL: https://{PROJECT_NAME}.onrender.com
     startCommand: deno run --allow-net --allow-read deno.ts
