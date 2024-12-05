@@ -3,7 +3,7 @@ services:
     type: web
     runtime: node
     repo: https://github.com/woak973/JPTube.git
-    env:
+    envVars:
     - key: BACKEND_URL
       value: https://{PROJECT_NAME}.onrender.com
     buildCommand: |
