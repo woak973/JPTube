@@ -1,32 +1,20 @@
 services:
   - name: nuxt
     type: web
+    runtime: node
+    repo: https://github.com/woak973/JPTube.git
     env:
-      - key: BASE_URL
-        value: https://{PROJECT_NAME}.onrender.com
-    build:
-      command: |
-        git clone https://github.com/woak973/JPTube.git .
-        cd your-nuxt-repo
-        npm install
-        npm run dev
-    envFrom:
-      - file: .env.production
-    sourceDir: .  # ビルド後のディレクトリを指定
+      BACKEND_URL: https://{PROJECT_NAME}.onrender.com
+    buildCommand: |
+      npm install
+      npm run dev
     startCommand: node .output/server/index.mjs
 
   - name: deno
     type: web
+    runtime: docker
+    repo: https://github.com/woak973/JPTube-Server.git
     image: denoland/deno:latest
     env:
-      - key: BASE_URL
-        value: https://{PROJECT_NAME}.onrender.com
-    build:
-      command: |
-        git clone https://github.com/woak973/JPTube-Server.git .
-        cd your-deno-repo
-        # Denoのビルドコマンド
-    envFrom:
-      - file: .env.production
-    sourceDir: .  # ビルド後のディレクトリを指定
+      BACKEND_URL: https://{PROJECT_NAME}.onrender.com
     startCommand: deno run --allow-net --allow-read deno.ts
