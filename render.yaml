@@ -1,20 +1,10 @@
 services:
-  - name: nuxt
+  - name: jptube
     type: web
     runtime: node
     repo: https://github.com/woak973/JPTube.git
-    envVars:
-    - key: BACKEND_URL
-      value: https://{SERVICE_NAME}.onrender.com
     buildCommand: |
       npm install
       npm run dev
     startCommand: node .output/server/index.mjs
 
-  - name: deno
-    type: web
-    runtime: docker
-    repo: https://github.com/woak973/JPTube-Server.git
-    envVars:
-    - key: BACKEND_URL
-      value: https://{SERVICE_NAME}.onrender.com
