@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Innertube, UniversalCache } from 'youtubei.js';
+import { Innertube, UniversalCache, Mixins, APIResponseTypes } from 'youtubei.js';
 import { fetchFn } from '@/composables/useYouTube';
-import HomeFeedComponent from '~/components/homefeed.vue';
+
 
 const route = useRoute();
+const langStore = useLangStore();
+const locationStore = useLocationStore();
+
 const results = ref();
 const alert = ref(false);
 const errorMessage = ref('');
@@ -20,11 +23,11 @@ watch(TitleResult, (newVal) => {
         });
     }
 });
-const snackbar = ref(false);
+
 
 try {
-    const lang = route.query.lang as string || 'ja';
-    const location = route.query.location as string || 'JP';
+    const lang = langStore.lang || 'ja';
+    const location = locationStore.location || 'JP';
     const yt = await Innertube.create({
         fetch: fetchFn,
         cache: new UniversalCache(false),
@@ -32,7 +35,7 @@ try {
         location: location
     });
 
-    const searchResults = await yt.getTrending();
+    const searchResults:Mixins.TabbedFeed<APIResponseTypes.IBrowseResponse> = await yt.getTrending();
     TitleResult.value = searchResults;
     StrongResult.value = await searchResults.title;
 
@@ -65,10 +68,6 @@ try {
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-
-            <v-snackbar v-model="snackbar" :timeout="4000">
-                No more Results
-            </v-snackbar>
         </div>
 
         <template v-if="StrongResult">
@@ -79,7 +78,7 @@ try {
             <template v-for="result in results" :key="result.id">
                 <v-col v-if="result.type === 'Video'" cols="12" md="3" lg="2" sm="6">
                     <template v-if="result.type === 'Video'">
-                        <HomeFeedComponent :data="result" />
+                        <HomeFeed :data="result" />
                     </template>
                 </v-col>
             </template>

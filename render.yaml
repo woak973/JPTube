@@ -5,7 +5,7 @@ services:
     repo: https://github.com/woak973/JPTube.git
     envVars:
     - key: BACKEND_URL
-      value: https://{PROJECT_NAME}.onrender.com
+      value: https://{SERVICE_NAME}.onrender.com
     buildCommand: |
       npm install
       npm run dev
@@ -17,5 +17,4 @@ services:
     repo: https://github.com/woak973/JPTube-Server.git
     envVars:
     - key: BACKEND_URL
-      value: https://{PROJECT_NAME}.onrender.com
-    dockerCommand: deno run --allow-net --allow-read deno.ts
+      value: https://{SERVICE_NAME}.onrender.com

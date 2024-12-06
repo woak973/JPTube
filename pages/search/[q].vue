@@ -1,21 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Innertube, UniversalCache } from 'youtubei.js';
+import { Innertube, UniversalCache, YT, Types } from 'youtubei.js';
 import { fetchFn } from '@/composables/useYouTube';
-import VideoComponent from '~/components/video.vue';
-import ChannelComponent from '~/components/channel.vue';
-import PlayListsComponent from '~/components/playlists.vue';
-import GridShortsComponent from '~/components/shorts.vue';
-import HomeFeedComponent from '~/components/homefeed.vue';
-import HashtagTileComponent from '~/components/hashtag.vue';
 
 const route = useRoute();
 const router = useRouter();
+const langStore = useLangStore();
+const locationStore = useLocationStore();
+
 const results = ref();
-let sourceresults: any;
+let sourceresults: YT.Search;
 const alert = ref(false);
 const errorMessage = ref('');
-const snackbar = ref(false);
 const filterDialog = ref(false);
 const uploadDateOptions = ['all', 'hour', 'today', 'week', 'month', 'year'];
 const durationOptions = ['all', 'short', 'medium', 'long'];
@@ -51,31 +47,16 @@ useHead({
 
 
 try {
-    const lang = route.query.lang as string || 'ja';
-    const location = route.query.location as string || 'JP';
+    const lang = langStore.lang || 'ja';
+    const location = locationStore.location || 'JP';
 
-    type SortType = 'relevance' | 'rating' | 'upload_date' | 'view_count';
-    type DurationType = 'all' | 'short' | 'medium' | 'long';
-    type DateType = 'all' | 'hour' | 'today' | 'week' | 'month' | 'year';
-    type TypeType = 'all' | 'video' | 'channel' | 'playlist' | 'movie';
-    type FeatureType = 'hd' | 'subtitles' | 'creative_commons' | '3d' | 'live' | 'purchased' | '4k' | '360' | 'location' | 'hdr' | 'vr180';
+    const sortData = route.query.sort as Types.SortBy || 'relevance';
+    const durationData = route.query.duration as Types.Duration || 'all';
+    const uploadDateData = route.query.upload_date as Types.UploadDate || 'all';
+    const typeData = route.query.type as Types.SearchType || 'all';
+    const featureData = route.query.features as Types.Feature[] || '';
 
-
-    type FilterType = {
-        upload_date: DateType;
-        duration: DurationType;
-        sort_by: SortType;
-        type: TypeType;
-        features?: FeatureType;
-    };
-
-    const sortData = route.query.sort as SortType || 'relevance';
-    const durationData = route.query.duration as DurationType || 'all';
-    const uploadDateData = route.query.upload_date as DateType || 'all';
-    const typeData = route.query.type as TypeType || 'all';
-    const featureData = route.query.features as FeatureType || '';
-
-    let filter: FilterType = {
+    let filter: Types.SearchFilters = {
         upload_date: uploadDateData,
         duration: durationData,
         sort_by: sortData,
@@ -92,7 +73,7 @@ try {
         lang: lang,
         location: location
     });
-    const searchResults = await yt.search(route.params.q as string, filter as any);
+    const searchResults:YT.Search = await yt.search(route.params.q as string, filter as Types.SearchFilters);
     results.value = searchResults.results;
     sourceresults = searchResults;
 
@@ -143,10 +124,6 @@ const LoadMore = async ({ done }: any) => {
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-
-            <v-snackbar v-model="snackbar" :timeout="4000">
-                No more Results
-            </v-snackbar>
         </div>
         <v-btn color="primary" @click="filterDialog = true">Configure Filters</v-btn>
 
@@ -182,7 +159,7 @@ const LoadMore = async ({ done }: any) => {
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" @click="applyFilters">適用</v-btn>
+                    <v-btn color="primary" @click="applyFilters">Apply</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -191,13 +168,13 @@ const LoadMore = async ({ done }: any) => {
             <v-row :items="results" style="width: 100%; margin-left: 0;">
                 <template v-for="result in results" :key="result.id">
                     <v-col v-if="result.type === 'Video'" cols="12">
-                        <VideoComponent :data="result" />
+                        <Video :data="result" />
                     </v-col>
                     <v-col v-else-if="result.type === 'Channel'" cols="12">
-                        <ChannelComponent :data="result" />
+                        <Channel :data="result" />
                     </v-col>
                     <v-col v-else-if="result.type === 'LockupView'" cols="12">
-                        <PlayListsComponent :data="result" />
+                        <Playlists :data="result" />
                     </v-col>
                     <v-col v-else-if="result.type === 'ReelShelf'">
                         <strong>{{ result.title.text }}</strong>
@@ -205,7 +182,7 @@ const LoadMore = async ({ done }: any) => {
                             <v-slide-item v-for="innerresult in result.items" :key="innerresult.id" class="ma-2"
                                 style="width: 200px;">
                                 <template v-if="innerresult.type === 'ShortsLockupView'">
-                                    <GridShortsComponent :data="innerresult" />
+                                    <Shorts :data="innerresult" />
                                 </template>
                             </v-slide-item>
                         </v-slide-group>
@@ -224,16 +201,16 @@ const LoadMore = async ({ done }: any) => {
                             <v-slide-item v-for="innerresult in result.content.items" :key="innerresult.id" class="ma-2"
                                 style="width: 200px;">
                                 <template v-if="innerresult.type === 'ShortsLockupView'">
-                                    <GridShortsComponent :data="innerresult" />
+                                    <Shorts :data="innerresult" />
                                 </template>
                                 <template v-else-if="innerresult.type === 'Video'">
-                                    <HomeFeedComponent :data="innerresult" />
+                                    <HomeFeed :data="innerresult" />
                                 </template>
                             </v-slide-item>
                         </v-slide-group>
                     </v-col>
                     <v-col v-else-if="result.type === 'HashtagTile'" cols="12">
-                        <HashtagTileComponent :data="result" />
+                        <Hashtag :data="result" />
                     </v-col>
                 </template>
             </v-row>

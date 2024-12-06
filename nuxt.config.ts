@@ -8,7 +8,11 @@ export default defineNuxtConfig({
       enabled: false
     }
   },
-  modules: ['vuetify-nuxt-module', '@pinia/nuxt'],
+  modules: [
+    'vuetify-nuxt-module',
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate'
+  ],
   vite: {
     server: {
       hmr: false

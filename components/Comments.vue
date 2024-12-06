@@ -28,7 +28,7 @@
                 <v-row>
                     <v-col cols="12">
                         <template v-for="reply in data.replies">
-                            <ReplyComponent :data="reply" />
+                            <Replies :data="reply" />
                         </template>
                     </v-col>
                 </v-row>
@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import ReplyComponent from '~/components/replies.vue';
+
 
 
 const props = defineProps({

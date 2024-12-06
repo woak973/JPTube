@@ -6,7 +6,7 @@ export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
             new URL(input.url);
 
     url.searchParams.set('__host', url.host);
-    url.host = process.env.BACKEND_URL || 'nuxt.sitejp.synology.me';
+    url.host = process.env.BACKEND_URL || 'innertube.sitejp.synology.me';
     url.protocol = 'https';
 
     const headers = init?.headers ?

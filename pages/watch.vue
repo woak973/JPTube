@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Innertube, UniversalCache } from 'youtubei.js';
+import { Innertube, UniversalCache, YT } from 'youtubei.js';
 import { fetchFn } from '@/composables/useYouTube';
-import CompactVideoComponent from '~/components/compactvideo.vue';
-import PlayListsComponent from '~/components/compactplaylists.vue';
-import CommentComponent from '~/components/comments.vue';
+
 
 const route = useRoute();
+const langStore = useLangStore();
+const locationStore = useLocationStore();
 const Relatedresults = ref();
 const Primary_Informationresults = ref();
 
@@ -21,13 +21,12 @@ watch(Primary_Informationresults, (newVal) => {
 const Secondary_Informationresults = ref();
 const Basic_Informationresults = ref();
 const Commentresults = ref();
-const selectedSort = ref('TOP_COMMENTS'); // 追加
-let sourceresults: any;
-let comsource: any;
-let yt: any;
+const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
+let sourceresults: YT.VideoInfo;
+let comsource: YT.Comments;
+let yt: Innertube;
 const alert = ref(false);
 const errorMessage = ref('');
-const snackbar = ref(false);
 const showFullDescription = ref(false);
 
 const toggleDescription = () => {
@@ -37,8 +36,8 @@ const toggleDescription = () => {
 
 
 try {
-    const lang = route.query.lang as string || 'ja';
-    const location = route.query.location as string || 'JP';
+    const lang = langStore.lang || 'ja';
+    const location = locationStore.location || 'JP';
     yt = await Innertube.create({
         fetch: fetchFn,
         cache: new UniversalCache(false),
@@ -83,7 +82,9 @@ const LoadMore = async ({ done }: any) => {
     try {
         if (sourceresults && sourceresults.wn_has_continuation) {
             const continuationResults = await sourceresults.getWatchNextContinuation();
-            Relatedresults.value.push(...await continuationResults.watch_next_feed);
+            if (continuationResults.watch_next_feed) {
+                Relatedresults.value.push(...continuationResults.watch_next_feed);
+            }
             sourceresults = continuationResults;
             done('ok');
         } else {
@@ -161,10 +162,6 @@ const ApplyComSort = async () => {
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-
-            <v-snackbar v-model="snackbar" :timeout="4000">
-                No more Results
-            </v-snackbar>
         </div>
 
         <v-row wrap>
@@ -223,21 +220,21 @@ const ApplyComSort = async () => {
 
                 <template v-if="Commentresults">
                     <v-col>
-                        <strong>{{ comsource.header.count.text }}</strong>
+                        <strong>{{ comsource?.header?.count.text }}</strong>
                         <v-menu transition="scale-transition">
                             <template v-slot:activator="{ isActive, props, targetRef }">
                                 <v-btn color="primary" dark v-bind="props" v-on="props">
                                     <v-icon left>mdi-sort</v-icon>
-                                    {{ comsource.header.sort_menu.title }}
+                                    {{ comsource?.header?.sort_menu?.title }}
                                 </v-btn>
                             </template>
                             <v-list>
                                 <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
-                                    <v-list-item-title>{{ comsource.header.sort_menu.sub_menu_items[0].title
+                                    <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{ comsource.header.sort_menu.sub_menu_items[0].title
                                         }}</v-list-item-title>
                                 </v-list-item>
                                 <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
-                                    <v-list-item-title>{{ comsource.header.sort_menu.sub_menu_items[1].title
+                                    <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{ comsource.header.sort_menu.sub_menu_items[1].title
                                         }}</v-list-item-title>
                                 </v-list-item>
                             </v-list>
@@ -249,7 +246,7 @@ const ApplyComSort = async () => {
                     <v-row style="width: 100%; margin-left: 0;">
                         <template v-for="result in Commentresults" :key="result.id">
                             <v-col v-if="result.type === 'CommentThread'" cols="12">
-                                <CommentComponent :data="result" />
+                                <Comments :data="result" />
                             </v-col>
                         </template>
                     </v-row>
@@ -264,10 +261,10 @@ const ApplyComSort = async () => {
                     <v-row style="width: 100%; margin-left: 0;">
                         <template v-for="result in Relatedresults" :key="result.id">
                             <v-col v-if="result.type === 'CompactVideo'" cols="12">
-                                <CompactVideoComponent :data="result" />
+                                <CompactVideo :data="result" />
                             </v-col>
                             <v-col v-else-if="result.type === 'LockupView'" cols="12">
-                                <PlayListsComponent :data="result" />
+                                <CompactPlaylists :data="result" />
                             </v-col>
                         </template>
                     </v-row>
