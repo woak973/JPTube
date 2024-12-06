@@ -4,7 +4,7 @@ services:
     runtime: node
     repo: https://github.com/woak973/JPTube.git
     plan: free
-    buildCommand: "npm install && npm run dev"
+    buildCommand: "npm install && npm run build"
     startCommand: "node .output/server/index.mjs"
     
 
