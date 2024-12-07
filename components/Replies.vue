@@ -11,7 +11,7 @@
                 <v-col>
                     <v-card-subtitle>{{ data.author.name }}・{{ data.published_time }}</v-card-subtitle>
                     <v-card-text>{{ data.content.text }}</v-card-text>
-                    <v-card-actions>
+                    <v-card-actions style="padding: 0">
                         <v-list-item>
                             <template v-slot:prepend>
                                 <v-icon class="me-1" icon="mdi-thumb-up"></v-icon>
