@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const cookies = useCookie('authToken')
     const enteredToken = cookies.value;
   
-    if (enteredToken !== validToken && to.path !== '/login') {
+    if (enteredToken !== validToken && !to.path.startsWith('/login')) {
       return navigateTo('/login');
     }
 });

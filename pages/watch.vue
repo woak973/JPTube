@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Innertube, UniversalCache, YT } from 'youtubei.js';
-import { fetchFn } from '@/composables/useYouTube';
 
 
 const route = useRoute();
@@ -21,6 +20,8 @@ watch(Primary_Informationresults, (newVal) => {
 const Secondary_Informationresults = ref();
 const Basic_Informationresults = ref();
 const Commentresults = ref();
+const Chatresults = ref();
+let livechat : YT.LiveChat;
 const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
 let sourceresults: YT.VideoInfo;
 let comsource: YT.Comments;
@@ -69,6 +70,18 @@ try {
             errorMessage.value = 'An unknown error occurred';
         }
     }
+
+    if (searchResults.livechat){
+        console.log('This video has a live chat.');
+        livechat = await searchResults.getLiveChat();
+
+        livechat.on('start', (initial_data) => console.log(initial_data));
+        livechat.on('end', () => console.info('This live stream has ended.'));
+        livechat.on('error', (error) => console.error('An error occurred:', error));
+        livechat.on('chat-update', (message) => console.log(message));
+        livechat.start();
+    }
+
 } catch (error) {
     alert.value = true;
     if (error instanceof Error) {

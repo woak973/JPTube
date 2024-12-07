@@ -17,6 +17,7 @@
                     <v-radio label="Japan" value="JP"></v-radio>
                     <v-radio label="US" value="US"></v-radio>
                 </v-radio-group>
+                <v-btn @click="toggleTheme">Toggle Theme</v-btn>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
@@ -34,6 +35,7 @@ const selectedLang = ref('ja');
 const selectedLocation = ref('JP');
 const langStore = useLangStore();
 const locationStore = useLocationStore();
+const theme = useTheme();
 
 const open = () => {
     selectedLang.value = langStore.lang;
@@ -50,6 +52,10 @@ const save = () => {
     locationStore.setLocation(selectedLocation.value);
     close();
     window.location.reload();
+};
+
+const toggleTheme = () => {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark';
 };
 
 defineExpose({ open });

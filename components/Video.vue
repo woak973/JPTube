@@ -15,7 +15,7 @@
         <v-card-title>{{ data.title }}</v-card-title>
         <v-card-subtitle>{{ data.view_count.text }}・{{ data.published.text }}</v-card-subtitle>
         <v-card-actions>
-          <v-list-item class="w-100" :href="`/channel/${data.author.id}/featured`" link>
+          <v-list-item class="w-100" :to="`/channel/${data.author.id}/featured`" link>
             <template v-slot:prepend>
               <v-avatar :image="data.author.thumbnails[0].url" size="24"></v-avatar>
             </template>

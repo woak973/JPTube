@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Innertube, UniversalCache, YT, YTNodes, ReloadContinuationItemsCommand } from 'youtubei.js';
-import { fetchFn } from '@/composables/useYouTube';
 
 
 
@@ -268,12 +267,12 @@ const LoadMore = async ({ done }: any) => {
         </template>
 
         <v-tabs v-model="tab" background-color="primary" dark @change="updateTab">
-            <v-tab v-if="sourceTab && sourceTab.has_home" href="./featured" value="featured">ホーム</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_videos" href="./videos" value="videos">動画</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_shorts" href="./shorts" value="shorts">ショート</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_live_streams" href="./streams" value="streams">ライブ</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_playlists" href="./playlists" value="playlists">再生リスト</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_community" href="./community" value="community">コミュニティ</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.has_home" to="./featured" value="featured">ホーム</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.has_videos" to="./videos" value="videos">動画</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.has_shorts" to="./shorts" value="shorts">ショート</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.has_live_streams" to="./streams" value="streams">ライブ</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.has_playlists" to="./playlists" value="playlists">再生リスト</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.has_community" to="./community" value="community">コミュニティ</v-tab>
             <v-btn v-if="sourceTab && sourceTab.has_search" icon @click="searchDialog = true">
                 <v-icon>mdi-magnify</v-icon>
             </v-btn>

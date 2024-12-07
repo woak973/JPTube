@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :href="`/channel/${data.id}/featured`" link>
+    <v-card v-if="data" elevation="16" :to="`/channel/${data.id}/featured`" link>
         <v-img :src="data.author.thumbnails[0].url" style="border-radius: 50%;">
             <template v-slot:placeholder>
                 <div class="d-flex align-center justify-center fill-height">

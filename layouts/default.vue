@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { Innertube, UniversalCache } from 'youtubei.js';
-import { fetchFn } from '@/composables/useYouTube';
 
 const drawer = ref(false);
 const searchQuery = ref('');
@@ -10,6 +9,7 @@ const suggestions = ref<string[]>([]);
 const langDialog = ref<HTMLElement | null>(null);
 const langStore = useLangStore();
 const locationStore = useLocationStore();
+
 
 watch(searchQuery, (newQuery) => {
   if (newQuery) {
@@ -52,6 +52,8 @@ const openLangDialog = () => {
     (langDialog.value as any).open();
   }
 };
+
+
 
 </script>
 

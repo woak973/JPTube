@@ -1,4 +1,5 @@
 export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
+    const config = useRuntimeConfig();
     const url = typeof input === 'string' ?
         new URL(input) :
         input instanceof URL ?
@@ -6,7 +7,7 @@ export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
             new URL(input.url);
 
     url.searchParams.set('__host', url.host);
-    url.host = process.env.BACKEND_URL || 'innertube.sitejp.synology.me';
+    url.host = config.public.backendHost as string || 'jptube-server.onrender.com';
     url.protocol = 'https';
 
     const headers = init?.headers ?

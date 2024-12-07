@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Innertube, UniversalCache, Mixins, APIResponseTypes } from 'youtubei.js';
-import { fetchFn } from '@/composables/useYouTube';
+
 
 
 const route = useRoute();
