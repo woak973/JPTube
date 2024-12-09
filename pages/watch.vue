@@ -21,7 +21,7 @@ const Secondary_Informationresults = ref();
 const Basic_Informationresults = ref();
 const Commentresults = ref();
 const Chatresults = ref();
-let livechat : YT.LiveChat;
+let livechat: YT.LiveChat;
 const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
 let sourceresults: YT.VideoInfo;
 let comsource: YT.Comments;
@@ -71,7 +71,7 @@ try {
         }
     }
 
-    if (searchResults.livechat){
+    if (searchResults.livechat) {
         console.log('This video has a live chat.');
         livechat = await searchResults.getLiveChat();
 
@@ -189,30 +189,39 @@ const ApplyComSort = async () => {
                 <v-card v-if="Primary_Informationresults && Secondary_Informationresults">
                     <v-card-title class="titletext">{{ Primary_Informationresults.title.text }}</v-card-title>
                     <v-card-actions>
-                        <v-list-item class="w-100">
-                            <template v-slot:prepend>
-                                <a :href="`/channel/${Secondary_Informationresults.owner.author.id}/featured`">
-                                    <v-avatar color="grey-darken-3" size="36"
-                                        :image="Secondary_Informationresults.owner.author.thumbnails[0].url"></v-avatar>
-                                </a>
-                            </template>
+                        <v-row justify="space-between">
+                            <v-col cols="auto">
+                                <v-list-item :to="`/channel/${Secondary_Informationresults.owner.author.id}/featured`"
+                                    link>
+                                    <template v-slot:prepend>
+                                        <v-avatar color="grey-darken-3" size="36"
+                                            :image="Secondary_Informationresults.owner.author.thumbnails[0].url"></v-avatar>
 
-                            <v-list-item-title>{{ Secondary_Informationresults.owner.author.name }}</v-list-item-title>
-                            <v-list-item-subtitle>{{ Secondary_Informationresults.owner.subscriber_count.text
-                                }}</v-list-item-subtitle>
-                            <template v-slot:append>
-                                <v-row>
-                                    <v-btn variant="tonal" class="rounded-pill mx-2" readonly>
-                                        <v-icon>mdi-thumb-up</v-icon>
-                                        {{ Basic_Informationresults.like_count }}
-                                    </v-btn>
-                                    <v-btn @click.stop="share" variant="tonal" class="rounded-pill mx-2">
-                                        <v-icon>mdi-share</v-icon>
-                                        Share
-                                    </v-btn>
-                                </v-row>
-                            </template>
-                        </v-list-item>
+                                    </template>
+
+                                    <v-list-item-title>{{ Secondary_Informationresults.owner.author.name
+                                        }}</v-list-item-title>
+                                    <v-list-item-subtitle>{{ Secondary_Informationresults.owner.subscriber_count.text
+                                        }}</v-list-item-subtitle>
+
+                                </v-list-item>
+                            </v-col>
+                            <v-col cols="auto">
+                                <v-list-item>
+                                    <v-row :dense=true :no-gutters=true>
+                                        <v-btn variant="tonal" class="rounded-pill mx-2" readonly>
+                                            <v-icon>mdi-thumb-up</v-icon>
+                                            {{ Basic_Informationresults.like_count }}
+                                        </v-btn>
+                                        <v-btn @click.stop="share" variant="tonal" class="rounded-pill mx-2">
+                                            <v-icon>mdi-share</v-icon>
+                                            Share
+                                        </v-btn>
+                                    </v-row>
+                                </v-list-item>
+                            </v-col>
+
+                        </v-row>
                     </v-card-actions>
                     <v-card-subtitle v-if="!showFullDescription">{{ Primary_Informationresults.relative_date.text }}・{{
                         Primary_Informationresults.short_view_count.text || Primary_Informationresults.view_count.text
@@ -243,12 +252,14 @@ const ApplyComSort = async () => {
                             </template>
                             <v-list>
                                 <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
-                                    <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{ comsource.header.sort_menu.sub_menu_items[0].title
-                                        }}</v-list-item-title>
+                                    <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
+                                        comsource.header.sort_menu.sub_menu_items[0].title
+                                    }}</v-list-item-title>
                                 </v-list-item>
                                 <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
-                                    <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{ comsource.header.sort_menu.sub_menu_items[1].title
-                                        }}</v-list-item-title>
+                                    <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
+                                        comsource.header.sort_menu.sub_menu_items[1].title
+                                    }}</v-list-item-title>
                                 </v-list-item>
                             </v-list>
                         </v-menu>

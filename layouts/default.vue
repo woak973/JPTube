@@ -66,17 +66,17 @@ const openLangDialog = () => {
       </router-link>
       <v-spacer></v-spacer>
       <v-combobox v-model="searchQuery" :items="suggestions" label="検索" single-line hide-details clearable
-        :filter="() => { return true; }" append-inner-icon="mdi-magnify" clear-icon="mdi-close-circle"
-        @keyup.enter="search" @click:append-inner="search" @click:clear="clearSearch" />
+        :filter="() => { return true; }" prepend-inner-icon="mdi-magnify" clear-icon="mdi-close-circle"
+        @keyup.enter="search" @click:prepend-inner="search" @click:clear="clearSearch" />
       <v-btn icon @click="openLangDialog">
         <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" temporary>
-      <v-list-item title="JPTube" subtitle="ようこそ"></v-list-item>
+      <v-list-item title="JPTube" subtitle="Welcome"></v-list-item>
       <v-divider></v-divider>
-      <v-list-item prepend-icon="mdi-home" link title="ホーム" to="/"></v-list-item>
+      <v-list-item prepend-icon="mdi-home" link title="Home(Trending)" to="/"></v-list-item>
       <v-list-item prepend-icon="mdi-music" link title="Music"
         to="/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ/featured"></v-list-item>
       <v-list-item prepend-icon="mdi-access-point" link title="Live"

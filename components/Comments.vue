@@ -4,9 +4,9 @@
         <v-list-item>
             <v-row dense>
                 <v-col cols="auto">
-                    <a :href="`/channel/${data.comment.author.id}/featured`">
+                    <v-list-item :to="`/channel/${data.comment.author.id}/featured`" style="padding: 0;">
                         <v-avatar :image="data.comment.author.thumbnails[0].url" class="mr-2"></v-avatar>
-                    </a>
+                    </v-list-item>
                 </v-col>
                 <v-col>
                     <v-card-subtitle>{{ data.comment.author.name }}・{{ data.comment.published_time }}</v-card-subtitle>
