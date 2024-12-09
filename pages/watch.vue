@@ -94,8 +94,9 @@ try {
                     }
                     Chatresults.value.unshift(items);
                     break;
-
-
+            }
+            if (Chatresults.value.length > 50) {
+                Chatresults.value.splice(50);
             }
         });
         livechat.start();
