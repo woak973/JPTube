@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Innertube, UniversalCache, YT } from 'youtubei.js';
+import { Innertube, UniversalCache, YT, YTNodes } from 'youtubei.js';
 
 
 const route = useRoute();
@@ -32,6 +32,13 @@ const showFullDescription = ref(false);
 
 const toggleDescription = () => {
     showFullDescription.value = !showFullDescription.value;
+};
+
+const ChatBtn = ref(false);
+const ChatComponent = ref(false);
+
+const toggleChatComponent = () => {
+    ChatComponent.value = !ChatComponent.value;
 };
 
 
@@ -78,8 +85,21 @@ try {
         livechat.on('start', (initial_data) => console.log(initial_data));
         livechat.on('end', () => console.info('This live stream has ended.'));
         livechat.on('error', (error) => console.error('An error occurred:', error));
-        livechat.on('chat-update', (message) => console.log(message));
+        livechat.on('chat-update', (message) => {
+            switch (message.type) {
+                case 'AddChatItemAction':
+                    const items = message.as(YTNodes.AddChatItemAction).item;
+                    if (!Chatresults.value) {
+                        Chatresults.value = [];
+                    }
+                    Chatresults.value.unshift(items);
+                    break;
+
+
+            }
+        });
         livechat.start();
+        ChatBtn.value = true;
     }
 
 } catch (error) {
@@ -187,7 +207,8 @@ const ApplyComSort = async () => {
 
 
                 <v-card v-if="Primary_Informationresults && Secondary_Informationresults">
-                    <v-card-title class="titletext" style="padding-bottom: 0">{{ Primary_Informationresults.title.text }}</v-card-title>
+                    <v-card-title class="titletext" style="padding-bottom: 0">{{ Primary_Informationresults.title.text
+                        }}</v-card-title>
                     <v-card-actions>
                         <v-row justify="space-between">
                             <v-col cols="auto">
@@ -281,6 +302,19 @@ const ApplyComSort = async () => {
 
             </v-col>
             <v-col cols="12" md="4">
+
+                <v-btn v-if="ChatBtn" @click="toggleChatComponent">Toggle Chat</v-btn>
+                <v-expand-transition>
+                    <div v-if="ChatComponent" class="scrollable-component">
+                        <v-row>
+                            <template v-for="result in Chatresults" :key="result.id">
+                                <v-col v-if="result.type === 'LiveChatTextMessage'" cols="12">
+                                    <Chat :data="result" />
+                                </v-col>
+                            </template>
+                        </v-row>
+                    </div>
+                </v-expand-transition>
                 <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="Relatedresults && Relatedresults.length">
                     <v-row style="width: 100%; margin-left: 0;">
                         <template v-for="result in Relatedresults" :key="result.id">
@@ -335,6 +369,13 @@ const ApplyComSort = async () => {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
+}
+
+.scrollable-component {
+    height: 500px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 16px;
 }
 </style>
 
