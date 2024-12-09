@@ -15,7 +15,7 @@
     "nuxt": "^3.14.159",
     "vue": "latest",
     "vue-router": "latest",
-    "youtubei.js": "^11.0.1"
+    "youtubei.js": "^12.0.0"
   },
   "devDependencies": {
     "@pinia/nuxt": "^0.8.0",
