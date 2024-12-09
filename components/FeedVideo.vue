@@ -9,7 +9,7 @@
             <div class="duration-overlay">{{ data.duration.text }}</div>
         </v-img>
         <v-card-text class="omit">{{ data.title }}</v-card-text>
-        <v-card-subtitle>{{ data.view_count.text }}・{{ data.published.text }}</v-card-subtitle>
+        <v-card-subtitle>{{ data.short_view_count.text }}・{{ data.published.text }}</v-card-subtitle>
     </v-card>
     <div v-else>
         データがありません

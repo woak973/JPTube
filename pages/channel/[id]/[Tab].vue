@@ -349,7 +349,7 @@ const LoadMore = async ({ done }: any) => {
                                             <GameCard :data="innerresult" />
                                         </template>
                                         <template v-if="innerresult.type === 'VideoCard'">
-                                            <FeedVideo :data="innerresult" />
+                                            <FeedVideoCard :data="innerresult" />
                                         </template>
                                     </v-slide-item>
                                 </v-slide-group>

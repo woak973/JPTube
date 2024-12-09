@@ -18,7 +18,7 @@
                 <v-col>
                     <div class="omit">{{ data.title }}</div>
                     <v-card-subtitle class="subomit">{{ data.author.name }}</v-card-subtitle>
-                    <v-card-subtitle class="subomit">{{ data.view_count.text }}・{{ data.published.text }}</v-card-subtitle>
+                    <v-card-subtitle class="subomit">{{ data.short_view_count.text }}・{{ data.published.text }}</v-card-subtitle>
                 </v-col>
             </v-row>
         </v-list-item>
