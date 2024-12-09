@@ -17,7 +17,7 @@
                     <v-radio label="Japan" value="JP"></v-radio>
                     <v-radio label="US" value="US"></v-radio>
                 </v-radio-group>
-                <v-btn @click="toggleTheme">Toggle Theme</v-btn>
+                <v-btn @click="toggleTheme">Toggle Theme(β)</v-btn>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
