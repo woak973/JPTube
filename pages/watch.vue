@@ -246,18 +246,18 @@ const ApplyComSort = async () => {
                         </v-row>
                     </v-card-actions>
                     <v-card-subtitle v-if="!showFullDescription">{{ Primary_Informationresults.relative_date.text }}・{{
-                        Primary_Informationresults.short_view_count.text || Primary_Informationresults.view_count.text
+                        Primary_Informationresults.view_count.short_view_count.text || Primary_Informationresults.view_count.view_count.text
                         }}</v-card-subtitle>
                     <v-card-subtitle v-else>{{ Primary_Informationresults.published.text }}・{{
-                        Primary_Informationresults.view_count.text
+                        Primary_Informationresults.view_count.view_count.text
                         }}</v-card-subtitle>
                     <v-card-text>
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             {{ Secondary_Informationresults.description.text }}
                         </div>
                         <v-btn @click="toggleDescription">
-                            {{ showFullDescription ? Secondary_Informationresults.show_less_text.simpleText :
-                                Secondary_Informationresults.show_more_text.simpleText }}
+                            {{ showFullDescription ? Secondary_Informationresults.show_less_text :
+                                Secondary_Informationresults.show_more_text }}
                         </v-btn>
                     </v-card-text>
                 </v-card>
