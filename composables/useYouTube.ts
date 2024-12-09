@@ -22,7 +22,7 @@ export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
         try{
             input.duplex = 'half';
         }catch (e){
-            console.error(e);
+
         }
 
     }
