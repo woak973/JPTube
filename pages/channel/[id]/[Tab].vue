@@ -382,7 +382,7 @@ const LoadMore = async ({ done }: any) => {
                                     style="width: 200px;">
                                     <template v-if="content.type === 'RichItem'">
                                         <template v-if="content.content.type === 'Video'">
-                                            <FeedVideo :data="content.content" />
+                                            <HomeFeed :data="content.content" />
                                         </template>
 
                                     </template>
