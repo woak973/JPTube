@@ -187,7 +187,7 @@ const ApplyComSort = async () => {
 
 
                 <v-card v-if="Primary_Informationresults && Secondary_Informationresults">
-                    <v-card-title class="titletext">{{ Primary_Informationresults.title.text }}</v-card-title>
+                    <v-card-title class="titletext" style="padding-bottom: 0">{{ Primary_Informationresults.title.text }}</v-card-title>
                     <v-card-actions>
                         <v-row justify="space-between">
                             <v-col cols="auto">
