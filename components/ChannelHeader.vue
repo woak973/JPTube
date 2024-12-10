@@ -1,4 +1,5 @@
 <template>
+  <v-img v-if="data" :src="data?.header?.content?.banner?.image[0]?.url" cover></v-img>
   <v-card v-if="data" elevation="16" @click="dialog = true">
     <v-row>
       <v-col cols="4" class="d-flex align-center justify-center">
