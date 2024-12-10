@@ -299,12 +299,15 @@ const downloadVideo = async () => {
                         }}</v-card-subtitle>
                     <v-card-subtitle v-else>{{ Primary_Informationresults?.published?.text }}・{{
                         Primary_Informationresults?.view_count?.view_count?.text
-                    }}</v-card-subtitle>
+                        }}</v-card-subtitle>
                     <v-card-text>
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             <template v-for="result in Secondary_Informationresults?.description?.runs">
                                 <template v-if="result.endpoint">
-                                    <NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink><br>
+                                    <NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink>
+                                </template>
+                                <template v-else-if="result.emoji">
+                                    {{ result.text }}
                                 </template>
                                 <template v-else>
                                     {{ result.text }}<br>
@@ -332,12 +335,12 @@ const downloadVideo = async () => {
                                 <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
                                     <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                         comsource.header.sort_menu.sub_menu_items[0].title
-                                        }}</v-list-item-title>
+                                    }}</v-list-item-title>
                                 </v-list-item>
                                 <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
                                     <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                         comsource.header.sort_menu.sub_menu_items[1].title
-                                        }}</v-list-item-title>
+                                    }}</v-list-item-title>
                                 </v-list-item>
                             </v-list>
                         </v-menu>
