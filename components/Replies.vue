@@ -10,7 +10,19 @@
                 </v-col>
                 <v-col>
                     <v-card-subtitle>{{ data.author.name }}・{{ data.published_time }}</v-card-subtitle>
-                    <v-card-text>{{ data.content.text }}</v-card-text>
+                    <v-card-text>
+                        <template v-for="result in data?.content?.runs">
+                            <template v-if="result.endpoint">
+                                <NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink>
+                            </template>
+                            <template v-else-if="result.emoji">
+                                {{ result.text }}
+                            </template>
+                            <template v-else>
+                                {{ result.text }}<br>
+                            </template>
+                        </template>
+                    </v-card-text>
                     <v-card-actions style="padding: 0">
                         <v-list-item>
                             <template v-slot:prepend>
