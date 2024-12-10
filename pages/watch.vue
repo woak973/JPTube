@@ -39,8 +39,13 @@ const ChatComponent = ref(false);
 
 const toggleChatComponent = () => {
     ChatComponent.value = !ChatComponent.value;
+    if (ChatComponent.value) {
+        livechat.start();
+    } else {
+        livechat.stop();
+        Chatresults.value = [];
+    }
 };
-
 
 
 try {
@@ -99,7 +104,6 @@ try {
                 Chatresults.value.splice(50);
             }
         });
-        livechat.start();
         ChatBtn.value = true;
     }
 
@@ -245,12 +249,14 @@ const ApplyComSort = async () => {
 
                         </v-row>
                     </v-card-actions>
-                    <v-card-subtitle v-if="!showFullDescription">{{ Primary_Informationresults?.relative_date?.text }}・{{
-                        Primary_Informationresults?.view_count?.short_view_count?.text || Primary_Informationresults?.view_count?.view_count?.text
+                    <v-card-subtitle v-if="!showFullDescription">{{ Primary_Informationresults?.relative_date?.text
+                        }}・{{
+                            Primary_Informationresults?.view_count?.short_view_count?.text ||
+                            Primary_Informationresults?.view_count?.view_count?.text
                         }}</v-card-subtitle>
                     <v-card-subtitle v-else>{{ Primary_Informationresults?.published?.text }}・{{
                         Primary_Informationresults?.view_count?.view_count?.text
-                        }}</v-card-subtitle>
+                    }}</v-card-subtitle>
                     <v-card-text>
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             {{ Secondary_Informationresults?.description?.text }}
@@ -276,12 +282,12 @@ const ApplyComSort = async () => {
                                 <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
                                     <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                         comsource.header.sort_menu.sub_menu_items[0].title
-                                    }}</v-list-item-title>
+                                        }}</v-list-item-title>
                                 </v-list-item>
                                 <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
                                     <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                         comsource.header.sort_menu.sub_menu_items[1].title
-                                    }}</v-list-item-title>
+                                        }}</v-list-item-title>
                                 </v-list-item>
                             </v-list>
                         </v-menu>
