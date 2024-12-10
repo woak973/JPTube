@@ -36,6 +36,7 @@ const toggleDescription = () => {
 
 const ChatBtn = ref(false);
 const ChatComponent = ref(false);
+const downloading = ref(false);
 
 const toggleChatComponent = () => {
     ChatComponent.value = !ChatComponent.value;
@@ -184,6 +185,42 @@ const ApplyComSort = async () => {
         }
     }
 };
+
+const downloadVideo = async () => {
+    downloading.value = true;
+    try {
+        const stream = await sourceresults.download();
+        const reader = stream.getReader();
+        const chunks = [];
+        let receivedLength = 0;
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            receivedLength += value.length;
+        }
+
+        const blob = new Blob(chunks);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'videoplayback.mp4'; // 適切なファイル名を設定してください
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    } catch (error) {
+        alert.value = true;
+        if (error instanceof Error) {
+            errorMessage.value = error.message;
+        } else {
+            errorMessage.value = 'An unknown error occurred';
+        }
+    } finally {
+        downloading.value = false;
+    }
+};
 </script>
 
 <template>
@@ -235,6 +272,12 @@ const ApplyComSort = async () => {
                             <v-col cols="auto">
                                 <v-list-item>
                                     <v-row :dense=true :no-gutters=true>
+                                        <v-btn :disabled="downloading" @click="downloadVideo" variant="tonal"
+                                            class="rounded-pill mx-2">
+                                            <v-icon v-if="!downloading">mdi-download</v-icon>
+                                            <v-progress-circular v-else indeterminate size="20"></v-progress-circular>
+                                            Download
+                                        </v-btn>
                                         <v-btn variant="tonal" class="rounded-pill mx-2" readonly>
                                             <v-icon>mdi-thumb-up</v-icon>
                                             {{ Basic_Informationresults.like_count }}
@@ -256,7 +299,7 @@ const ApplyComSort = async () => {
                         }}</v-card-subtitle>
                     <v-card-subtitle v-else>{{ Primary_Informationresults?.published?.text }}・{{
                         Primary_Informationresults?.view_count?.view_count?.text
-                    }}</v-card-subtitle>
+                        }}</v-card-subtitle>
                     <v-card-text>
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             {{ Secondary_Informationresults?.description?.text }}
@@ -282,12 +325,12 @@ const ApplyComSort = async () => {
                                 <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
                                     <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                         comsource.header.sort_menu.sub_menu_items[0].title
-                                        }}</v-list-item-title>
+                                    }}</v-list-item-title>
                                 </v-list-item>
                                 <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
                                     <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                         comsource.header.sort_menu.sub_menu_items[1].title
-                                        }}</v-list-item-title>
+                                    }}</v-list-item-title>
                                 </v-list-item>
                             </v-list>
                         </v-menu>
