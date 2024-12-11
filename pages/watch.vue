@@ -92,13 +92,19 @@ try {
         livechat.on('end', () => console.info('This live stream has ended.'));
         livechat.on('error', (error) => console.error('An error occurred:', error));
         livechat.on('chat-update', (message) => {
+            if (!Chatresults.value) {
+                Chatresults.value = [];
+            }
             switch (message.type) {
                 case 'AddChatItemAction':
                     const items = message.as(YTNodes.AddChatItemAction).item;
-                    if (!Chatresults.value) {
-                        Chatresults.value = [];
-                    }
                     Chatresults.value.unshift(items);
+                    break;
+                case 'ReplayChatItemAction':
+                    message.as(YTNodes.ReplayChatItemAction).actions.forEach((action) => {
+                        const replayItems = action.as(YTNodes.AddChatItemAction).item;
+                        Chatresults.value.unshift(replayItems);
+                    });
                     break;
             }
             if (Chatresults.value.length > 50) {
@@ -304,7 +310,9 @@ const downloadVideo = async () => {
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             <template v-for="result in Secondary_Informationresults?.description?.runs">
                                 <template v-if="result.endpoint">
-                                    <span style="white-space: pre-wrap;"><NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink></span>
+                                    <span style="white-space: pre-wrap;">
+                                        <NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink>
+                                    </span>
                                 </template>
                                 <template v-else-if="result.emoji">
                                     <span style="white-space: pre-wrap;">{{ result.text }}</span>
