@@ -16,15 +16,16 @@ export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
             input.headers :
             new Headers();
 
-    url.searchParams.set('__headers', JSON.stringify([...headers]));
+    // Base64エンコード
+    const encodedHeaders = btoa(JSON.stringify([...headers]));
+    url.searchParams.set('__headers', encodedHeaders);
 
     if (input instanceof Request) {
-        try{
+        try {
             input.duplex = 'half';
-        }catch (e){
-
+        } catch (e) {
+            // Handle error
         }
-
     }
 
     const request = new Request(
