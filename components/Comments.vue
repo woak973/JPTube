@@ -13,13 +13,13 @@
                     <v-card-text>
                         <template v-for="result in data?.comment?.content?.runs">
                             <template v-if="result.endpoint">
-                                <NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink>
+                                <span style="white-space: pre-wrap;"><NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink></span>
                             </template>
                             <template v-else-if="result.emoji">
-                                {{ result.text }}
+                                <span style="white-space: pre-wrap;">{{ result.text }}</span>
                             </template>
                             <template v-else>
-                                {{ result.text }}<br>
+                                <span style="white-space: pre-wrap;">{{ result.text }}</span>
                             </template>
                         </template>
                     </v-card-text>
