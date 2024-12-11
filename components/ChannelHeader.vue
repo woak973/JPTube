@@ -34,7 +34,7 @@
   <v-dialog v-model="dialog" max-width="600px" v-if="about">
     <v-card>
       <v-card-title>{{ about?.metadata?.description_label?.text }}</v-card-title>
-      <v-card-text>{{ about?.metadata?.description }}</v-card-text>
+      <v-card-text><span style="white-space: pre-wrap;">{{ about?.metadata?.description }}</span></v-card-text>
       <v-card-title>{{ about?.metadata?.custom_links_label?.text }}</v-card-title>
       <template v-for="link in about?.metadata?.links">
         <v-row>
@@ -42,7 +42,7 @@
             <v-card v-if="link?.type === 'ChannelExternalLinkView'" elevation="0">
               <v-list-item>
                 <template v-slot:prepend>
-                  <img v-if="link?.favicon?.[0]?.url" :src="link.favicon[0].url" alt="avatar">
+                  <img v-if="link?.favicon?.[0]?.url" :src="link.favicon[0].url" alt="avatar" width="24">
                 </template>
 
                 <v-card-title>{{ link?.title?.text }}</v-card-title>

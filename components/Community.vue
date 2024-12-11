@@ -10,7 +10,13 @@
                 </v-col>
                 <v-col>
                     <v-card-subtitle>{{ data.author.name }}・{{ data.published.text }}</v-card-subtitle>
-                    <v-card-text>{{ data.content.text }}</v-card-text>
+                    <span style="white-space: pre-wrap;"><v-card-text>{{ data.content.text }}</v-card-text></span>
+                    <v-list-item>
+                        <template v-slot:prepend>
+                            <v-icon class="me-1" icon="mdi-thumb-up"></v-icon>
+                            <v-list-item-subtitle>{{ data.vote_count.text }}</v-list-item-subtitle>
+                        </template>
+                    </v-list-item>
                 </v-col>
             </v-row>
         </v-list-item>
