@@ -1,0 +1,15 @@
+zerops:
+  - setup: nuxt
+    build:
+      base: nodejs@20
+      buildCommands:
+        - npm i
+        - npm build
+      deployFiles:
+        - .output/~
+    run:
+      base: nodejs@20
+      ports:
+        - port: 3000
+          httpSupport: true
+      start: node server/index.mjs
