@@ -1,0 +1,10 @@
+project:
+  name: recipe-nuxt
+  tags:
+    - zerops-recipe
+
+services:
+  - hostname: app
+    type: nodejs@20
+    buildFromGit: https://github.com/woak973/JPTube
+    enableSubdomainAccess: true
