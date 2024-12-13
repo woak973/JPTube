@@ -305,7 +305,7 @@ const downloadVideo = async () => {
                         }}</v-card-subtitle>
                     <v-card-subtitle v-else>{{ Primary_Informationresults?.published?.text }}・{{
                         Primary_Informationresults?.view_count?.view_count?.text
-                    }}</v-card-subtitle>
+                        }}</v-card-subtitle>
                     <v-card-text>
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             <template v-for="result in Secondary_Informationresults?.description?.runs">
@@ -343,12 +343,12 @@ const downloadVideo = async () => {
                                 <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
                                     <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                         comsource.header.sort_menu.sub_menu_items[0].title
-                                        }}</v-list-item-title>
+                                    }}</v-list-item-title>
                                 </v-list-item>
                                 <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
                                     <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                         comsource.header.sort_menu.sub_menu_items[1].title
-                                        }}</v-list-item-title>
+                                    }}</v-list-item-title>
                                 </v-list-item>
                             </v-list>
                         </v-menu>
@@ -390,7 +390,9 @@ const downloadVideo = async () => {
                                 <CompactVideo :data="result" />
                             </v-col>
                             <v-col v-else-if="result.type === 'LockupView'" cols="12">
-                                <CompactPlaylists :data="result" />
+                                <template v-if="result.content_type === 'PLAYLIST'">
+                                    <CompactPlaylists :data="result" />
+                                </template>
                             </v-col>
                         </template>
                     </v-row>
