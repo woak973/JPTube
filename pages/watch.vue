@@ -393,6 +393,9 @@ const downloadVideo = async () => {
                                 <template v-if="result.content_type === 'PLAYLIST'">
                                     <CompactPlaylists :data="result" />
                                 </template>
+                                <template v-else-if="result.content_type === 'VIDEO'">
+                                    <LockUpCompactVideo :data="result" />
+                                </template>
                             </v-col>
                         </template>
                     </v-row>
