@@ -1,8 +1,15 @@
-# Nuxt Minimal Starter
+# Nuxt JPTube FrontEnd Starter
+[![GitHub stars](https://img.shields.io/github/stars/woak973/JPTube)](https://github.com/woak973/JPTube/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/woak973/JPTube)](https://github.com/woak973/JPTube/network)
+[![GitHub issues](https://img.shields.io/github/issues/woak973/JPTube)](https://github.com/woak973/JPTube/issues)
+[![GitHub license](https://img.shields.io/github/license/woak973/JPTube)](https://github.com/woak973/JPTube/blob/main/LICENSE)
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-## Setup
+## About JPTube
+JPTube is an alternative frontend for YouTube. It uses [GitHub repository](https://github.com/LuanRT/YouTube.js) to retrieve information. JPTube is built using Nuxt and Vuetify.
+
+## Setup JPTube
 
 Make sure to install dependencies:
 
