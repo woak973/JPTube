@@ -2,13 +2,13 @@
     <v-card v-if="data" elevation="16" :href="`/watch?list=${data.content_id}`" link>
         <v-row>
             <v-col cols="4" class="d-flex align-center justify-center image">
-                <v-img :src="data.content_image.primary_thumbnail.image[0].url" aspect-ratio="16/9" rounded>
+                <v-img :src="data.content_image?.primary_thumbnail?.image[0]?.url" aspect-ratio="16/9" rounded>
                     <template v-slot:placeholder>
                         <div class="d-flex align-center justify-center fill-height">
                             <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
                         </div>
                     </template>
-                    <div class="duration-overlay">{{ data.content_image.primary_thumbnail.overlays[0].badges[0].text }}
+                    <div class="duration-overlay">{{ data.content_image?.primary_thumbnail?.overlays[0]?.badges[0]?.text }}
                     </div>
                 </v-img>
             </v-col>
