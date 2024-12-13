@@ -18,7 +18,7 @@ JPTube requires a backend to function. You can deploy the backend from [JPTube-s
 You can configure the following environment variables:
 
 - `BACKEND_HOST`: The host of the backend server.
-- `PASSWORD`: The password for accessing.
+- `LOGIN_PASSWORD`: The password for accessing.
 
 When deploying, if the `BACKEND_HOST` environment variable is not set, the default backend hosted by woak973 will be used.
 
