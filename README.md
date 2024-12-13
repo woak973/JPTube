@@ -9,6 +9,19 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 ## About JPTube
 JPTube is an alternative frontend for YouTube. It uses [LuanRT/YouTube.js](https://github.com/LuanRT/YouTube.js) to retrieve information. JPTube is built using Nuxt and Vuetify.
 
+## Backend
+
+You can deploy the backend from [JPTube-server](https://github.com/woak973/JPTube-server).
+
+## Environment Variables
+
+You can configure the following environment variables:
+
+- `BACKEND_HOST`: The host of the backend server.
+- `PASSWORD`: The password for accessing.
+
+When deploying, if the `BACKEND_HOST` environment variable is not set, the default backend hosted by woak973 will be used.
+
 ## Setup JPTube
 
 Make sure to install dependencies:
