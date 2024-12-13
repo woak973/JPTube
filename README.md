@@ -11,7 +11,7 @@ JPTube is an alternative frontend for YouTube. It uses [LuanRT/YouTube.js](https
 
 ### Backend
 
-You can deploy the backend from [JPTube-server](https://github.com/woak973/JPTube-server).
+JPTube requires a backend to function. You can deploy the backend from [JPTube-server](https://github.com/woak973/JPTube-server).
 
 ### Environment Variables
 
