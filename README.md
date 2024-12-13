@@ -86,8 +86,3 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 [![Run on Google Cloud](https://binbashbanana.github.io/deploy-buttons/buttons/official/googlecloud.svg)](https://deploy.cloud.run/?git_repo=https://github.com/woak973/JPTube)
 [![Deploy to Amplify Console](https://binbashbanana.github.io/deploy-buttons/buttons/remade/amplifyconsole.svg)](https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/woak973/JPTube)
 
-## License
-
-This project uses the following third-party libraries:
-
-- [youtubei.js](https://github.com/LuanRT/YouTube.js) - Licensed under the MIT License
