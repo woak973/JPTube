@@ -30,7 +30,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { setCookie } from 'nookies';
 
 definePageMeta({
     layout: false
@@ -43,8 +42,9 @@ const config = useRuntimeConfig();
 
 const login = () => {
     if (password.value === config.public.loginPassword) {
-        const token = 'your-secure-token'; // ここに実際のトークンを設定
-        setCookie(null, 'authToken', token, { path: '/' });
+        const token = 'your-secure-token'; // ここに実際のトークンを設定        
+        const authtoken = useCookie('authToken', { path: '/', maxAge: 2147483647 });
+        authtoken.value = token;
         router.push('/');
     } else {
         dialog.value = true;
