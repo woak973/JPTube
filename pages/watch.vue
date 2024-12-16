@@ -277,22 +277,29 @@ const downloadVideo = async () => {
                             </v-col>
                             <v-col cols="auto">
                                 <v-list-item>
-                                    <v-row :dense=true :no-gutters=true>
-                                        <v-btn :disabled="downloading" @click="downloadVideo" variant="tonal"
-                                            class="rounded-pill mx-2">
-                                            <v-icon v-if="!downloading">mdi-download</v-icon>
-                                            <v-progress-circular v-else indeterminate size="20"></v-progress-circular>
-                                            Download
-                                        </v-btn>
-                                        <v-btn variant="tonal" class="rounded-pill mx-2" readonly>
-                                            <v-icon>mdi-thumb-up</v-icon>
-                                            {{ Basic_Informationresults.like_count }}
-                                        </v-btn>
-                                        <v-btn @click.stop="share" variant="tonal" class="rounded-pill mx-2">
-                                            <v-icon>mdi-share</v-icon>
-                                            Share
-                                        </v-btn>
-                                    </v-row>
+                                    <v-slide-group show-arrows>
+                                        <v-slide-item>
+                                            <v-btn :disabled="downloading" @click="downloadVideo" variant="tonal"
+                                                class="rounded-pill mx-2">
+                                                <v-icon v-if="!downloading">mdi-download</v-icon>
+                                                <v-progress-circular v-else indeterminate
+                                                    size="20"></v-progress-circular>
+                                                Download
+                                            </v-btn>
+                                        </v-slide-item>
+                                        <v-slide-item>
+                                            <v-btn variant="tonal" class="rounded-pill mx-2" readonly>
+                                                <v-icon>mdi-thumb-up</v-icon>
+                                                {{ Basic_Informationresults.like_count }}
+                                            </v-btn>
+                                        </v-slide-item>
+                                        <v-slide-item>
+                                            <v-btn @click.stop="share" variant="tonal" class="rounded-pill mx-2">
+                                                <v-icon>mdi-share</v-icon>
+                                                Share
+                                            </v-btn>
+                                        </v-slide-item>
+                                    </v-slide-group>
                                 </v-list-item>
                             </v-col>
 
@@ -305,7 +312,7 @@ const downloadVideo = async () => {
                         }}</v-card-subtitle>
                     <v-card-subtitle v-else>{{ Primary_Informationresults?.published?.text }}・{{
                         Primary_Informationresults?.view_count?.view_count?.text
-                        }}</v-card-subtitle>
+                    }}</v-card-subtitle>
                     <v-card-text>
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             <template v-for="result in Secondary_Informationresults?.description?.runs">
@@ -343,12 +350,12 @@ const downloadVideo = async () => {
                                 <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
                                     <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                         comsource.header.sort_menu.sub_menu_items[0].title
-                                    }}</v-list-item-title>
+                                        }}</v-list-item-title>
                                 </v-list-item>
                                 <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
                                     <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                         comsource.header.sort_menu.sub_menu_items[1].title
-                                    }}</v-list-item-title>
+                                        }}</v-list-item-title>
                                 </v-list-item>
                             </v-list>
                         </v-menu>
