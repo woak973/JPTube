@@ -89,14 +89,14 @@ const LoadMore = async ({ done }: any) => {
 
         </div>
         <v-row>
-            <v-col cols="2">
+            <v-col cols="12" md="2">
                 <template v-if="Headerresults">
                     <Playlistinfo :data="Headerresults" />
                 </template>
 
             </v-col>
 
-            <v-col>
+            <v-col cols="12" md="10">
                 <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
                     <v-row style="width: 100%; margin-left: 0;">
                         <template v-for="result in results" :key="result.id">

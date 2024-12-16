@@ -12,7 +12,7 @@
         <v-card-actions>
             <v-list-item :to="`/channel/${data.info.author.id}/featured`" link>
                 <template v-slot:prepend>
-                    <v-avatar :image="data.info.author.thumbnails[0].url" size="24"></v-avatar>
+                    <v-avatar :image="data.info.author?.thumbnails[0]?.url" size="24"></v-avatar>
                 </template>
                 <v-list-item-title>{{ data.info.author.name }}</v-list-item-title>
             </v-list-item>
