@@ -9,7 +9,12 @@
             <div class="duration-overlay">{{ data.content_image.primary_thumbnail.overlays[0].badges[0].text }}</div>
         </v-img>
         <v-card-text class="omit">{{ data.metadata.title.text }}</v-card-text>
-        <v-card-subtitle>{{ data.metadata.metadata.metadata_rows[0].metadata_parts[0].text }}</v-card-subtitle>
+        <template v-for="row in data.metadata.metadata.metadata_rows">
+            <v-list-item style="min-height: 0px;" v-for="part in row.metadata_parts"
+                :to="part.text?.endpoint?.metadata?.url">
+                <v-list-item-subtitle>{{ part.text }}</v-list-item-subtitle>
+            </v-list-item>
+        </template>
     </v-card>
     <div v-else>
         データがありません
@@ -22,6 +27,7 @@ import { defineProps } from 'vue';
 const props = defineProps({
     data: Object
 });
+console.dir(props.data, { depth: null });
 </script>
 
 <style scoped>

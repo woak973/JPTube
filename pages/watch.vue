@@ -12,7 +12,7 @@ const Primary_Informationresults = ref();
 watch(Primary_Informationresults, (newVal) => {
     if (newVal) {
         useHead({
-            title: `${newVal.title.text} - JPTube` || "Watch"
+            title: `${newVal.title.text} - JPTube` || "Watch - JPTube"
         });
     }
 });
@@ -211,7 +211,7 @@ const downloadVideo = async () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'videoplayback.mp4'; // 適切なファイル名を設定してください
+        a.download = 'videoplayback.mp4'; 
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
