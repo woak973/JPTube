@@ -21,7 +21,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       backendHost: process.env.BACKEND_HOST || 'jptube-server.onrender.com',
-      loginPassword: process.env.LOGIN_PASSWORD || '85715'
+      loginPassword: process.env.LOGIN_PASSWORD || '20531'
     }
   }
 })
