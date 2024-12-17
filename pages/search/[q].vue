@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { Innertube, UniversalCache, YT, Types } from 'youtubei.js';
 
 const route = useRoute();

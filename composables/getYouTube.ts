@@ -1,4 +1,7 @@
 export function getProxifiedUrl(input: RequestInfo | URL, init?: RequestInit): string {
+    if (!input) {
+        return ''; // デフォルトのURLまたは空文字列を返す
+    }
     const config = useRuntimeConfig();
     const url = typeof input === 'string' ?
         new URL(input) :

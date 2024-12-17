@@ -1,9 +1,9 @@
 <template>
-  <v-img v-if="data" :src="data?.header?.content?.banner?.image[0]?.url" cover></v-img>
+  <v-img v-if="data" :src="getProxifiedUrl(data?.header?.content?.banner?.image[0]?.url)" cover></v-img>
   <v-card v-if="data" elevation="16" @click="dialog = true">
     <v-row>
       <v-col cols="4" class="d-flex align-center justify-center">
-        <v-img v-if="data?.metadata?.avatar && data.metadata.avatar[0]?.url" :src="data?.metadata?.avatar[0]?.url"
+        <v-img v-if="data?.metadata?.avatar && data.metadata.avatar[0]?.url" :src="getProxifiedUrl(data?.metadata?.avatar[0]?.url)"
           max-width="50%" style="border-radius: 50%;">
           <template v-slot:placeholder>
             <div class="d-flex align-center justify-center fill-height">
@@ -42,7 +42,7 @@
             <v-card v-if="link?.type === 'ChannelExternalLinkView'" elevation="0">
               <v-list-item>
                 <template v-slot:prepend>
-                  <img v-if="link?.favicon?.[0]?.url" :src="link.favicon[0].url" alt="avatar" width="24">
+                  <img v-if="link?.favicon?.[0]?.url" :src="getProxifiedUrl(link.favicon[0].url)" alt="avatar" width="24">
                 </template>
 
                 <v-card-title>{{ link?.title?.text }}</v-card-title>
@@ -69,7 +69,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
 
 const props = defineProps({
   data: Object,

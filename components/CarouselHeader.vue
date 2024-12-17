@@ -5,7 +5,7 @@
                 <v-row>
                     <v-col cols="4" class="d-flex align-center justify-center">
                         <v-img v-if="content.avatar && content.avatar[0]?.url"
-                            :src="content.avatar[0]?.url" max-width="50%" style="border-radius: 50%;">
+                            :src="getProxifiedUrl(content.avatar[0]?.url)" max-width="50%" style="border-radius: 50%;">
                             <template v-slot:placeholder>
                                 <div class="d-flex align-center justify-center fill-height">
                                     <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+
 
 const props = defineProps({
     data: Object

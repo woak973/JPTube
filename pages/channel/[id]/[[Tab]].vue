@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { Innertube, UniversalCache, YT, YTNodes, ReloadContinuationItemsCommand } from 'youtubei.js';
 
 

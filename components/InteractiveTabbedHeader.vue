@@ -2,7 +2,7 @@
     <v-card v-if="data" elevation="16" :image="data?.header?.banner[0]?.url">
         <v-row>
             <v-col cols="4" class="d-flex align-center justify-center">
-                <v-img v-if="data.header.box_art && data.header.box_art[0]?.url" :src="data.header.box_art[0]?.url"
+                <v-img v-if="data.header.box_art && data.header.box_art[0]?.url" :src="getProxifiedUrl(data.header.box_art[0]?.url)"
                     max-width="50%">
                     <template v-slot:placeholder>
                         <div class="d-flex align-center justify-center fill-height">
@@ -26,7 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
 
 const props = defineProps({
     data: Object

@@ -2,7 +2,7 @@
     <v-card v-if="data" elevation="16" :href="`/watch?list=${data.content_id}`" link>
       <v-row>
         <v-col cols="4" class="d-flex align-center justify-center">
-          <v-img :src="data.content_image.primary_thumbnail.image[0].url" aspect-ratio="16/9" rounded>
+          <v-img :src="getProxifiedUrl(data.content_image.primary_thumbnail.image[0].url)" aspect-ratio="16/9" rounded>
             <template v-slot:placeholder>
               <div class="d-flex align-center justify-center fill-height">
                 <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
@@ -24,7 +24,6 @@
   </template>
   
   <script setup lang="ts">
-  import { defineProps } from 'vue';
   
   const props = defineProps({
     data: Object
