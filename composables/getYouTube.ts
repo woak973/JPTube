@@ -3,11 +3,18 @@ export function getProxifiedUrl(input: RequestInfo | URL, init?: RequestInit): s
         return ''; // デフォルトのURLまたは空文字列を返す
     }
     const config = useRuntimeConfig();
-    const url = typeof input === 'string' ?
-        new URL(input) :
-        input instanceof URL ?
-            input :
-            new URL(input.url);
+    let url: URL;
+
+    try {
+        url = typeof input === 'string' ?
+            new URL(input, window.location.href) :
+            input instanceof URL ?
+                input :
+                new URL(input.url);
+    } catch (e) {
+        console.error(e);
+        return ''; // 無効なURLの場合は空文字列を返す
+    }
 
     url.searchParams.set('__host', url.host);
     url.host = config.public.backendHost as string || 'jptube-server.onrender.com';
