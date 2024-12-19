@@ -210,7 +210,7 @@ const downloadVideo = async () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'videoplayback.mp4'; 
+        a.download = 'videoplayback.mp4';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -311,7 +311,7 @@ const downloadVideo = async () => {
                         }}</v-card-subtitle>
                     <v-card-subtitle v-else>{{ Primary_Informationresults?.published?.text }}・{{
                         Primary_Informationresults?.view_count?.view_count?.text
-                    }}</v-card-subtitle>
+                        }}</v-card-subtitle>
                     <v-card-text>
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             <template v-for="result in Secondary_Informationresults?.description?.runs">
@@ -335,42 +335,64 @@ const downloadVideo = async () => {
                     </v-card-text>
                 </v-card>
 
-                <template v-if="Commentresults">
-                    <v-col>
-                        <strong>{{ comsource?.header?.count.text }}</strong>
-                        <v-menu transition="scale-transition">
-                            <template v-slot:activator="{ isActive, props, targetRef }">
-                                <v-btn color="primary" dark v-bind="props" v-on="props">
-                                    <v-icon left>mdi-sort</v-icon>
-                                    {{ comsource?.header?.sort_menu?.title }}
-                                </v-btn>
-                            </template>
-                            <v-list>
-                                <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
-                                    <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
-                                        comsource.header.sort_menu.sub_menu_items[0].title
-                                        }}</v-list-item-title>
-                                </v-list-item>
-                                <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
-                                    <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
-                                        comsource.header.sort_menu.sub_menu_items[1].title
-                                        }}</v-list-item-title>
-                                </v-list-item>
-                            </v-list>
-                        </v-menu>
-                    </v-col>
+                <template v-if="isMobile">
+                    <template v-if="Relatedresults">
+                        <v-infinite-scroll :mode="mode" @load="LoadMore" v-if="Relatedresults.length">
+                            <v-row style="width: 100%; margin-left: 0;">
+                                <template v-for="result in Relatedresults" :key="result.id">
+                                    <v-col v-if="result.type === 'CompactVideo'" cols="12">
+                                        <CompactVideo :data="result" />
+                                    </v-col>
+                                    <v-col v-else-if="result.type === 'LockupView'" cols="12">
+                                        <template v-if="result.content_type === 'PLAYLIST'">
+                                            <CompactPlaylists :data="result" />
+                                        </template>
+                                        <template v-else-if="result.content_type === 'VIDEO'">
+                                            <LockUpCompactVideo :data="result" />
+                                        </template>
+                                    </v-col>
+                                </template>
+                            </v-row>
+                        </v-infinite-scroll>
+                    </template>
                 </template>
+                <template v-else>
+                    <template v-if="Commentresults">
+                        <v-col>
+                            <strong>{{ comsource?.header?.count.text }}</strong>
+                            <v-menu transition="scale-transition">
+                                <template v-slot:activator="{ isActive, props, targetRef }">
+                                    <v-btn color="primary" dark v-bind="props" v-on="props">
+                                        <v-icon left>mdi-sort</v-icon>
+                                        {{ comsource?.header?.sort_menu?.title }}
+                                    </v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
+                                        <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
+                                            comsource.header.sort_menu.sub_menu_items[0].title
+                                            }}</v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
+                                        <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
+                                            comsource.header.sort_menu.sub_menu_items[1].title
+                                            }}</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-col>
 
-                <v-infinite-scroll :mode="mode" @load="ComLoadMore" v-if="Commentresults && Commentresults.length">
-                    <v-row style="width: 100%; margin-left: 0;">
-                        <template v-for="result in Commentresults" :key="result.id">
-                            <v-col v-if="result.type === 'CommentThread'" cols="12">
-                                <Comments :data="result" />
-                            </v-col>
-                        </template>
-                    </v-row>
-                </v-infinite-scroll>
-
+                        <v-infinite-scroll mode="intersect" @load="ComLoadMore" v-if="Commentresults.length">
+                            <v-row style="width: 100%; margin-left: 0;">
+                                <template v-for="result in Commentresults" :key="result.id">
+                                    <v-col v-if="result.type === 'CommentThread'" cols="12">
+                                        <Comments :data="result" />
+                                    </v-col>
+                                </template>
+                            </v-row>
+                        </v-infinite-scroll>
+                    </template>
+                </template>
 
 
 
@@ -389,23 +411,65 @@ const downloadVideo = async () => {
                         </v-row>
                     </div>
                 </v-expand-transition>
-                <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="Relatedresults && Relatedresults.length">
-                    <v-row style="width: 100%; margin-left: 0;">
-                        <template v-for="result in Relatedresults" :key="result.id">
-                            <v-col v-if="result.type === 'CompactVideo'" cols="12">
-                                <CompactVideo :data="result" />
-                            </v-col>
-                            <v-col v-else-if="result.type === 'LockupView'" cols="12">
-                                <template v-if="result.content_type === 'PLAYLIST'">
-                                    <CompactPlaylists :data="result" />
+
+                <template v-if="isMobile">
+                    <template v-if="Commentresults">
+                        <v-col>
+                            <strong>{{ comsource?.header?.count.text }}</strong>
+                            <v-menu transition="scale-transition">
+                                <template v-slot:activator="{ isActive, props, targetRef }">
+                                    <v-btn color="primary" dark v-bind="props" v-on="props">
+                                        <v-icon left>mdi-sort</v-icon>
+                                        {{ comsource?.header?.sort_menu?.title }}
+                                    </v-btn>
                                 </template>
-                                <template v-else-if="result.content_type === 'VIDEO'">
-                                    <LockUpCompactVideo :data="result" />
+                                <v-list>
+                                    <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
+                                        <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
+                                            comsource.header.sort_menu.sub_menu_items[0].title
+                                            }}</v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
+                                        <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
+                                            comsource.header.sort_menu.sub_menu_items[1].title
+                                            }}</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-col>
+
+                        <v-infinite-scroll :mode="mode" @load="ComLoadMore" v-if="Commentresults.length">
+                            <v-row style="width: 100%; margin-left: 0;">
+                                <template v-for="result in Commentresults" :key="result.id">
+                                    <v-col v-if="result.type === 'CommentThread'" cols="12">
+                                        <Comments :data="result" />
+                                    </v-col>
                                 </template>
-                            </v-col>
-                        </template>
-                    </v-row>
-                </v-infinite-scroll>
+                            </v-row>
+                        </v-infinite-scroll>
+                    </template>
+                </template>
+                <template v-else>
+                    <template v-if="Relatedresults">
+                        <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="Relatedresults.length">
+                            <v-row style="width: 100%; margin-left: 0;">
+                                <template v-for="result in Relatedresults" :key="result.id">
+                                    <v-col v-if="result.type === 'CompactVideo'" cols="12">
+                                        <CompactVideo :data="result" />
+                                    </v-col>
+                                    <v-col v-else-if="result.type === 'LockupView'" cols="12">
+                                        <template v-if="result.content_type === 'PLAYLIST'">
+                                            <CompactPlaylists :data="result" />
+                                        </template>
+                                        <template v-else-if="result.content_type === 'VIDEO'">
+                                            <LockUpCompactVideo :data="result" />
+                                        </template>
+                                    </v-col>
+                                </template>
+                            </v-row>
+                        </v-infinite-scroll>
+                    </template>
+                </template>
 
             </v-col>
         </v-row>
