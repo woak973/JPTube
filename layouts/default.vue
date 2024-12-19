@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
 import { Innertube, UniversalCache } from 'youtubei.js';
 
 const drawer = ref(false);
@@ -10,6 +9,16 @@ const langDialog = ref<HTMLElement | null>(null);
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 
+const createYTInstance = async () => {
+  const lang = langStore.lang || 'ja';
+  const location = locationStore.location || 'JP';
+  return await Innertube.create({
+    fetch: fetchFn,
+    cache: new UniversalCache(false),
+    lang: lang,
+    location: location
+  });
+};
 
 watch(searchQuery, (newQuery) => {
   if (newQuery) {
@@ -19,8 +28,19 @@ watch(searchQuery, (newQuery) => {
   }
 });
 
-const search = () => {
+const search = async () => {
   if (searchQuery.value) {
+    const yt = await createYTInstance();
+    try {
+      const resolvedURL = await yt.resolveURL(searchQuery.value);
+      if (resolvedURL.metadata.page_type !== 'WEB_PAGE_TYPE_UNKNOWN') {
+        navigateTo(resolvedURL.metadata.url);
+        return;
+      }
+    } catch (error) {
+      console.error('Error resolving URL:', error);
+    }
+
     const encodedQuery = encodeURIComponent(searchQuery.value);
     navigateTo(`/search/${encodedQuery}`);
   }
@@ -32,14 +52,7 @@ const clearSearch = () => {
 
 const fetchSuggestions = async (query: string): Promise<void> => {
   try {
-    const lang = langStore.lang || 'ja';
-    const location = locationStore.location || 'JP';
-    const yt = await Innertube.create({
-      fetch: fetchFn,
-      cache: new UniversalCache(false),
-      lang: lang,
-      location: location
-    });
+    const yt = await createYTInstance();
     const response = await yt.getSearchSuggestions(query);
     suggestions.value = response.map((suggestion: any) => suggestion);
   } catch (error) {
@@ -52,9 +65,6 @@ const openLangDialog = () => {
     (langDialog.value as any).open();
   }
 };
-
-
-
 </script>
 
 <template>
