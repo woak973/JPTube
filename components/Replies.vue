@@ -15,9 +15,6 @@
                             <template v-if="result.endpoint">
                                 <span style="white-space: pre-wrap;"><NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink></span>
                             </template>
-                            <template v-else-if="result.emoji">
-                                <span style="white-space: pre-wrap;">{{ result.text }}</span>
-                            </template>
                             <template v-else>
                                 <span style="white-space: pre-wrap;">{{ result.text }}</span>
                             </template>

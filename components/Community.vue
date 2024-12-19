@@ -10,7 +10,36 @@
                 </v-col>
                 <v-col>
                     <v-card-subtitle>{{ data.author.name }}・{{ data.published.text }}</v-card-subtitle>
-                    <span style="white-space: pre-wrap;"><v-card-text>{{ data.content.text }}</v-card-text></span>
+
+                    <v-card-text>
+                        <template v-for="result in data?.content?.runs">
+                            <template v-if="result.endpoint">
+                                <span style="white-space: pre-wrap;">
+                                    <NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink>
+                                </span>
+                            </template>
+                            <template v-else>
+                                <span style="white-space: pre-wrap;">{{ result.text }}</span>
+                            </template>
+                        </template>
+                    </v-card-text>
+
+                    <template v-if="data.attachment">
+                        <v-img v-if="data.attachment.type === 'BackstageImage'"
+                            :src="getProxifiedUrl(data.attachment.image[0].url)" rounded max-width="638">
+                            <template v-slot:placeholder>
+                                <div class="d-flex align-center justify-center fill-height">
+                                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                                </div>
+                            </template>
+                        </v-img>
+                        <Video v-else-if="data.attachment.type === 'Video'" :data="data.attachment" />
+                        <v-carousel v-else-if="data.attachment.type === 'PostMultiImage'" hide-delimiters>
+                            <v-carousel-item v-for="(img, index) in data.attachment.images" :key="index">
+                                <v-img :src="getProxifiedUrl(img.image[0].url)" />
+                            </v-carousel-item>
+                        </v-carousel>
+                    </template>
                     <v-list-item>
                         <template v-slot:prepend>
                             <v-icon class="me-1" icon="mdi-thumb-up"></v-icon>

@@ -363,8 +363,11 @@ const LoadMore = async ({ done }: any) => {
                     <v-col v-if="result.type === 'ItemSection'" cols="12" style="padding: 0%">
                         <template v-for="content in result.contents" :key="content.id">
                             <template v-if="content.type === 'BackstagePostThread'">
-                                <v-col cols="12">
+                                <v-col v-if="content.post.type === 'BackstagePost'" cols="12">
                                     <Community :data="content.post" />
+                                </v-col>
+                                <v-col v-else-if="content.post.type === 'SharedPost'" cols="12">
+                                    <SharedPost :data="content.post" />
                                 </v-col>
                             </template>
                         </template>
@@ -374,9 +377,14 @@ const LoadMore = async ({ done }: any) => {
                         <ContFeedPlaylists :data="result" />
                     </v-col>
 
-                    <v-col v-if="result.type === 'BackstagePostThread'" cols="12">
-                        <Community :data="result.post" />
-                    </v-col>
+                    <template v-if="result.type === 'BackstagePostThread'">
+                        <v-col v-if="result.post.type === 'BackstagePost'" cols="12">
+                            <Community :data="result.post" />
+                        </v-col>
+                        <v-col v-if="result.post.type === 'SharedPost'" cols="12">
+                            <SharedPost :data="result.post" />
+                        </v-col>
+                    </template>
 
                     <v-col v-if="result.type === 'RichSection'" cols="12">
                         <template v-if="result.content.type === 'RichShelf'">
