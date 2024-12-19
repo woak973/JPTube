@@ -71,7 +71,7 @@ try {
         lang: lang,
         location: location
     });
-    const searchResults:YT.Search = await yt.search(route.params.q as string, filter as Types.SearchFilters);
+    const searchResults: YT.Search = await yt.search(route.params.q as string, filter as Types.SearchFilters);
     results.value = searchResults.results;
     sourceresults = searchResults;
 
@@ -198,7 +198,10 @@ const LoadMore = async ({ done }: any) => {
                         <v-slide-group show-arrows>
                             <v-slide-item v-for="innerresult in result.content.items" :key="innerresult.id" class="ma-2"
                                 style="width: 200px;">
-                                <template v-if="innerresult.type === 'ShortsLockupView'">
+                                <template v-if="innerresult.type === 'GridVideo'">
+                                    <GridVideoFeed :data="innerresult" />
+                                </template>
+                                <template v-else-if="innerresult.type === 'ShortsLockupView'">
                                     <Shorts :data="innerresult" />
                                 </template>
                                 <template v-else-if="innerresult.type === 'Video'">
