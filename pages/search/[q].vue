@@ -102,6 +102,7 @@ const LoadMore = async ({ done }: any) => {
         } else {
             errorMessage.value = 'An unknown error occurred';
         }
+        done('error');
     }
 
 };
