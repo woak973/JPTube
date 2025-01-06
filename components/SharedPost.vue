@@ -10,7 +10,7 @@
                 </v-col>
                 <v-col>
                     <v-card-subtitle>{{ data.author.name }}・{{ data.published.text }}</v-card-subtitle>
-                    <span style="white-space: pre-wrap;"><v-card-text>{{ data.content.text }}</v-card-text></span>
+                    <span style="white-space: pre-wrap; word-break: break-all;"><v-card-text>{{ data.content.text }}</v-card-text></span>
                 </v-col>
             </v-row>
         </v-list-item>

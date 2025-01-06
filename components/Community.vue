@@ -14,12 +14,12 @@
                     <v-card-text>
                         <template v-for="result in data?.content?.runs">
                             <template v-if="result.endpoint">
-                                <span style="white-space: pre-wrap;">
+                                <span style="white-space: pre-wrap; word-break: break-all;">
                                     <NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink>
                                 </span>
                             </template>
                             <template v-else>
-                                <span style="white-space: pre-wrap;">{{ result.text }}</span>
+                                <span style="white-space: pre-wrap; word-break: break-all;">{{ result.text }}</span>
                             </template>
                         </template>
                     </v-card-text>

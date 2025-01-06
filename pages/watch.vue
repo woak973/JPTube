@@ -318,15 +318,15 @@ const downloadVideo = async () => {
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             <template v-for="result in Secondary_Informationresults?.description?.runs">
                                 <template v-if="result.endpoint">
-                                    <span style="white-space: pre-wrap;">
+                                    <span style="white-space: pre-wrap; word-break: break-all;">
                                         <NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink>
                                     </span>
                                 </template>
                                 <template v-else-if="result.emoji">
-                                    <span style="white-space: pre-wrap;">{{ result.text }}</span>
+                                    <span style="white-space: pre-wrap; word-break: break-all;">{{ result.text }}</span>
                                 </template>
                                 <template v-else>
-                                    <span style="white-space: pre-wrap;">{{ result.text }}</span>
+                                    <span style="white-space: pre-wrap; word-break: break-all;">{{ result.text }}</span>
                                 </template>
                             </template>
                         </div>

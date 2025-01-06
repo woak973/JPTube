@@ -34,7 +34,7 @@
   <v-dialog v-model="dialog" max-width="600px" v-if="about">
     <v-card>
       <v-card-title>{{ about?.metadata?.description_label?.text }}</v-card-title>
-      <v-card-text><span style="white-space: pre-wrap;">{{ about?.metadata?.description }}</span></v-card-text>
+      <v-card-text><span style="white-space: pre-wrap; word-break: break-all;">{{ about?.metadata?.description }}</span></v-card-text>
       <v-card-title>{{ about?.metadata?.custom_links_label?.text }}</v-card-title>
       <template v-for="link in about?.metadata?.links">
         <v-row>
@@ -54,7 +54,7 @@
         </v-row>
       </template>
       <v-card-title>{{ about?.metadata?.additional_info_label?.text }}</v-card-title>
-      <v-card-text><v-icon>mdi-web</v-icon>{{ about?.metadata?.canonical_channel_url }}</v-card-text>
+      <v-card-text><v-icon>mdi-web</v-icon><span style="word-break: break-all;">{{ about?.metadata?.canonical_channel_url }}</span></v-card-text>
       <v-card-text><v-icon>mdi-account-outline</v-icon>{{ about?.metadata?.subscriber_count }}</v-card-text>
       <v-card-text><v-icon>mdi-play-box</v-icon>{{ about?.metadata?.video_count }}</v-card-text>
       <v-card-text><v-icon>mdi-trending-up</v-icon>{{ about?.metadata?.view_count }}</v-card-text>
