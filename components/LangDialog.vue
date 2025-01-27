@@ -17,6 +17,10 @@
                     <v-radio label="Japan" value="JP"></v-radio>
                     <v-radio label="US" value="US"></v-radio>
                 </v-radio-group>
+                <v-radio-group v-model="selectedPlayer" column>
+                    <v-radio label="embed" value="embed"></v-radio>
+                    <v-radio label="shaka-player" value="shaka-player"></v-radio>
+                </v-radio-group>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
@@ -31,13 +35,16 @@
 const dialog = ref(false);
 const selectedLang = ref('ja');
 const selectedLocation = ref('JP');
+const selectedPlayer = ref('embed');
 const langStore = useLangStore();
 const locationStore = useLocationStore();
-const theme = useTheme();
+const playerStore = usePlayerStore();
+const router = useRouter();
 
 const open = () => {
     selectedLang.value = langStore.lang;
     selectedLocation.value = locationStore.location;
+    selectedPlayer.value = playerStore.player;
     dialog.value = true;
 };
 
@@ -48,8 +55,9 @@ const close = () => {
 const save = () => {
     langStore.setLang(selectedLang.value);
     locationStore.setLocation(selectedLocation.value);
+    playerStore.setPlayer(selectedPlayer.value);
     close();
-    window.location.reload();
+    router.go(0);
 };
 
 defineExpose({ open });

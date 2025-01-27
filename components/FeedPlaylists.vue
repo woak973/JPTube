@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :href="`/watch?list=${data.content_id}`" link>
+    <v-card v-if="data" elevation="16" :to="`/watch?list=${data.content_id}`" link>
         <v-img :src="getProxifiedUrl(data.content_image.primary_thumbnail.image[0].url)" aspect-ratio="16/9" rounded>
             <template v-slot:placeholder>
                 <div class="d-flex align-center justify-center fill-height">

@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :href="`/watch?v=${data.id}`" link>
+    <v-card v-if="data" elevation="16" :to="data.endpoint.metadata.url" link>
       <v-row>
         <v-col cols="4" class="d-flex align-center justify-center">
           <v-img :src="getProxifiedUrl(data.thumbnails[0].url)" aspect-ratio="16/9" rounded>

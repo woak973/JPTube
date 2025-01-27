@@ -33,7 +33,8 @@ const search = async () => {
     const yt = await createYTInstance();
     try {
       const resolvedURL = await yt.resolveURL(searchQuery.value);
-      if (resolvedURL.metadata.page_type !== 'WEB_PAGE_TYPE_UNKNOWN') {
+      if (resolvedURL.metadata.page_type !== 'WEB_PAGE_TYPE_UNKNOWN' && !searchQuery.value.startsWith('#')) {
+        console.log("resolvedURL", resolvedURL);
         navigateTo(resolvedURL.metadata.url);
         return;
       }

@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache, YT, YTNodes } from 'youtubei.js';
+import Chat from '~/components/Chat.vue';
 
 
 const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
+const playerStore = usePlayerStore();
 const Relatedresults = ref();
 const Primary_Informationresults = ref();
+const videoId = ref(route.query.v as string);
 
 watch(Primary_Informationresults, (newVal) => {
     if (newVal) {
@@ -16,10 +19,31 @@ watch(Primary_Informationresults, (newVal) => {
     }
 });
 
+watch(() => route.query.t, (newTime) => {
+    if (newTime) {
+        let timeString = newTime.toString();
+        if (timeString.endsWith('s')) {
+            timeString = timeString.slice(0, -1);
+        }
+        seekToTime(Number(timeString));
+        window.scrollTo(0, 0);
+
+    }
+});
+
+watch(() => route.query.v, async (newVideoId) => {
+    videoId.value = newVideoId as string;
+    window.scrollTo(0, 0);
+    await fetchVideoData();
+
+});
+
+
 const Secondary_Informationresults = ref();
 const Basic_Informationresults = ref();
 const Commentresults = ref();
 const Chatresults = ref();
+const PLResults = ref();
 let livechat: YT.LiveChat;
 const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
 let sourceresults: YT.VideoInfo;
@@ -29,13 +53,19 @@ const alert = ref(false);
 const errorMessage = ref('');
 const showFullDescription = ref(false);
 
+
 const toggleDescription = () => {
     showFullDescription.value = !showFullDescription.value;
 };
 
 const ChatBtn = ref(false);
+const PLBtn = ref(false);
+
 const ChatComponent = ref(false);
+const PLComponent = ref(false);
+
 const downloading = ref(false);
+const child = ref<{ seek: (seconds: number) => void } | null>(null);
 
 const toggleChatComponent = () => {
     ChatComponent.value = !ChatComponent.value;
@@ -47,80 +77,171 @@ const toggleChatComponent = () => {
     }
 };
 
+const togglePLComponent = () => {
+    PLComponent.value = !PLComponent.value;
+};
 
-try {
-    const lang = langStore.lang || 'ja';
-    const location = locationStore.location || 'JP';
-    yt = await Innertube.create({
-        fetch: fetchFn,
-        cache: new UniversalCache(false),
-        lang: lang,
-        location: location
-    })
-    const searchResults = await yt.getInfo(route.query.v as string);
+const seekToTime = (time: number) => {
+    if (!isFinite(time)) {
+        console.error('Invalid seek time:', time);
+        return;
+    }
 
-    Relatedresults.value = await searchResults.watch_next_feed;
-    Primary_Informationresults.value = await searchResults.primary_info;
-    Secondary_Informationresults.value = await searchResults.secondary_info;
-    Basic_Informationresults.value = await searchResults.basic_info;
-    sourceresults = searchResults;
+    if (child.value) {
+        child.value.seek(time);
 
+    } else if (playerStore.player === 'embed') {
+        moveseek(time);
+
+    } else {
+        console.error('Component is not available');
+    }
+};
+
+// 親ページから子ページへのメッセージを送信する関数
+function postMessageToChild(action: string, arg: any = null) {
+    const message = {
+        event: 'command',
+        func: action,
+        args: arg
+    };
+    const iframe = document.getElementById('youtubeiframechild') as HTMLIFrameElement;
+    if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage(JSON.stringify(message), '*');
+        console.log('Message sent:', message);
+    }
+}
+
+// 各関数を実行するための親ページの関数
+function moveseek(timer: number) {
+    postMessageToChild('seekTo', [timer, true]);
+}
+
+
+const fetchVideoData = async () => {
     try {
-        const searchcommentResults = await yt.getComments(route.query.v as string);
-        for (const comment of searchcommentResults.contents) {
-            if (comment.has_replies) {
-                await comment.getReplies();
+        const lang = langStore.lang || 'ja';
+        const location = locationStore.location || 'JP';
+        yt = await Innertube.create({
+            fetch: fetchFn,
+            cache: new UniversalCache(false),
+            lang: lang,
+            location: location
+        });
+
+        let searchResults: YT.VideoInfo;
+
+        if (route.query.list) {
+            let PLvideoId: string = '';
+            const PL = await yt.getPlaylist(route.query.list as string);
+            if (PL.page_contents instanceof YTNodes.SectionList) {
+                const PLcontents = PL.page_contents.contents;
+                PLcontents.forEach((content) => {
+                    if (content.type === 'ItemSection') {
+                        (content as YTNodes.ItemSection).contents.forEach((item) => {
+                            if (item.type === 'PlaylistVideoList') {
+                                PLResults.value = (item as YTNodes.PlaylistVideoList).videos;
+                                (item as YTNodes.PlaylistVideoList).videos.forEach((video) => {
+
+                                    if (video.type === 'PlaylistVideo') {
+                                        if (route.query.index === (video as YTNodes.PlaylistVideo).index.text) {
+                                            PLvideoId = (video as YTNodes.PlaylistVideo).id;
+                                        } else if (route.query.v === (video as YTNodes.PlaylistVideo).id) {
+                                            PLvideoId = (video as YTNodes.PlaylistVideo).id;
+                                        }
+                                    }
+                                });
+
+                                if (PLvideoId === '') {
+                                    PLvideoId = ((item as YTNodes.PlaylistVideoList).videos[0] as YTNodes.PlaylistVideo).id;
+                                }
+
+                            }
+                        });
+                    }
+                });
+            } else {
+                throw new Error('No Contents Found');
+            }
+            PLBtn.value = true;
+            PLComponent.value = true;
+
+            videoId.value = PLvideoId;
+            searchResults = await yt.getInfo(PLvideoId);
+        } else {
+            PLBtn.value = false;
+            PLComponent.value = false;
+            searchResults = await yt.getInfo(route.query.v as string);
+        }
+
+
+
+        Relatedresults.value = await searchResults.watch_next_feed;
+        Primary_Informationresults.value = await searchResults.primary_info;
+        Secondary_Informationresults.value = await searchResults.secondary_info;
+        Basic_Informationresults.value = await searchResults.basic_info;
+        sourceresults = searchResults;
+
+        try {
+            const searchcommentResults = await yt.getComments(route.query.v as string);
+            for (const comment of searchcommentResults.contents) {
+                if (comment.has_replies) {
+                    await comment.getReplies();
+                }
+            }
+            Commentresults.value = await searchcommentResults.contents;
+            comsource = searchcommentResults;
+        } catch (error) {
+            Commentresults.value = null;
+            console.error('Error fetching comments:', error);
+            if (error instanceof Error) {
+                errorMessage.value = error.message;
+            } else {
+                errorMessage.value = 'An unknown error occurred';
             }
         }
-        Commentresults.value = await searchcommentResults.contents;
-        comsource = searchcommentResults;
+
+        if (searchResults.livechat) {
+            console.log('This video has a live chat.');
+            livechat = await searchResults.getLiveChat();
+
+            livechat.on('start', (initial_data) => console.log(initial_data));
+            livechat.on('end', () => console.info('This live stream has ended.'));
+            livechat.on('error', (error) => console.error('An error occurred:', error));
+            livechat.on('chat-update', (message) => {
+                if (!Chatresults.value) {
+                    Chatresults.value = [];
+                }
+                switch (message.type) {
+                    case 'AddChatItemAction':
+                        const items = message.as(YTNodes.AddChatItemAction).item;
+                        Chatresults.value.unshift(items);
+                        break;
+                    case 'ReplayChatItemAction':
+                        message.as(YTNodes.ReplayChatItemAction).actions.forEach((action) => {
+                            const replayItems = action.as(YTNodes.AddChatItemAction).item;
+                            Chatresults.value.unshift(replayItems);
+                        });
+                        break;
+                }
+                if (Chatresults.value.length > 50) {
+                    Chatresults.value.splice(50);
+                }
+            });
+            ChatBtn.value = true;
+        } else {
+            ChatBtn.value = false;
+            ChatComponent.value = false;
+        }
     } catch (error) {
-        console.error('Error fetching comments:', error);
+        alert.value = true;
         if (error instanceof Error) {
             errorMessage.value = error.message;
         } else {
             errorMessage.value = 'An unknown error occurred';
         }
     }
-
-    if (searchResults.livechat) {
-        console.log('This video has a live chat.');
-        livechat = await searchResults.getLiveChat();
-
-        livechat.on('start', (initial_data) => console.log(initial_data));
-        livechat.on('end', () => console.info('This live stream has ended.'));
-        livechat.on('error', (error) => console.error('An error occurred:', error));
-        livechat.on('chat-update', (message) => {
-            if (!Chatresults.value) {
-                Chatresults.value = [];
-            }
-            switch (message.type) {
-                case 'AddChatItemAction':
-                    const items = message.as(YTNodes.AddChatItemAction).item;
-                    Chatresults.value.unshift(items);
-                    break;
-                case 'ReplayChatItemAction':
-                    message.as(YTNodes.ReplayChatItemAction).actions.forEach((action) => {
-                        const replayItems = action.as(YTNodes.AddChatItemAction).item;
-                        Chatresults.value.unshift(replayItems);
-                    });
-                    break;
-            }
-            if (Chatresults.value.length > 50) {
-                Chatresults.value.splice(50);
-            }
-        });
-        ChatBtn.value = true;
-    }
-
-} catch (error) {
-    alert.value = true;
-    if (error instanceof Error) {
-        errorMessage.value = error.message;
-    } else {
-        errorMessage.value = 'An unknown error occurred';
-    }
-}
+};
 
 const LoadMore = async ({ done }: any) => {
     try {
@@ -228,6 +349,13 @@ const downloadVideo = async () => {
         downloading.value = false;
     }
 };
+
+const handleError = (message: string) => {
+    alert.value = true;
+    errorMessage.value = message;
+};
+
+await fetchVideoData();
 </script>
 
 <template>
@@ -248,12 +376,13 @@ const downloadVideo = async () => {
 
         <v-row wrap>
             <v-col cols="12" md="8">
-                <div class="video-container">
-                    <iframe :src="videoUrl" frameborder="0"
+                <div v-if="playerStore.player !== 'shaka-player'" class="video-container">
+                    <iframe :src="videoUrl" id="youtubeiframechild" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 </div>
 
+                <Player v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError" />
 
                 <v-card v-if="Primary_Informationresults && Secondary_Informationresults">
                     <v-card-title class="titletext" style="padding-bottom: 0">{{ Primary_Informationresults.title.text
@@ -313,7 +442,7 @@ const downloadVideo = async () => {
                         }}</v-card-subtitle>
                     <v-card-subtitle v-else>{{ Primary_Informationresults?.published?.text }}・{{
                         Primary_Informationresults?.view_count?.view_count?.text
-                        }}</v-card-subtitle>
+                    }}</v-card-subtitle>
                     <v-card-text>
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             <template v-for="result in Secondary_Informationresults?.description?.runs">
@@ -330,6 +459,47 @@ const downloadVideo = async () => {
                                 </template>
                             </template>
                         </div>
+
+
+                        <template v-if="showFullDescription"
+                            v-for="result in Secondary_Informationresults?.metadata?.rows">
+                            <template v-if="result.type === 'RichMetadataRow'">
+                                <v-row>
+                                    <template v-for="innerresult in result.contents">
+                                        <v-col cols="6" v-if="innerresult.type === 'RichMetadata'">
+                                            <v-card elevation="16" :to="innerresult?.endpoint?.metadata?.url" link>
+                                                <v-row>
+                                                    <v-col cols="4" class="d-flex align-center justify-center image">
+                                                        <v-img :src="getProxifiedUrl(innerresult?.thumbnail[0]?.url)">
+                                                            <template v-slot:placeholder>
+                                                                <div
+                                                                    class="d-flex align-center justify-center fill-height">
+                                                                    <v-progress-circular color="grey-lighten-4"
+                                                                        indeterminate></v-progress-circular>
+                                                                </div>
+                                                            </template>
+                                                        </v-img>
+                                                    </v-col>
+                                                    <v-col cols="8" class="description">
+                                                        <v-card-title class="small-text omit">{{
+                                                            innerresult?.title?.text
+                                                            }}</v-card-title>
+                                                        <v-card-subtitle class="tiny-text">{{
+                                                            innerresult?.subtitle?.text
+                                                            }}</v-card-subtitle>
+                                                        <v-card-subtitle class="tiny-text">{{
+                                                            innerresult?.call_to_action?.text
+                                                            }}</v-card-subtitle>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-card>
+                                        </v-col>
+                                    </template>
+                                </v-row>
+                            </template>
+
+                        </template>
+
                         <v-btn @click="toggleDescription">
                             {{ showFullDescription ? Secondary_Informationresults?.show_less_text :
                                 Secondary_Informationresults?.show_more_text }}
@@ -373,12 +543,12 @@ const downloadVideo = async () => {
                                     <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
                                         <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                             comsource.header.sort_menu.sub_menu_items[0].title
-                                            }}</v-list-item-title>
+                                        }}</v-list-item-title>
                                     </v-list-item>
                                     <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
                                         <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                             comsource.header.sort_menu.sub_menu_items[1].title
-                                            }}</v-list-item-title>
+                                        }}</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -414,6 +584,24 @@ const downloadVideo = async () => {
                     </div>
                 </v-expand-transition>
 
+                <v-btn v-if="PLBtn" @click="togglePLComponent">Toggle Playlist</v-btn>
+
+
+                <v-expand-transition>
+                    <div v-if="PLComponent" class="scrollable-component">
+                        <v-row>
+                            <template v-for="result in PLResults" :key="result.id">
+                                <template v-if="result.type === 'PlaylistVideo'">
+                                    <v-col cols="12">
+                                        <CompactPlaylistVideo :data="result" />
+                                    </v-col>
+                                </template>
+                            </template>
+                        </v-row>
+                    </div>
+                </v-expand-transition>
+
+
                 <template v-if="isMobile">
                     <template v-if="Commentresults">
                         <v-col>
@@ -429,12 +617,12 @@ const downloadVideo = async () => {
                                     <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
                                         <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                             comsource.header.sort_menu.sub_menu_items[0].title
-                                            }}</v-list-item-title>
+                                        }}</v-list-item-title>
                                     </v-list-item>
                                     <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
                                         <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                             comsource.header.sort_menu.sub_menu_items[1].title
-                                            }}</v-list-item-title>
+                                        }}</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -535,11 +723,7 @@ export default {
     computed: {
         videoUrl() {
             const videoId = this.$route.query.v as string || '';
-            const playlistId = this.$route.query.list as string || '';
-            let url = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1`;
-            if (playlistId) {
-                url += `&list=${playlistId}`;
-            }
+            let url = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1&origin=${window.location.origin}`;
             return url;
         },
         isMobile() {
