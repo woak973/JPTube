@@ -7,6 +7,7 @@ import 'shaka-player/dist/controls.css';
 
 const props = defineProps({ videoId: String });
 const emit = defineEmits(['errors']);
+const hostconfig = useRuntimeConfig();
 
 let player: any;
 let ui;
@@ -121,7 +122,7 @@ onMounted(async () => {
                     // For local development.
                     if ((url.host.endsWith('.googlevideo.com') || url.href.includes('drm'))) {
                         url.searchParams.set('__host', url.host);
-                        url.host = 'tube.sitejp.synology.me';
+                        url.host = hostconfig.public.backendHost as string || 'jptube-server.onrender.com';
                         url.protocol = 'https';
                     }
 
