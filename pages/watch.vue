@@ -723,7 +723,7 @@ export default {
     computed: {
         videoUrl() {
             const videoId = this.$route.query.v as string || '';
-            let url = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1&origin=${window.location.origin}`;
+            let url = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1`;
             return url;
         },
         isMobile() {
