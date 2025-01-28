@@ -51,6 +51,7 @@ let comsource: YT.Comments;
 let yt: Innertube;
 const alert = ref(false);
 const errorMessage = ref('');
+const fatalError = ref(false);
 const showFullDescription = ref(false);
 
 
@@ -235,6 +236,7 @@ const fetchVideoData = async () => {
         }
     } catch (error) {
         alert.value = true;
+        fatalError.value = true;
         if (error instanceof Error) {
             errorMessage.value = error.message;
         } else {
@@ -374,7 +376,7 @@ await fetchVideoData();
             </v-dialog>
         </div>
 
-        <v-row wrap>
+        <v-row wrap v-if="!fatalError">
             <v-col cols="12" md="8">
                 <div v-if="playerStore.player !== 'shaka-player'" class="video-container">
                     <iframe :src="videoUrl" id="youtubeiframechild" frameborder="0"
