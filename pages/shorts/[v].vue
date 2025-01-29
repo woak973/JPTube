@@ -254,7 +254,7 @@ const ApplyComSort = async () => {
 
 </script>
 <template>
-    <v-container>
+    <v-container :fluid=true>
         <div>
             <v-dialog v-model="alert" max-width="500">
                 <v-card>
