@@ -5,7 +5,13 @@ import { Innertube, ProtoUtils, UniversalCache, Utils } from 'youtubei.js';
 
 import 'shaka-player/dist/controls.css';
 
-const props = defineProps({ videoId: String });
+const props = defineProps({
+    videoId: String,
+    aspectRatio: {
+        type: String,
+        default: '16:9'
+    }
+});
 const emit = defineEmits(['errors']);
 const hostconfig = useRuntimeConfig();
 
@@ -264,11 +270,15 @@ const seek = (seconds: number) => {
     }
 };
 
+const aspectRatioClass = computed(() => {
+    return props.aspectRatio === '9:16' ? 'aspect-9-16' : 'aspect-16-9';
+});
+
 defineExpose({ seek });
 
 </script>
 <template>
-    <div class="shaka-container" id="shaka-container" data-shaka-player-container>
+    <div :class="['shaka-container', aspectRatioClass]" id="shaka-container" data-shaka-player-container>
         <video class="videoel" id="videoel" data-shaka-player autoplay></video>
     </div>
 </template>
@@ -277,8 +287,16 @@ defineExpose({ seek });
 .shaka-container {
     position: relative;
     width: 100%;
+}
+
+.aspect-16-9 {
     padding-top: 56.25%;
     /* 16:9 aspect ratio */
+}
+
+.aspect-9-16 {
+    padding-top: 177.78%;
+    /* 9:16 aspect ratio */
 }
 
 .videoel {

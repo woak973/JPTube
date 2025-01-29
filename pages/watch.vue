@@ -43,7 +43,7 @@ const Secondary_Informationresults = ref();
 const Basic_Informationresults = ref();
 const Commentresults = ref();
 const Chatresults = ref();
-const PLResults = ref();
+const PLResults = ref<YTNodes.PlaylistVideo[]>([]);
 let livechat: YT.LiveChat;
 const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
 let sourceresults: YT.VideoInfo;
@@ -136,31 +136,37 @@ const fetchVideoData = async () => {
             let PLvideoId: string = '';
             const PL = await yt.getPlaylist(route.query.list as string);
             if (PL.page_contents instanceof YTNodes.SectionList) {
-                const PLcontents = PL.page_contents.contents;
-                PLcontents.forEach((content) => {
-                    if (content.type === 'ItemSection') {
-                        (content as YTNodes.ItemSection).contents.forEach((item) => {
-                            if (item.type === 'PlaylistVideoList') {
-                                PLResults.value = (item as YTNodes.PlaylistVideoList).videos;
-                                (item as YTNodes.PlaylistVideoList).videos.forEach((video) => {
+                let PLcontents = PL;
+                let flag = false;
+                PLResults.value = [];
 
-                                    if (video.type === 'PlaylistVideo') {
-                                        if (route.query.index === (video as YTNodes.PlaylistVideo).index.text) {
-                                            PLvideoId = (video as YTNodes.PlaylistVideo).id;
-                                        } else if (route.query.v === (video as YTNodes.PlaylistVideo).id) {
-                                            PLvideoId = (video as YTNodes.PlaylistVideo).id;
-                                        }
-                                    }
-                                });
-
-                                if (PLvideoId === '') {
-                                    PLvideoId = ((item as YTNodes.PlaylistVideoList).videos[0] as YTNodes.PlaylistVideo).id;
-                                }
-
+                while (!flag) {
+                    PLcontents.items.forEach((video) => {
+                        if (video.type === 'PlaylistVideo') {
+                            if (route.query.index === (video as YTNodes.PlaylistVideo).index.text) {
+                                PLvideoId = (video as YTNodes.PlaylistVideo).id;
+                                flag = true;
+                            } else if (route.query.v === (video as YTNodes.PlaylistVideo).id) {
+                                PLvideoId = (video as YTNodes.PlaylistVideo).id;
+                                flag = true;
                             }
-                        });
+                            PLResults.value.push(video as YTNodes.PlaylistVideo);
+                        }
+                    });
+
+                    if (!flag && await PLcontents.has_continuation) {
+                        const ContPL = await PLcontents.getContinuation();
+                        PLcontents = await ContPL;
+                    } else {
+                        break;
                     }
-                });
+                }
+
+                if (PLvideoId === '') {
+                    PLvideoId = (PLcontents.items[0] as YTNodes.PlaylistVideo).id;
+                }
+
+
             } else {
                 throw new Error('No Contents Found');
             }
@@ -379,7 +385,9 @@ await fetchVideoData();
         <v-row wrap v-if="!fatalError">
             <v-col cols="12" md="8">
                 <div v-if="playerStore.player !== 'shaka-player'" class="video-container">
-                    <iframe :src="videoUrl" id="youtubeiframechild" frameborder="0"
+                    <iframe
+                        :src="`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1`"
+                        id="youtubeiframechild" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 </div>
@@ -444,7 +452,7 @@ await fetchVideoData();
                         }}</v-card-subtitle>
                     <v-card-subtitle v-else>{{ Primary_Informationresults?.published?.text }}・{{
                         Primary_Informationresults?.view_count?.view_count?.text
-                    }}</v-card-subtitle>
+                        }}</v-card-subtitle>
                     <v-card-text>
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             <template v-for="result in Secondary_Informationresults?.description?.runs">
@@ -485,13 +493,13 @@ await fetchVideoData();
                                                     <v-col cols="8" class="description">
                                                         <v-card-title class="small-text omit">{{
                                                             innerresult?.title?.text
-                                                            }}</v-card-title>
+                                                        }}</v-card-title>
                                                         <v-card-subtitle class="tiny-text">{{
                                                             innerresult?.subtitle?.text
-                                                            }}</v-card-subtitle>
+                                                        }}</v-card-subtitle>
                                                         <v-card-subtitle class="tiny-text">{{
                                                             innerresult?.call_to_action?.text
-                                                            }}</v-card-subtitle>
+                                                        }}</v-card-subtitle>
                                                     </v-col>
                                                 </v-row>
                                             </v-card>
@@ -545,12 +553,12 @@ await fetchVideoData();
                                     <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
                                         <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                             comsource.header.sort_menu.sub_menu_items[0].title
-                                        }}</v-list-item-title>
+                                            }}</v-list-item-title>
                                     </v-list-item>
                                     <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
                                         <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                             comsource.header.sort_menu.sub_menu_items[1].title
-                                        }}</v-list-item-title>
+                                            }}</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -619,12 +627,12 @@ await fetchVideoData();
                                     <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
                                         <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                             comsource.header.sort_menu.sub_menu_items[0].title
-                                        }}</v-list-item-title>
+                                            }}</v-list-item-title>
                                     </v-list-item>
                                     <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
                                         <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                             comsource.header.sort_menu.sub_menu_items[1].title
-                                        }}</v-list-item-title>
+                                            }}</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -723,11 +731,6 @@ export default {
     },
     name: 'Watch',
     computed: {
-        videoUrl() {
-            const videoId = this.$route.query.v as string || '';
-            let url = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1`;
-            return url;
-        },
         isMobile() {
             return this.$vuetify.display.smAndDown
         }

@@ -164,6 +164,14 @@ try {
             }
             break;
 
+        case 'podcasts':
+            if (searchResults.has_podcasts) {
+                AddResults = await searchResults.getPodcasts();
+            } else {
+                has_contents.value = false;
+            }
+            break;
+
         default:
             if (searchResults.has_home) {
                 AddResults = await searchResults.getHome();
@@ -267,17 +275,19 @@ const LoadMore = async ({ done }: any) => {
 
         <v-tabs v-model="tab" background-color="primary" dark @change="updateTab">
             <v-tab v-if="sourceTab && sourceTab.has_home" :to="`/channel/${route.params.id}/featured`"
-                value="featured">ホーム</v-tab>
+                value="featured">Home</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_videos" :to="`/channel/${route.params.id}/videos`"
-                value="videos">動画</v-tab>
+                value="videos">Videos</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_shorts" :to="`/channel/${route.params.id}/shorts`"
-                value="shorts">ショート</v-tab>
+                value="shorts">Shorts</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_live_streams" :to="`/channel/${route.params.id}/streams`"
-                value="streams">ライブ</v-tab>
+                value="streams">Live</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.has_podcasts" :to="`/channel/${route.params.id}/podcasts`"
+                value="podcasts">Podcasts</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_playlists" :to="`/channel/${route.params.id}/playlists`"
-                value="playlists">再生リスト</v-tab>
+                value="playlists">Playlists</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_community" :to="`/channel/${route.params.id}/community`"
-                value="community">コミュニティ</v-tab>
+                value="community">Community</v-tab>
             <v-btn v-if="sourceTab && sourceTab.has_search" icon @click="searchDialog = true">
                 <v-icon>mdi-magnify</v-icon>
             </v-btn>
@@ -300,6 +310,9 @@ const LoadMore = async ({ done }: any) => {
                         </template>
                         <template v-else-if="result.content?.type === 'ShortsLockupView'">
                             <Shorts :data="result?.content" />
+                        </template>
+                        <template v-else-if="result.content?.type === 'LockupView'">
+                            <FeedPlaylists :data="result?.content" />
                         </template>
                     </v-col>
 

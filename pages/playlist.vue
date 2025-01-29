@@ -34,7 +34,7 @@ try {
     sourceresults = searchResults;
     Headerresults.value = searchResults;
     if (searchResults.page_contents instanceof YTNodes.SectionList) {
-        results.value = await searchResults.page_contents.contents;
+        results.value = await searchResults.items;
     } else {
         throw new Error('No Contents Found');
     }
@@ -48,12 +48,11 @@ try {
 }
 
 const LoadMore = async ({ done }: any) => {
+    console.log(sourceresults.has_continuation)
     try {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
-            if (continuationResults.page_contents instanceof YTNodes.SectionList) {
-                results.value.push(...await continuationResults.page_contents.contents);
-            }
+            results.value.push(...await continuationResults.items);
             sourceresults = continuationResults;
             done('ok');
         } else {
@@ -101,19 +100,11 @@ const LoadMore = async ({ done }: any) => {
                 <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
                     <v-row style="width: 100%; margin-left: 0;">
                         <template v-for="result in results" :key="result.id">
-                            <v-col v-if="result.type === 'ItemSection'" cols="12" style="padding: 0%">
-                                <template v-for="content in result.contents" :key="content.id">
-                                    <template v-if="content.type === 'PlaylistVideoList'">
-                                        <template v-for="innerresult in content.videos">
-                                            <template v-if="innerresult.type === 'PlaylistVideo'">
-                                                <v-col cols="12">
-                                                    <PlaylistVideo :data="innerresult" />
-                                                </v-col>
-                                            </template>
-                                        </template>
-                                    </template>
-                                </template>
-                            </v-col>
+                            <template v-if="result.type === 'PlaylistVideo'">
+                                <v-col cols="12">
+                                    <PlaylistVideo :data="result" />
+                                </v-col>
+                            </template>
                         </template>
                     </v-row>
                 </v-infinite-scroll>
