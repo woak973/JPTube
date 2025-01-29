@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="`/watch?v=${data.on_tap_endpoint.payload.videoId}`" link>
+    <v-card v-if="data" elevation="16" :to="data.on_tap_endpoint.metadata.url" link>
         <v-img :src="getProxifiedUrl(data.thumbnail[0].url)" aspect-ratio="16/9" rounded>
             <template v-slot:placeholder>
                 <div class="d-flex align-center justify-center fill-height">
