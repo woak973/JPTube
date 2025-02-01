@@ -240,6 +240,7 @@ const fetchVideoData = async () => {
             ChatBtn.value = false;
             ChatComponent.value = false;
         }
+        fatalError.value = false;
     } catch (error) {
         alert.value = true;
         fatalError.value = true;
