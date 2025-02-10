@@ -1,6 +1,6 @@
 export const usePlayerStore = defineStore('player', {
     state: () => ({
-      player: 'embed',
+      player: 'shaka-player',
     }),
     actions: {
       setPlayer(this: { player: string }, newPlayer: string) {

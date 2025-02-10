@@ -50,9 +50,18 @@ onMounted(async () => {
         const info = await yt.getInfo(props.videoId);
 
         try {
-            const dash = await info.toDash();
+            let uri;
+            try {
+                const dash = await info.toDash();
+                uri = `data:application/dash+xml;charset=utf-8;base64,${btoa(dash)}`;
+            } catch (e) {
+                if (info.streaming_data && info.streaming_data.hls_manifest_url) {
+                    uri = info.streaming_data.hls_manifest_url;
+                } else {
+                    throw e;
+                }
+            }
 
-            const uri = `data:application/dash+xml;charset=utf-8;base64,${btoa(dash)}`;
 
             if (player) {
                 await player.destroy();
