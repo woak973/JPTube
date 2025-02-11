@@ -177,7 +177,7 @@ const LoadMore = async ({ done }: any) => {
                     </v-col>
                     <v-col v-else-if="result.type === 'ReelShelf'">
                         <strong>{{ result.title.text }}</strong>
-                        <v-slide-group show-arrows>
+                        <v-slide-group>
                             <v-slide-item v-for="innerresult in result.items" :key="innerresult.id" class="ma-2"
                                 style="width: 200px;">
                                 <template v-if="innerresult.type === 'ShortsLockupView'">
@@ -196,7 +196,7 @@ const LoadMore = async ({ done }: any) => {
                     </v-col>
                     <v-col v-else-if="result.type === 'Shelf'">
                         <strong>{{ result.title.text }}</strong>
-                        <v-slide-group show-arrows>
+                        <v-slide-group>
                             <v-slide-item v-for="innerresult in result.content.items" :key="innerresult.id" class="ma-2"
                                 style="width: 200px;">
                                 <template v-if="innerresult.type === 'GridVideo'">

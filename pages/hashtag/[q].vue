@@ -121,7 +121,7 @@ const LoadMore = async ({ done }: any) => {
                         <template v-for="content in result.contents" :key="content.id">
                             <template v-if="content.type === 'Shelf'">
                                 <strong>{{ content.title.text }}</strong>
-                                <v-slide-group show-arrows>
+                                <v-slide-group>
                                     <v-slide-item v-for="innerresult in content.content.items" :key="innerresult.id"
                                         class="ma-2" style="width: 200px;">
                                         <template v-if="innerresult.type === 'GridVideo'">
@@ -138,7 +138,7 @@ const LoadMore = async ({ done }: any) => {
                             </template>
                             <template v-if="content.type === 'ReelShelf'">
                                 <strong>{{ content.title.text }}</strong>
-                                <v-slide-group show-arrows>
+                                <v-slide-group>
                                     <v-slide-item v-for="innerresult in content.items" :key="innerresult.id"
                                         class="ma-2" style="width: 200px;">
                                         <template v-if="innerresult.type === 'ShortsLockupView'">
@@ -179,7 +179,7 @@ const LoadMore = async ({ done }: any) => {
                     <v-col v-if="result.type === 'RichSection'" cols="12">
                         <template v-if="result.content && result.content.type === 'RichShelf'">
                             <strong>{{ result.content.title.text }}</strong>
-                            <v-slide-group show-arrows>
+                            <v-slide-group>
                                 <v-slide-item v-for="content in result.content.contents" :key="content.id" class="ma-2"
                                     style="width: 200px;">
                                     <template v-if="content.type === 'RichItem'">

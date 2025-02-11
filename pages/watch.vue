@@ -418,7 +418,7 @@ await fetchVideoData();
                             </v-col>
                             <v-col cols="auto">
                                 <v-list-item>
-                                    <v-slide-group show-arrows>
+                                    <v-slide-group>
                                         <v-slide-item>
                                             <v-btn :disabled="downloading" @click="downloadVideo" variant="tonal"
                                                 class="rounded-pill mx-2">
