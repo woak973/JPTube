@@ -9,7 +9,7 @@
                     </v-list-item>
                 </v-col>
                 <v-col>
-                    <v-card-subtitle>{{ data.comment.author.name }}・{{ data.comment.published_time }}</v-card-subtitle>
+                    <v-card-subtitle style="white-space: pre-wrap; word-break: break-all;">{{ data.comment.author.name }}・{{ data.comment.published_time }}</v-card-subtitle>
                     <v-card-text>
                         <template v-for="result in data?.comment?.content?.runs">
                             <template v-if="result.endpoint">
