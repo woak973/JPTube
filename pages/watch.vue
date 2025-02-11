@@ -480,7 +480,7 @@ await fetchVideoData();
                                         <v-col cols="6" v-if="innerresult.type === 'RichMetadata'">
                                             <v-card elevation="16" :to="innerresult?.endpoint?.metadata?.url" link>
                                                 <v-row>
-                                                    <v-col cols="4" class="d-flex align-center justify-center image">
+                                                    <v-col cols="12" md="4" class="d-flex align-center justify-center image">
                                                         <v-img :src="getProxifiedUrl(innerresult?.thumbnail[0]?.url)">
                                                             <template v-slot:placeholder>
                                                                 <div
@@ -491,7 +491,7 @@ await fetchVideoData();
                                                             </template>
                                                         </v-img>
                                                     </v-col>
-                                                    <v-col cols="8" class="description">
+                                                    <v-col cols="12" md="4" class="description">
                                                         <v-card-title class="small-text omit">{{
                                                             innerresult?.title?.text
                                                         }}</v-card-title>
