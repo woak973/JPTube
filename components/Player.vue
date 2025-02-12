@@ -95,7 +95,8 @@ onMounted(async () => {
                         buffered: 'rgba(255,255,255,.4)',
                         played: 'rgb(255,0,0)'
                     },
-                    fadeDelay: 0
+                    fadeDelay: 0,
+                    preferDocumentPictureInPicture: false,
                 };
 
                 ui.configure(config);
