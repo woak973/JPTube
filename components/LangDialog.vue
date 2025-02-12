@@ -9,14 +9,19 @@
                 <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text>
+                <v-card-title><v-icon left>mdi-web</v-icon>Language</v-card-title>
                 <v-radio-group v-model="selectedLang" column>
                     <v-radio label="Japanese" value="ja"></v-radio>
                     <v-radio label="English" value="en"></v-radio>
                 </v-radio-group>
+
+                <v-card-title><v-icon left>mdi-earth</v-icon>Region</v-card-title>
                 <v-radio-group v-model="selectedLocation" column>
                     <v-radio label="Japan" value="JP"></v-radio>
                     <v-radio label="US" value="US"></v-radio>
                 </v-radio-group>
+
+                <v-card-title><v-icon left>mdi-play-box-multiple</v-icon>Player</v-card-title>
                 <v-radio-group v-model="selectedPlayer" column>
                     <v-radio label="embed" value="embed"></v-radio>
                     <v-radio label="shaka-player" value="shaka-player"></v-radio>

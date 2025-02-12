@@ -44,6 +44,7 @@ const Basic_Informationresults = ref();
 const Commentresults = ref();
 const Chatresults = ref();
 const PLResults = ref<YTNodes.PlaylistVideo[]>([]);
+const PLInfo = ref();
 let livechat: YT.LiveChat;
 const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
 let sourceresults: YT.VideoInfo;
@@ -136,6 +137,7 @@ const fetchVideoData = async () => {
             let PLvideoId: string = '';
             const PL = await yt.getPlaylist(route.query.list as string);
             if (PL.page_contents instanceof YTNodes.SectionList) {
+                PLInfo.value = PL;
                 let PLcontents = PL;
                 let flag = false;
                 PLResults.value = [];
@@ -163,7 +165,7 @@ const fetchVideoData = async () => {
                 }
 
                 if (PLvideoId === '') {
-                    PLvideoId = (PLcontents.items[0] as YTNodes.PlaylistVideo).id;
+                    PLvideoId = (PL.items[0] as YTNodes.PlaylistVideo).id;
                 }
 
 
@@ -600,6 +602,9 @@ await fetchVideoData();
 
                 <v-expand-transition>
                     <div v-if="PLComponent" class="scrollable-component">
+                        <v-card flat link :to="`/playlist?list=${PLInfo?.endpoint?.payload?.playlistId}`">
+                            <v-card-text>{{PLInfo?.info?.title}}・{{PLInfo?.info?.total_items}}</v-card-text>
+                        </v-card>
                         <v-row>
                             <template v-for="result in PLResults" :key="result.id">
                                 <template v-if="result.type === 'PlaylistVideo'">
