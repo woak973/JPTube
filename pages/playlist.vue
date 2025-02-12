@@ -20,33 +20,6 @@ watch(Headerresults, (newVal: YT.Playlist) => {
     }
 });
 
-try {
-    const lang = langStore.lang || 'ja';
-    const location = locationStore.location || 'JP';
-    const yt = await Innertube.create({
-        fetch: fetchFn,
-        cache: new UniversalCache(false),
-        lang: lang,
-        location: location
-    });
-
-    const searchResults: YT.Playlist = await yt.getPlaylist(route.query.list as string);
-    sourceresults = searchResults;
-    Headerresults.value = searchResults;
-    if (searchResults.page_contents instanceof YTNodes.SectionList) {
-        results.value = await searchResults.items;
-    } else {
-        throw new Error('No Contents Found');
-    }
-} catch (error) {
-    alert.value = true;
-    if (error instanceof Error) {
-        errorMessage.value = error.message;
-    } else {
-        errorMessage.value = 'An unknown error occurred';
-    }
-}
-
 const LoadMore = async ({ done }: any) => {
     console.log(sourceresults.has_continuation)
     try {
@@ -72,6 +45,36 @@ const LoadMore = async ({ done }: any) => {
 
 };
 
+const fetchData = async () => {
+    try {
+        const lang = langStore.lang || 'ja';
+        const location = locationStore.location || 'JP';
+        const yt = await Innertube.create({
+            fetch: fetchFn,
+            cache: new UniversalCache(false),
+            lang: lang,
+            location: location
+        });
+
+        const searchResults: YT.Playlist = await yt.getPlaylist(route.query.list as string);
+        sourceresults = searchResults;
+        Headerresults.value = searchResults;
+        if (searchResults.page_contents instanceof YTNodes.SectionList) {
+            results.value = await searchResults.items;
+        } else {
+            throw new Error('No Contents Found');
+        }
+    } catch (error) {
+        alert.value = true;
+        if (error instanceof Error) {
+            errorMessage.value = error.message;
+        } else {
+            errorMessage.value = 'An unknown error occurred';
+        }
+    }
+};
+
+await fetchData();
 </script>
 <template>
     <v-container>

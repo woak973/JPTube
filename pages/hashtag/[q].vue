@@ -18,30 +18,7 @@ useHead({
 
 
 
-try {
-    const lang = langStore.lang || 'ja';
-    const location = locationStore.location || 'JP';
-    const yt = await Innertube.create({
-        fetch: fetchFn,
-        cache: new UniversalCache(false),
-        lang: lang,
-        location: location
-    });
 
-    const searchResults:YT.HashtagFeed = await yt.getHashtag(route.params.q as string);
-    sourceresults = searchResults;
-    Headerresults.value = searchResults;
-    results.value = await searchResults.contents.contents;
-
-
-} catch (error) {
-    alert.value = true;
-    if (error instanceof Error) {
-        errorMessage.value = error.message;
-    } else {
-        errorMessage.value = 'An unknown error occurred';
-    }
-}
 
 const LoadMore = async ({ done }: any) => {
     try {
@@ -66,6 +43,34 @@ const LoadMore = async ({ done }: any) => {
 
 };
 
+const fetchData = async () => {
+    try {
+        const lang = langStore.lang || 'ja';
+        const location = locationStore.location || 'JP';
+        const yt = await Innertube.create({
+            fetch: fetchFn,
+            cache: new UniversalCache(false),
+            lang: lang,
+            location: location
+        });
+
+        const searchResults: YT.HashtagFeed = await yt.getHashtag(route.params.q as string);
+        sourceresults = searchResults;
+        Headerresults.value = searchResults;
+        results.value = await searchResults.contents.contents;
+
+
+    } catch (error) {
+        alert.value = true;
+        if (error instanceof Error) {
+            errorMessage.value = error.message;
+        } else {
+            errorMessage.value = 'An unknown error occurred';
+        }
+    }
+};
+
+await fetchData();
 </script>
 <template>
     <v-container>

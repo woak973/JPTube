@@ -13,7 +13,7 @@ const props = defineProps({
     }
 });
 const emit = defineEmits(['errors']);
-const hostconfig = useRuntimeConfig();
+const playerbackendStore = usePlayerBackendStore();
 
 let player: any;
 let ui;
@@ -137,7 +137,7 @@ onMounted(async () => {
                     // For local development.
                     if ((url.host.endsWith('.googlevideo.com') || url.href.includes('drm'))) {
                         url.searchParams.set('__host', url.host);
-                        url.host = hostconfig.public.playerbackendHost as string || 'official-jptube-proxy.onrender.com';
+                        url.host = playerbackendStore.playerbackend as string || 'official-jptube-proxy.onrender.com';
                         url.protocol = 'https';
                     }
 

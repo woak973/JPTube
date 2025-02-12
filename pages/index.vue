@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache, Mixins, APIResponseTypes } from 'youtubei.js';
 
-
-
-const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 
 const results = ref();
 const alert = ref(false);
 const errorMessage = ref('');
-const Fulfill = ref(false);
 const isEnd = ref(false);
 const TitleResult = ref();
 const StrongResult = ref();
@@ -23,36 +19,36 @@ watch(TitleResult, (newVal) => {
     }
 });
 
+const fetchData = async () => {
+    try {
+        const lang = langStore.lang || 'ja';
+        const location = locationStore.location || 'JP';
+        const yt = await Innertube.create({
+            fetch: fetchFn,
+            cache: new UniversalCache(false),
+            lang: lang,
+            location: location
+        });
 
-try {
-    const lang = langStore.lang || 'ja';
-    const location = locationStore.location || 'JP';
-    const yt = await Innertube.create({
-        fetch: fetchFn,
-        cache: new UniversalCache(false),
-        lang: lang,
-        location: location
-    });
-
-    const searchResults:Mixins.TabbedFeed<APIResponseTypes.IBrowseResponse> = await yt.getTrending();
-    TitleResult.value = searchResults;
-    StrongResult.value = await searchResults.title;
-
-
-    results.value = await searchResults.videos;
+        const searchResults: Mixins.TabbedFeed<APIResponseTypes.IBrowseResponse> = await yt.getTrending();
+        TitleResult.value = searchResults;
+        StrongResult.value = await searchResults.title;
 
 
-} catch (error) {
-    alert.value = true;
-    if (error instanceof Error) {
-        errorMessage.value = error.message;
-    } else {
-        errorMessage.value = 'An unknown error occurred';
+        results.value = await searchResults.videos;
+
+
+    } catch (error) {
+        alert.value = true;
+        if (error instanceof Error) {
+            errorMessage.value = error.message;
+        } else {
+            errorMessage.value = 'An unknown error occurred';
+        }
     }
-} finally {
-    Fulfill.value = true;
-}
+};
 
+await fetchData();
 </script>
 <template>
     <v-container>
@@ -72,7 +68,7 @@ try {
         <template v-if="StrongResult">
             <strong>{{ StrongResult }}</strong>
         </template>
-        
+
         <v-row>
             <template v-for="result in results" :key="result.id">
                 <v-col v-if="result.type === 'Video'" cols="12" md="3" lg="2" sm="6">
@@ -82,9 +78,5 @@ try {
                 </v-col>
             </template>
         </v-row>
-        <div class="text-center">
-            <v-progress-circular color="primary" :size="70" :width="7" indeterminate
-                v-if="!Fulfill && !isEnd"></v-progress-circular>
-        </div>
     </v-container>
 </template>

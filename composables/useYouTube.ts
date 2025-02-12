@@ -38,13 +38,13 @@ function createRequest(input: RequestInfo | URL, init: RequestInit | undefined, 
 }
 
 export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
-    const config = useRuntimeConfig();
-    const { request, headers } = createRequest(input, init, typeof config.public.backendHost === 'string' ? config.public.backendHost : 'jptube-server.onrender.com');
+    const backendStore = useBackendStore();
+    const { request, headers } = createRequest(input, init, typeof backendStore.backend === 'string' ? backendStore.backend : 'jptube-server.onrender.com');
     return fetch(request, init ? { ...init, headers } : { headers });
 }
 
 export function PlayerfetchFn(input: RequestInfo | URL, init?: RequestInit) {
-    const config = useRuntimeConfig();
-    const { request, headers } = createRequest(input, init, typeof config.public.playerbackendHost === 'string' ? config.public.playerbackendHost : 'official-jptube-proxy.onrender.com');
+    const playerbackendStore = usePlayerBackendStore();
+    const { request, headers } = createRequest(input, init, typeof playerbackendStore.playerbackend === 'string' ? playerbackendStore.playerbackend : 'official-jptube-proxy.onrender.com');
     return fetch(request, init ? { ...init, headers } : { headers });
 }

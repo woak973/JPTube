@@ -47,61 +47,6 @@ watch(Primary_Informationresults, (newVal) => {
     }
 });
 
-
-
-try {
-    const lang = langStore.lang || 'ja';
-    const location = locationStore.location || 'JP';
-    yt = await Innertube.create({
-        fetch: fetchFn,
-        cache: new UniversalCache(false),
-        lang: lang,
-        location: location
-    });
-
-    const searchResults: YTShorts.ShortFormVideoInfo = await yt.getShortsVideoInfo(route.params.v as string);
-    const typicalsearchResults: YT.VideoInfo = await yt.getInfo(route.params.v as string);
-    sourceresults = searchResults;
-    Relatedresults.value = await searchResults.watch_next_feed;
-
-
-    typicalsource = typicalsearchResults;
-    RelatedTypicalresults.value = await typicalsearchResults.watch_next_feed;
-    Primary_Informationresults.value = await typicalsearchResults.primary_info;
-    Secondary_Informationresults.value = await typicalsearchResults.secondary_info;
-    Basic_Informationresults.value = await typicalsearchResults.basic_info;
-
-
-    try {
-        const searchcommentResults = await yt.getComments(route.params.v as string);
-        for (const comment of searchcommentResults.contents) {
-            if (comment.has_replies) {
-                await comment.getReplies();
-            }
-        }
-        Commentresults.value = await searchcommentResults.contents;
-        comsource = searchcommentResults;
-    } catch (error) {
-        Commentresults.value = null;
-        console.error('Error fetching comments:', error);
-        if (error instanceof Error) {
-            errorMessage.value = error.message;
-        } else {
-            errorMessage.value = 'An unknown error occurred';
-        }
-    }
-
-
-} catch (error) {
-    alert.value = true;
-    fatalError.value = true;
-    if (error instanceof Error) {
-        errorMessage.value = error.message;
-    } else {
-        errorMessage.value = 'An unknown error occurred';
-    }
-}
-
 const LoadMore = async ({ done }: any) => {
     try {
         if (sourceresults && sourceresults.wn_has_continuation) {
@@ -252,6 +197,63 @@ const ApplyComSort = async () => {
     }
 };
 
+const fetchData = async () => {
+    try {
+        const lang = langStore.lang || 'ja';
+        const location = locationStore.location || 'JP';
+        yt = await Innertube.create({
+            fetch: fetchFn,
+            cache: new UniversalCache(false),
+            lang: lang,
+            location: location
+        });
+
+        const searchResults: YTShorts.ShortFormVideoInfo = await yt.getShortsVideoInfo(route.params.v as string);
+        const typicalsearchResults: YT.VideoInfo = await yt.getInfo(route.params.v as string);
+        sourceresults = searchResults;
+        Relatedresults.value = await searchResults.watch_next_feed;
+
+
+        typicalsource = typicalsearchResults;
+        RelatedTypicalresults.value = await typicalsearchResults.watch_next_feed;
+        Primary_Informationresults.value = await typicalsearchResults.primary_info;
+        Secondary_Informationresults.value = await typicalsearchResults.secondary_info;
+        Basic_Informationresults.value = await typicalsearchResults.basic_info;
+
+
+        try {
+            const searchcommentResults = await yt.getComments(route.params.v as string);
+            for (const comment of searchcommentResults.contents) {
+                if (comment.has_replies) {
+                    await comment.getReplies();
+                }
+            }
+            Commentresults.value = await searchcommentResults.contents;
+            comsource = searchcommentResults;
+        } catch (error) {
+            Commentresults.value = null;
+            console.error('Error fetching comments:', error);
+            if (error instanceof Error) {
+                errorMessage.value = error.message;
+            } else {
+                errorMessage.value = 'An unknown error occurred';
+            }
+        }
+
+
+    } catch (error) {
+        alert.value = true;
+        fatalError.value = true;
+        if (error instanceof Error) {
+            errorMessage.value = error.message;
+        } else {
+            errorMessage.value = 'An unknown error occurred';
+        }
+    }
+};
+
+await fetchData();
+
 </script>
 <template>
     <v-container :fluid=true>
@@ -272,7 +274,9 @@ const ApplyComSort = async () => {
         <v-row wrap v-if="!fatalError">
             <v-col cols="12" md="8">
                 <div v-if="playerStore.player !== 'shaka-player'" class="video-container">
-                    <iframe :src="`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1`" id="youtubeiframechild" frameborder="0"
+                    <iframe
+                        :src="`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1`"
+                        id="youtubeiframechild" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 </div>
@@ -338,7 +342,7 @@ const ApplyComSort = async () => {
                         }}</v-card-subtitle>
                     <v-card-subtitle v-else>{{ Primary_Informationresults?.published?.text }}・{{
                         Primary_Informationresults?.view_count?.view_count?.text
-                    }}</v-card-subtitle>
+                        }}</v-card-subtitle>
                     <v-card-text>
                         <div :class="{ 'line-clamp': !showFullDescription }">
                             <template v-for="result in Secondary_Informationresults?.description?.runs">
@@ -379,13 +383,13 @@ const ApplyComSort = async () => {
                                                     <v-col cols="8" class="description">
                                                         <v-card-title class="small-text omit">{{
                                                             innerresult?.title?.text
-                                                            }}</v-card-title>
+                                                        }}</v-card-title>
                                                         <v-card-subtitle class="tiny-text">{{
                                                             innerresult?.subtitle?.text
-                                                            }}</v-card-subtitle>
+                                                        }}</v-card-subtitle>
                                                         <v-card-subtitle class="tiny-text">{{
                                                             innerresult?.call_to_action?.text
-                                                            }}</v-card-subtitle>
+                                                        }}</v-card-subtitle>
                                                     </v-col>
                                                 </v-row>
                                             </v-card>
@@ -426,12 +430,12 @@ const ApplyComSort = async () => {
                                         <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
                                             <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                                 comsource.header.sort_menu.sub_menu_items[0].title
-                                            }}</v-list-item-title>
+                                                }}</v-list-item-title>
                                         </v-list-item>
                                         <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
                                             <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
                                                 comsource.header.sort_menu.sub_menu_items[1].title
-                                            }}</v-list-item-title>
+                                                }}</v-list-item-title>
                                         </v-list-item>
                                     </v-list>
                                 </v-menu>

@@ -44,45 +44,7 @@ useHead({
 })
 
 
-try {
-    const lang = langStore.lang || 'ja';
-    const location = locationStore.location || 'JP';
 
-    const sortData = route.query.sort as Types.SortBy || 'relevance';
-    const durationData = route.query.duration as Types.Duration || 'all';
-    const uploadDateData = route.query.upload_date as Types.UploadDate || 'all';
-    const typeData = route.query.type as Types.SearchType || 'all';
-    const featureData = route.query.features as Types.Feature[] || '';
-
-    let filter: Types.SearchFilters = {
-        upload_date: uploadDateData,
-        duration: durationData,
-        sort_by: sortData,
-        type: typeData
-    };
-
-    if (featureData) {
-        filter.features = featureData;
-    }
-
-    const yt = await Innertube.create({
-        fetch: fetchFn,
-        cache: new UniversalCache(false),
-        lang: lang,
-        location: location
-    });
-    const searchResults: YT.Search = await yt.search(route.params.q as string, filter as Types.SearchFilters);
-    results.value = searchResults.results;
-    sourceresults = searchResults;
-
-} catch (error) {
-    alert.value = true;
-    if (error instanceof Error) {
-        errorMessage.value = error.message;
-    } else {
-        errorMessage.value = 'An unknown error occurred';
-    }
-}
 
 const LoadMore = async ({ done }: any) => {
     try {
@@ -107,6 +69,49 @@ const LoadMore = async ({ done }: any) => {
 
 };
 
+const fetchData = async () => {
+    try {
+        const lang = langStore.lang || 'ja';
+        const location = locationStore.location || 'JP';
+
+        const sortData = route.query.sort as Types.SortBy || 'relevance';
+        const durationData = route.query.duration as Types.Duration || 'all';
+        const uploadDateData = route.query.upload_date as Types.UploadDate || 'all';
+        const typeData = route.query.type as Types.SearchType || 'all';
+        const featureData = route.query.features as Types.Feature[] || '';
+
+        let filter: Types.SearchFilters = {
+            upload_date: uploadDateData,
+            duration: durationData,
+            sort_by: sortData,
+            type: typeData
+        };
+
+        if (featureData) {
+            filter.features = featureData;
+        }
+
+        const yt = await Innertube.create({
+            fetch: fetchFn,
+            cache: new UniversalCache(false),
+            lang: lang,
+            location: location
+        });
+        const searchResults: YT.Search = await yt.search(route.params.q as string, filter as Types.SearchFilters);
+        results.value = searchResults.results;
+        sourceresults = searchResults;
+
+    } catch (error) {
+        alert.value = true;
+        if (error instanceof Error) {
+            errorMessage.value = error.message;
+        } else {
+            errorMessage.value = 'An unknown error occurred';
+        }
+    }
+};
+
+await fetchData();
 </script>
 
 

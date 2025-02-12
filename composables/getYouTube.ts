@@ -2,7 +2,7 @@ export function getProxifiedUrl(input: RequestInfo | URL, init?: RequestInit): s
     if (!input) {
         return ''; // デフォルトのURLまたは空文字列を返す
     }
-    const config = useRuntimeConfig();
+    const backendStore = useBackendStore();
     let url: URL;
 
     try {
@@ -17,7 +17,7 @@ export function getProxifiedUrl(input: RequestInfo | URL, init?: RequestInit): s
     }
 
     url.searchParams.set('__host', url.host);
-    url.host = config.public.backendHost as string || 'jptube-server.onrender.com';
+    url.host = (backendStore.backend as string) || 'jptube-server.onrender.com';
     url.protocol = 'https';
 
     const headers = init?.headers ?

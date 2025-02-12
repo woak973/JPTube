@@ -89,124 +89,6 @@ watch(Headerresults, (newVal) => {
     }
 });
 
-try {
-    const lang = langStore.lang || 'ja';
-    const location = locationStore.location || 'JP';
-    const yt = await Innertube.create({
-        fetch: fetchFn,
-        cache: new UniversalCache(false),
-        lang: lang,
-        location: location
-    });
-
-    let getID: string = route.params.id as string;
-    getID = getID.startsWith('@') ? `https://m.youtube.com/${getID}` : `https://m.youtube.com/channel/${getID}`;
-    let searchID = await yt.resolveURL(getID);
-    if (!searchID.payload.browseId) {
-        searchID = await yt.resolveURL(searchID.payload.url);
-    }
-
-    const searchResults: YT.Channel = await yt.getChannel(searchID.payload.browseId);
-
-    Headerresults.value = searchResults;
-    sourceTab = searchResults;
-    if (searchResults.has_about) {
-        about.value = await searchResults.getAbout();
-    }
-
-
-    let AddResults: YT.Channel | undefined;
-    switch (route.params.Tab) {
-        case 'videos':
-            if (searchResults.has_videos) {
-                AddResults = await searchResults.getVideos();
-            } else {
-                has_contents.value = false;
-            }
-            break;
-
-        case 'playlists':
-            if (searchResults.has_playlists) {
-                AddResults = await searchResults.getPlaylists();
-            } else {
-                has_contents.value = false;
-            }
-            break;
-
-        case 'streams':
-            if (searchResults.has_live_streams) {
-                AddResults = await searchResults.getLiveStreams();
-            } else {
-                has_contents.value = false;
-            }
-            break;
-
-        case 'community':
-            if (searchResults.has_community) {
-                AddResults = await searchResults.getCommunity();
-            } else {
-                has_contents.value = false;
-            }
-            break;
-        case 'shorts':
-            if (searchResults.has_shorts) {
-                AddResults = await searchResults.getShorts();
-            } else {
-                has_contents.value = false;
-            }
-            break;
-
-        case 'search':
-            if (searchResults.has_search) {
-                AddResults = await searchResults.search(route.query.query as string || '');
-            } else {
-                has_contents.value = false;
-            }
-            break;
-
-        case 'podcasts':
-            if (searchResults.has_podcasts) {
-                AddResults = await searchResults.getPodcasts();
-            } else {
-                has_contents.value = false;
-            }
-            break;
-
-        default:
-            if (searchResults.has_home) {
-                AddResults = await searchResults.getHome();
-            } else {
-                has_contents.value = false;
-            }
-            break;
-
-    }
-    if (AddResults) {
-        filter.value = await AddResults.filters;
-        if (AddResults?.current_tab?.content && 'contents' in AddResults.current_tab.content) {
-            results.value = AddResults.current_tab.content.contents;
-        }
-        sourceresults = AddResults;
-    } else if (!has_contents.value) {
-        const AddResultsPage: YTNodes.SectionList | YTNodes.MusicQueue | YTNodes.RichGrid | ReloadContinuationItemsCommand = await searchResults.page_contents;
-        if ('contents' in AddResultsPage) {
-            results.value = AddResultsPage.contents;
-        } else {
-            results.value = [];
-        }
-        sourceresults = searchResults;
-    }
-    sourcefilter = AddResults;
-
-} catch (error) {
-    alert.value = true;
-    if (error instanceof Error) {
-        errorMessage.value = error.message;
-    } else {
-        errorMessage.value = 'An unknown error occurred';
-    }
-}
-
 const LoadMore = async ({ done }: any) => {
     try {
         if (sourceresults && sourceresults.has_continuation) {
@@ -232,6 +114,127 @@ const LoadMore = async ({ done }: any) => {
 
 };
 
+const fetchData = async () => {
+    try {
+        const lang = langStore.lang || 'ja';
+        const location = locationStore.location || 'JP';
+        const yt = await Innertube.create({
+            fetch: fetchFn,
+            cache: new UniversalCache(false),
+            lang: lang,
+            location: location
+        });
+
+        let getID: string = route.params.id as string;
+        getID = getID.startsWith('@') ? `https://m.youtube.com/${getID}` : `https://m.youtube.com/channel/${getID}`;
+        let searchID = await yt.resolveURL(getID);
+        if (!searchID.payload.browseId) {
+            searchID = await yt.resolveURL(searchID.payload.url);
+        }
+
+        const searchResults: YT.Channel = await yt.getChannel(searchID.payload.browseId);
+
+        Headerresults.value = searchResults;
+        sourceTab = searchResults;
+        if (searchResults.has_about) {
+            about.value = await searchResults.getAbout();
+        }
+
+
+        let AddResults: YT.Channel | undefined;
+        switch (route.params.Tab) {
+            case 'videos':
+                if (searchResults.has_videos) {
+                    AddResults = await searchResults.getVideos();
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'playlists':
+                if (searchResults.has_playlists) {
+                    AddResults = await searchResults.getPlaylists();
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'streams':
+                if (searchResults.has_live_streams) {
+                    AddResults = await searchResults.getLiveStreams();
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'community':
+                if (searchResults.has_community) {
+                    AddResults = await searchResults.getCommunity();
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+            case 'shorts':
+                if (searchResults.has_shorts) {
+                    AddResults = await searchResults.getShorts();
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'search':
+                if (searchResults.has_search) {
+                    AddResults = await searchResults.search(route.query.query as string || '');
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'podcasts':
+                if (searchResults.has_podcasts) {
+                    AddResults = await searchResults.getPodcasts();
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            default:
+                if (searchResults.has_home) {
+                    AddResults = await searchResults.getHome();
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+        }
+        if (AddResults) {
+            filter.value = await AddResults.filters;
+            if (AddResults?.current_tab?.content && 'contents' in AddResults.current_tab.content) {
+                results.value = AddResults.current_tab.content.contents;
+            }
+            sourceresults = AddResults;
+        } else if (!has_contents.value) {
+            const AddResultsPage: YTNodes.SectionList | YTNodes.MusicQueue | YTNodes.RichGrid | ReloadContinuationItemsCommand = await searchResults.page_contents;
+            if ('contents' in AddResultsPage) {
+                results.value = AddResultsPage.contents;
+            } else {
+                results.value = [];
+            }
+            sourceresults = searchResults;
+        }
+        sourcefilter = AddResults;
+
+    } catch (error) {
+        alert.value = true;
+        if (error instanceof Error) {
+            errorMessage.value = error.message;
+        } else {
+            errorMessage.value = 'An unknown error occurred';
+        }
+    }
+};
+
+await fetchData();
 </script>
 <template>
     <v-container>
@@ -323,7 +326,7 @@ const LoadMore = async ({ done }: any) => {
                             </template>
                             <template v-if="content.type === 'Shelf'">
                                 <strong>{{ content.title.text }}</strong>
-                                <v-slide-group >
+                                <v-slide-group>
                                     <v-slide-item v-for="innerresult in content.content.items" :key="innerresult.id"
                                         class="ma-2" style="width: 200px;">
                                         <template v-if="innerresult.type === 'GridVideo'">
@@ -340,7 +343,7 @@ const LoadMore = async ({ done }: any) => {
                             </template>
                             <template v-if="content.type === 'ReelShelf'">
                                 <strong>{{ content.title.text }}</strong>
-                                <v-slide-group >
+                                <v-slide-group>
                                     <v-slide-item v-for="innerresult in content.items" :key="innerresult.id"
                                         class="ma-2" style="width: 200px;">
                                         <template v-if="innerresult.type === 'ShortsLockupView'">
@@ -360,7 +363,7 @@ const LoadMore = async ({ done }: any) => {
                             </template>
                             <v-col v-if="content.type === 'HorizontalCardList'">
                                 <strong>{{ content.header.title.text }}</strong>
-                                <v-slide-group >
+                                <v-slide-group>
                                     <v-slide-item v-for="innerresult in content.cards" :key="innerresult.id"
                                         class="ma-2" style="width: 200px;">
                                         <template v-if="innerresult.type === 'GameCard'">
@@ -403,7 +406,7 @@ const LoadMore = async ({ done }: any) => {
                     <v-col v-if="result.type === 'RichSection'" cols="12">
                         <template v-if="result.content.type === 'RichShelf'">
                             <strong>{{ result.content.title.text }}</strong>
-                            <v-slide-group >
+                            <v-slide-group>
                                 <v-slide-item v-for="content in result.content.contents" :key="content.id" class="ma-2"
                                     style="width: 200px;">
                                     <template v-if="content.type === 'RichItem'">
