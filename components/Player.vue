@@ -29,7 +29,6 @@ onMounted(async () => {
         getPo(visitorData).then((webPo) => poToken = webPo);
 
         const yt = await Innertube.create({
-            po_token: poToken || coldStartToken,
             visitor_data: visitorData,
             fetch: fetchFn,
             generate_session_locally: true,
