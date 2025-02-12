@@ -30,9 +30,9 @@ watch(() => route.query.t, (newTime) => {
     }
 });
 
-watch(() => route.query.v, async (newVideoId) => {
+watch(() => route.query.v, async (newVideoId, oldVideoId) => {
 
-    if (playerStore.player === 'shaka-player') {
+    if (playerStore.player === 'shaka-player' && newVideoId !== oldVideoId) {
         const playerComponent = child.value;
         if (playerComponent && playerComponent.destroyPlayer) {
             await playerComponent.destroyPlayer();
@@ -45,7 +45,7 @@ watch(() => route.query.v, async (newVideoId) => {
 });
 
 onBeforeRouteUpdate(async (to, from, next) => {
-    if (playerStore.player === 'shaka-player') {
+    if (playerStore.player === 'shaka-player' && to.query.v !== from.query.v) {
         const playerComponent = child.value;
         if (playerComponent && playerComponent.destroyPlayer) {
             await playerComponent.destroyPlayer();

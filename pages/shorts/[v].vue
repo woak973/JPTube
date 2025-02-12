@@ -61,7 +61,7 @@ watch(() => route.query.t, (newTime) => {
 });
 
 onBeforeRouteUpdate(async (to, from, next) => {
-    if (playerStore.player === 'shaka-player') {
+    if (playerStore.player === 'shaka-player' && to.query.v !== from.query.v) {
         const playerComponent = child.value;
         if (playerComponent && playerComponent.destroyPlayer) {
             await playerComponent.destroyPlayer();
