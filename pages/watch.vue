@@ -45,6 +45,16 @@ watch(() => route.query.v, async (newVideoId) => {
 
 });
 
+onBeforeRouteUpdate(async (to, from, next) => {
+    if (playerStore.player === 'shaka-player') {
+        const playerComponent = child.value;
+        if (playerComponent && playerComponent.destroyPlayer) {
+            await playerComponent.destroyPlayer();
+        }
+    }
+    next();
+});
+
 
 const Secondary_Informationresults = ref();
 const Basic_Informationresults = ref();

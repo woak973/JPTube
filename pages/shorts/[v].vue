@@ -29,6 +29,8 @@ const errorMessage = ref('');
 const fatalError = ref(false);
 
 const downloading = ref(false);
+const child = ref<{ seek: (seconds: number) => void; destroyPlayer?: () => Promise<void> } | null>(null);
+
 
 const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
 
@@ -45,6 +47,16 @@ watch(Primary_Informationresults, (newVal) => {
             title: `${newVal.title.text} - JPTube` || "Watch - JPTube"
         });
     }
+});
+
+onBeforeRouteUpdate(async (to, from, next) => {
+    if (playerStore.player === 'shaka-player') {
+        const playerComponent = child.value;
+        if (playerComponent && playerComponent.destroyPlayer) {
+            await playerComponent.destroyPlayer();
+        }
+    }
+    next();
 });
 
 const LoadMore = async ({ done }: any) => {
