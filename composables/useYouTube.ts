@@ -1,5 +1,4 @@
-export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
-    const config = useRuntimeConfig();
+function createRequest(input: RequestInfo | URL, init: RequestInit | undefined, host: string) {
     const url = typeof input === 'string' ?
         new URL(input) :
         input instanceof URL ?
@@ -7,7 +6,7 @@ export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
             new URL(input.url);
 
     url.searchParams.set('__host', url.host);
-    url.host = config.public.backendHost as string || 'jptube-server.onrender.com';
+    url.host = host;
     url.protocol = 'https';
 
     const headers = init?.headers ?
@@ -35,10 +34,17 @@ export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
 
     headers.delete('user-agent');
 
-    return fetch(request, init ? {
-        ...init,
-        headers
-    } : {
-        headers
-    });
+    return { request, headers };
+}
+
+export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
+    const config = useRuntimeConfig();
+    const { request, headers } = createRequest(input, init, typeof config.public.backendHost === 'string' ? config.public.backendHost : 'jptube-server.onrender.com');
+    return fetch(request, init ? { ...init, headers } : { headers });
+}
+
+export function PlayerfetchFn(input: RequestInfo | URL, init?: RequestInit) {
+    const config = useRuntimeConfig();
+    const { request, headers } = createRequest(input, init, typeof config.public.playerbackendHost === 'string' ? config.public.playerbackendHost : 'official-jptube-proxy.onrender.com');
+    return fetch(request, init ? { ...init, headers } : { headers });
 }

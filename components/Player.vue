@@ -31,7 +31,7 @@ onMounted(async () => {
         const yt = await Innertube.create({
             po_token: poToken || coldStartToken,
             visitor_data: visitorData,
-            fetch: fetchFn,
+            fetch: PlayerfetchFn,
             generate_session_locally: true,
             cache: new UniversalCache(false)
         });
@@ -137,7 +137,7 @@ onMounted(async () => {
                     // For local development.
                     if ((url.host.endsWith('.googlevideo.com') || url.href.includes('drm'))) {
                         url.searchParams.set('__host', url.host);
-                        url.host = hostconfig.public.backendHost as string || 'jptube-server.onrender.com';
+                        url.host = hostconfig.public.backendHost as string || 'official-jptube-proxy.onrender.com';
                         url.protocol = 'https';
                     }
 
