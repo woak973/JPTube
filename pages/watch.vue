@@ -32,6 +32,13 @@ watch(() => route.query.t, (newTime) => {
 });
 
 watch(() => route.query.v, async (newVideoId) => {
+
+    if (playerStore.player === 'shaka-player') {
+        const playerComponent = child.value;
+        if (playerComponent && playerComponent.destroyPlayer) {
+            await playerComponent.destroyPlayer();
+        }
+    }
     videoId.value = newVideoId as string;
     window.scrollTo(0, 0);
     await fetchVideoData();
@@ -67,7 +74,7 @@ const ChatComponent = ref(false);
 const PLComponent = ref(false);
 
 const downloading = ref(false);
-const child = ref<{ seek: (seconds: number) => void } | null>(null);
+const child = ref<{ seek: (seconds: number) => void; destroyPlayer?: () => Promise<void> } | null>(null);
 
 const toggleChatComponent = () => {
     ChatComponent.value = !ChatComponent.value;

@@ -16,7 +16,7 @@ const emit = defineEmits(['errors']);
 const playerbackendStore = usePlayerBackendStore();
 
 let player: any;
-let ui;
+let ui: any;
 
 onMounted(async () => {
     const shaka = await import('shaka-player/dist/shaka-player.ui');
@@ -195,35 +195,12 @@ onMounted(async () => {
                             try {
                                 const data = part.data.chunks[0];
                                 switch (part.type) {
-                                    case PART.MEDIA_HEADER: {
-                                        const mediaHeader = Protos.MediaHeader.decode(data);
-                                        console.info('[MediaHeader]:', mediaHeader);
-                                        break;
-                                    }
                                     case PART.MEDIA: {
                                         handleMediaData(part.data.split(1).remainingBuffer.chunks[0]);
                                         break;
                                     }
                                     case PART.SABR_REDIRECT: {
                                         redirect = Protos.SabrRedirect.decode(data);
-                                        console.info('[SABRRedirect]:', redirect);
-                                        break;
-                                    }
-                                    case PART.STREAM_PROTECTION_STATUS: {
-                                        const streamProtectionStatus = Protos.StreamProtectionStatus.decode(data);
-                                        switch (streamProtectionStatus.status) {
-                                            case 1:
-                                                console.info('[StreamProtectionStatus]: Ok');
-                                                break;
-                                            case 2:
-                                                console.error('[StreamProtectionStatus]: Attestation pending');
-                                                break;
-                                            case 3:
-                                                console.error('[StreamProtectionStatus]: Attestation required');
-                                                break;
-                                            default:
-                                                break;
-                                        }
                                         break;
                                     }
                                 }
@@ -284,7 +261,18 @@ const aspectRatioClass = computed(() => {
     return props.aspectRatio === '9:16' ? 'aspect-9-16' : 'aspect-16-9';
 });
 
-defineExpose({ seek });
+const destroyPlayer = async () => {
+    if (player) {
+        await player.destroy();
+        player = undefined;
+    }
+    if (ui) {
+        await ui.destroy();
+        ui = undefined;
+    }
+};
+
+defineExpose({ seek, destroyPlayer });
 
 </script>
 <template>
