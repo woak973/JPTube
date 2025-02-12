@@ -47,7 +47,7 @@ onMounted(async () => {
             console.error('Video ID is undefined');
             return;
         }
-        const info = await yt.getInfo(props.videoId);
+        const info = await yt.getInfo(props.videoId, 'WEB_EMBEDDED');
 
         try {
             let uri;
