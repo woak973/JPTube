@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache, YT, Mixins, YTShorts } from 'youtubei.js';
-import ReelWatchEndpoint from '~/components/ReelWatchEndpoint.vue';
 
 
 const route = useRoute();
@@ -49,6 +48,18 @@ watch(Primary_Informationresults, (newVal) => {
     }
 });
 
+watch(() => route.query.t, (newTime) => {
+    if (newTime) {
+        let timeString = newTime.toString();
+        if (timeString.endsWith('s')) {
+            timeString = timeString.slice(0, -1);
+        }
+        seekToTime(Number(timeString));
+        window.scrollTo(0, 0);
+
+    }
+});
+
 onBeforeRouteUpdate(async (to, from, next) => {
     if (playerStore.player === 'shaka-player') {
         const playerComponent = child.value;
@@ -58,6 +69,52 @@ onBeforeRouteUpdate(async (to, from, next) => {
     }
     next();
 });
+
+onBeforeRouteLeave(async (to, from, next) => {
+    if (playerStore.player === 'shaka-player') {
+        const playerComponent = child.value;
+        if (playerComponent && playerComponent.destroyPlayer) {
+            await playerComponent.destroyPlayer();
+        }
+    }
+    next();
+});
+
+const seekToTime = (time: number) => {
+    if (!isFinite(time)) {
+        console.error('Invalid seek time:', time);
+        return;
+    }
+
+    if (child.value) {
+        child.value.seek(time);
+
+    } else if (playerStore.player === 'embed') {
+        moveseek(time);
+
+    } else {
+        console.error('Component is not available');
+    }
+};
+
+// 親ページから子ページへのメッセージを送信する関数
+function postMessageToChild(action: string, arg: any = null) {
+    const message = {
+        event: 'command',
+        func: action,
+        args: arg
+    };
+    const iframe = document.getElementById('youtubeiframechild') as HTMLIFrameElement;
+    if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage(JSON.stringify(message), '*');
+        console.log('Message sent:', message);
+    }
+}
+
+// 各関数を実行するための親ページの関数
+function moveseek(timer: number) {
+    postMessageToChild('seekTo', [timer, true]);
+}
 
 const LoadMore = async ({ done }: any) => {
     try {

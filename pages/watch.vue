@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache, YT, YTNodes } from 'youtubei.js';
-import Chat from '~/components/Chat.vue';
 
 
 const route = useRoute();
@@ -55,6 +54,15 @@ onBeforeRouteUpdate(async (to, from, next) => {
     next();
 });
 
+onBeforeRouteLeave(async (to, from, next) => {
+    if (playerStore.player === 'shaka-player') {
+        const playerComponent = child.value;
+        if (playerComponent && playerComponent.destroyPlayer) {
+            await playerComponent.destroyPlayer();
+        }
+    }
+    next();
+});
 
 const Secondary_Informationresults = ref();
 const Basic_Informationresults = ref();
