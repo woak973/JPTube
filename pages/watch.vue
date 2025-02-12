@@ -475,7 +475,7 @@ await fetchVideoData();
                         <template v-if="showFullDescription"
                             v-for="result in Secondary_Informationresults?.metadata?.rows">
                             <template v-if="result.type === 'RichMetadataRow'">
-                                <v-row>
+                                <v-row style="margin-top: 0; margin-bottom: 0;">
                                     <template v-for="innerresult in result.contents">
                                         <v-col cols="6" v-if="innerresult.type === 'RichMetadata'">
                                             <v-card elevation="16" :to="innerresult?.endpoint?.metadata?.url" link>

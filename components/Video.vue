@@ -22,7 +22,7 @@
             <v-list-item-title>{{ data.author.name }}</v-list-item-title>
           </v-list-item>
         </v-card-actions>
-        <v-card-text>{{ data.description }}</v-card-text>
+        <v-card-text v-if="$vuetify.display.smAndUp">{{ data.description }}</v-card-text>
       </v-col>
     </v-row>
   </v-card>
