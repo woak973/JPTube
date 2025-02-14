@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="data.on_tap_endpoint.metadata.url" link>
+    <v-card v-if="data" elevation="16" :to="getLink()" link>
         <v-img :src="getProxifiedUrl(data.thumbnail[0].url)" aspect-ratio="16/9" rounded>
             <template v-slot:placeholder>
                 <div class="d-flex align-center justify-center fill-height">
@@ -7,8 +7,8 @@
                 </div>
             </template>
         </v-img>
-        <v-card-text class="omit">{{ data.accessibility_text }}</v-card-text>
-        <v-card-subtitle>{{ data.overlay_metadata.secondary_text.text }}</v-card-subtitle>
+        <v-card-text class="omit">{{ data.title.text }}</v-card-text>
+        <v-card-subtitle>{{ data.subtitle.text }}</v-card-subtitle>
     </v-card>
     <div v-else>
         データがありません
@@ -20,6 +20,14 @@
 const props = defineProps({
     data: Object
 });
+
+const getLink = () => {
+    if (props.data && props.data.item_type === 'video') {
+        return `/music/watch?v=${props.data.id}`;
+    } else {
+        return props.data ? `/music/playlist?list=${props.data.id}` : '';
+    }
+};
 </script>
 
 <style scoped>

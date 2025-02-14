@@ -379,7 +379,6 @@ await fetchData();
                             </template>
 
                             <template v-if="content.type === 'ChannelVideoPlayer'">
-                                <VideoPlayer :data="content" />
                             </template>
 
 

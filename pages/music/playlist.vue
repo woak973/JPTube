@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, YTNodes } from 'youtubei.js';
+import { Innertube, UniversalCache, YTMusic, YTNodes } from 'youtubei.js';
 
 
 const route = useRoute();
@@ -8,14 +8,14 @@ const locationStore = useLocationStore();
 
 const results = ref();
 const Headerresults = ref();
-let sourceresults: YT.Playlist;
+let sourceresults: YTMusic.Playlist;
 const alert = ref(false);
 const errorMessage = ref('');
 
-watch(Headerresults, (newVal: YT.Playlist) => {
-    if (newVal) {
+watch(Headerresults, (newVal: YTNodes.MusicResponsiveHeader | YTNodes.MusicEditablePlaylistDetailHeader | YTNodes.MusicDetailHeader) => {
+    if (newVal && !(newVal instanceof YTNodes.MusicEditablePlaylistDetailHeader)) {
         useHead({
-            title: `${newVal.info.title} - JPTube` || "Playlist - JPTube"
+            title: `${newVal.title.text} - JPTube Music` || "Playlist - JPTube Music"
         });
     }
 });
@@ -55,11 +55,12 @@ const fetchData = async () => {
             lang: lang,
             location: location
         });
+        const ytmusic = await yt.music;
 
-        const searchResults: YT.Playlist = await yt.getPlaylist(route.query.list as string);
+        const searchResults: YTMusic.Playlist = await ytmusic.getPlaylist(route.query.list as string);
         sourceresults = searchResults;
-        Headerresults.value = searchResults;
-        if (searchResults.page_contents instanceof YTNodes.SectionList) {
+        Headerresults.value = searchResults.header;
+        if (searchResults.items) {
             results.value = await searchResults.items;
         } else {
             throw new Error('No Contents Found');
@@ -94,7 +95,9 @@ await fetchData();
         <v-row>
             <v-col cols="12" md="2">
                 <template v-if="Headerresults">
-                    <Playlistinfo :data="Headerresults" />
+                    <template v-if="Headerresults.type === 'MusicResponsiveHeader'">
+                        <MusicResponsiveHeader :data="Headerresults" />
+                    </template>          
                 </template>
 
             </v-col>
@@ -103,9 +106,9 @@ await fetchData();
                 <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
                     <v-row style="width: 100%; margin-left: 0;">
                         <template v-for="result in results" :key="result.id">
-                            <template v-if="result.type === 'PlaylistVideo'">
+                            <template v-if="result.type === 'MusicResponsiveListItem'">
                                 <v-col cols="12">
-                                    <PlaylistVideo :data="result" />
+                                    <MusicResponsiveListItem :data="result" />
                                 </v-col>
                             </template>
                         </template>

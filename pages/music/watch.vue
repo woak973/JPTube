@@ -1,14 +1,21 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache, Mixins, APIResponseTypes, YTMusic } from 'youtubei.js';
 
+const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
+const playerStore = usePlayerStore();
 
-const results = ref();
-let sourceresults: YTMusic.HomeFeed;
+const videoId = ref(route.query.v as string);
+
+const nextresults = ref();
+let sourceresults: YTMusic.TrackInfo;
 const alert = ref(false);
 const errorMessage = ref('');
 const isEnd = ref(false);
+
+const child = ref<{ seek: (seconds: number) => void; destroyPlayer?: () => Promise<void> } | null>(null);
+
 
 useHead({
     title: "Home - JPTube Music"
@@ -53,7 +60,7 @@ const fetchData = async () => {
 
         const ytmusic = await yt.music;
 
-        const searchResults = await ytmusic.getHomeFeed();
+        const searchResults = await ytmusic.getInfo(route.query.v as string);
         sourceresults = searchResults;
 
 
@@ -73,7 +80,7 @@ const fetchData = async () => {
 await fetchData();
 </script>
 <template>
-    <v-container>
+    <v-container :fluid="true">
         <div>
             <v-dialog v-model="alert" max-width="500">
                 <v-card>
@@ -86,7 +93,19 @@ await fetchData();
                 </v-card>
             </v-dialog>
         </div>
+        <v-col cols="12" md="8">
+            <div v-if="playerStore.player !== 'shaka-player'" class="video-container">
+                <iframe
+                    :src="`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1`"
+                    id="youtubeiframechild" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
 
+            <Player v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError" />
+        </v-col>
+        <v-col cols="12" md="4">
+            
         <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
             <v-row>
                 <template v-for="result in results" :key="result.id">
@@ -107,5 +126,7 @@ await fetchData();
                 </template>
             </v-row>
         </v-infinite-scroll>
+        </v-col>
+
     </v-container>
 </template>

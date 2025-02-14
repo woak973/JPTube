@@ -203,7 +203,7 @@ await fetchData();
                         <strong>{{ result.title.text }}</strong>
                         <v-slide-group>
                             <v-slide-item v-for="innerresult in result.content.items" :key="innerresult.id" class="ma-2"
-                                style="width: 200px;">
+                                v-bind:style="{ width: innerresult.type === 'Post' ? '500px' : '200px' }">
                                 <template v-if="innerresult.type === 'GridVideo'">
                                     <GridVideoFeed :data="innerresult" />
                                 </template>
@@ -212,6 +212,9 @@ await fetchData();
                                 </template>
                                 <template v-else-if="innerresult.type === 'Video'">
                                     <HomeFeed :data="innerresult" />
+                                </template>
+                                <template v-else-if="innerresult.type === 'Post'">
+                                    <FeedPost :data="innerresult" />
                                 </template>
                             </v-slide-item>
                         </v-slide-group>

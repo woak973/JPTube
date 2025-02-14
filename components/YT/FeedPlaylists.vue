@@ -26,7 +26,6 @@
 const props = defineProps({
     data: Object
 });
-console.dir(props.data, { depth: null });
 </script>
 
 <style scoped>
