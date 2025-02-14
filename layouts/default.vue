@@ -76,7 +76,7 @@ const openLangDialog = () => {
         <v-app-bar-title>JPTube</v-app-bar-title>
       </router-link>
       <v-spacer></v-spacer>
-      <v-combobox v-model="searchQuery" :items="suggestions" label="検索" single-line hide-details clearable
+      <v-combobox v-model="searchQuery" :items="suggestions" label="Search" single-line hide-details clearable
         :filter="() => { return true; }" prepend-inner-icon="mdi-magnify" clear-icon="mdi-close-circle"
         @keyup.enter="search" @click:prepend-inner="search" @click:clear="clearSearch" />
       <v-btn icon @click="openLangDialog">

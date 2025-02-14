@@ -257,13 +257,13 @@ await fetchData();
 
             <v-dialog v-model="searchDialog" max-width="500">
                 <v-card>
-                    <v-card-title class="headline">検索</v-card-title>
+                    <v-card-title class="headline">Search</v-card-title>
                     <v-card-text>
-                        <v-text-field v-model="searchQuery" label="検索ワード" @keyup.enter="performSearch"></v-text-field>
+                        <v-text-field v-model="searchQuery" label="SearchWord" @keyup.enter="performSearch"></v-text-field>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" @click="performSearch">検索</v-btn>
+                        <v-btn color="primary" @click="performSearch">Search</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
