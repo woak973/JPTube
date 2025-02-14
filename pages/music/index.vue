@@ -62,11 +62,15 @@ await fetchData();
 
         <v-row>
             <template v-for="result in results" :key="result.id">
-                <v-col v-if="result.type === 'MusicCarouselShelf'" cols="12" md="3" lg="2" sm="6">
+                <v-col v-if="result.type === 'MusicCarouselShelf'" cols="12">
                     <template v-for="content in result.contents" :key="content.id">
-                        <template v-if="content.type === 'MusicResponsiveListItem'">
-                            <MusicResponsiveListItem :data="content" />
-                        </template>
+                        <v-row>
+                            <template v-if="content.type === 'MusicResponsiveListItem'">
+                                <v-col cols="4">
+                                    <MusicResponsiveListItem :data="content" />
+                                </v-col>
+                            </template>
+                        </v-row>
                     </template>
                 </v-col>
             </template>
