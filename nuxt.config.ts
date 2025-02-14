@@ -13,6 +13,16 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate'
   ],
+  components: [
+    {
+      path: '~/components/YT',
+      pathPrefix: false,
+    },
+    {
+      path: '~/components/YTMusic',
+      pathPrefix: false,
+    },
+  ],
   vite: {
     server: {
       hmr: false
