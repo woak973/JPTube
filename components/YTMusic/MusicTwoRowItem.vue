@@ -24,6 +24,8 @@ const props = defineProps({
 const getLink = () => {
     if (props.data && props.data.item_type === 'video') {
         return `/music/watch?v=${props.data.id}`;
+    } else if (props.data && props.data.item_type === 'album'){
+        return props.data ? `/music/album?id=${props.data.id}` : '';
     } else {
         return props.data ? `/music/playlist?list=${props.data.id}` : '';
     }
