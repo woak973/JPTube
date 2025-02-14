@@ -1,7 +1,7 @@
 <template>
     <v-card v-if="data" elevation="16" :to="`/music/watch?v=${data.id}`" link>
       <v-row>
-        <v-col cols="auto" class="d-flex align-center justify-center">
+        <v-col cols="4" class="d-flex align-center justify-center">
           <v-img :src="getProxifiedUrl(data.thumbnails[0].url)" max-width="50%" style="border-radius: 50%;">
             <template v-slot:placeholder>
               <div class="d-flex align-center justify-center fill-height">
@@ -10,7 +10,7 @@
             </template>
           </v-img>
         </v-col>
-        <v-col>
+        <v-col cols="8">
           <v-card-title>{{ data.title }}</v-card-title>
           <v-card-actions>
             <v-list-item :to="`/music/channel/${data?.artists[0]?.channel_id}/featured`" link>
