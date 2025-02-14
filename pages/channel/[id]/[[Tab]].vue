@@ -234,6 +234,11 @@ const fetchData = async () => {
     }
 };
 
+const handleError = (message: string) => {
+    alert.value = true;
+    errorMessage.value = message;
+};
+
 await fetchData();
 </script>
 <template>
@@ -361,6 +366,23 @@ await fetchData();
                                     </template>
                                 </v-row>
                             </template>
+                            <template v-if="content.type === 'ChannelFeaturedContent'">
+                                <strong>{{ content.title.text }}</strong>
+                                <v-row>
+                                    <template v-for="inresult in content.items">
+                                        <v-col v-if="inresult.type === 'Video'" cols="12" lg="8">
+                                            <Video :data="inresult" />
+                                        </v-col>
+                                    </template>
+
+                                </v-row>
+                            </template>
+
+                            <template v-if="content.type === 'ChannelVideoPlayer'">
+                                <VideoPlayer :data="content" />
+                            </template>
+
+
                             <v-col v-if="content.type === 'HorizontalCardList'">
                                 <strong>{{ content.header.title.text }}</strong>
                                 <v-slide-group>
