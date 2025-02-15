@@ -18,7 +18,7 @@
     "youtubei.js": "^13.0.0",
     "bgutils-js": "^3.1.2",
     "googlevideo": "^2.0.0",
-    "shaka-player": "4.11.7"
+    "shaka-player": "4.13.0"
   },
   "devDependencies": {
     "@pinia/nuxt": "^0.8.0",
