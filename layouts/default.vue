@@ -98,6 +98,10 @@ const openLangDialog = () => {
         to="/channel/UCYfdidRxbB8Qhf0Nx7ioOYw/featured"></v-list-item>
       <v-list-item prepend-icon="mdi-trophy-variant" link title="Sports"
         to="/channel/UCEgdi0XIXXZ-qJOFPf4JSKw/featured"></v-list-item>
+      <v-divider></v-divider>
+      <v-list-item title="Other Services" subtitle="Welcome"></v-list-item>
+      <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music"></v-list-item>
+
     </v-navigation-drawer>
 
     <v-main class="bg-grey-lighten-2">

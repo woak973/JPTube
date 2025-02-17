@@ -1,0 +1,93 @@
+<script setup lang="ts">
+import { Innertube, UniversalCache } from 'youtubei.js';
+
+const drawer = ref(false);
+const searchQuery = ref('');
+const value = ref('');
+const suggestions = ref<string[]>([]);
+const langDialog = ref<HTMLElement | null>(null);
+const langStore = useLangStore();
+const locationStore = useLocationStore();
+
+const createYTInstance = async () => {
+  const lang = langStore.lang || 'ja';
+  const location = locationStore.location || 'JP';
+  return await Innertube.create({
+    fetch: fetchFn,
+    cache: new UniversalCache(false),
+    lang: lang,
+    location: location
+  });
+};
+
+watch(searchQuery, (newQuery) => {
+  if (newQuery) {
+    fetchSuggestions(newQuery);
+  } else {
+    suggestions.value = [];
+  }
+});
+
+const search = async () => {
+  if (searchQuery.value) {
+    const encodedQuery = encodeURIComponent(searchQuery.value);
+    navigateTo(`/music/search/${encodedQuery}`);
+  }
+};
+
+const clearSearch = () => {
+  searchQuery.value = '';
+};
+
+const fetchSuggestions = async (query: string): Promise<void> => {
+  try {
+    const yt = await createYTInstance();
+    const music = await yt.music;
+    const response = await music.getSearchSuggestions(query);
+    suggestions.value = response[0].contents.map((suggestion: any) => suggestion.suggestion.text);
+  } catch (error) {
+    console.error('Error fetching suggestions:', error);
+  }
+};
+
+const openLangDialog = () => {
+  if (langDialog.value) {
+    (langDialog.value as any).open();
+  }
+};
+</script>
+
+<template>
+  <v-app id="inspire">
+    <v-app-bar>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <router-link to="/music" style="text-decoration: none; color: inherit;">
+        <v-app-bar-title>JPTube Music</v-app-bar-title>
+      </router-link>
+      <v-spacer></v-spacer>
+      <v-combobox v-model="searchQuery" :items="suggestions" label="Search" single-line hide-details clearable
+        :filter="() => { return true; }" prepend-inner-icon="mdi-magnify" clear-icon="mdi-close-circle"
+        @keyup.enter="search" @click:prepend-inner="search" @click:clear="clearSearch" />
+      <v-btn icon @click="openLangDialog">
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-navigation-drawer v-model="drawer" temporary>
+      <v-list-item title="JPTube Music" subtitle="Welcome"></v-list-item>
+      <v-divider></v-divider>
+      <v-list-item prepend-icon="mdi-home" link title="Home" to="/music"></v-list-item>
+      <v-list-item prepend-icon="mdi-compass" link title="Explore" to="/music/explore"></v-list-item>
+      <v-divider></v-divider>
+      <v-list-item title="Other Services" subtitle="Welcome"></v-list-item>
+      <v-list-item prepend-icon="mdi-play-box" link title="JPTube" to="/"></v-list-item>
+
+    </v-navigation-drawer>
+
+    <v-main class="bg-grey-lighten-2">
+      <slot :value="value" />
+    </v-main>
+
+    <LangDialog ref="langDialog" />
+  </v-app>
+</template>

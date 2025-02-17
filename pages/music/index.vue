@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, Mixins, APIResponseTypes, YTMusic } from 'youtubei.js';
+import { Innertube, UniversalCache, Helpers, YTNodes, YTMusic } from 'youtubei.js';
 
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 
-const results = ref();
+const results = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf | YTNodes.MusicTastebuilderShelf> | undefined>();
 let sourceresults: YTMusic.HomeFeed;
 const alert = ref(false);
-const errorMessage = ref('');
+const errorMessage = ref<string>('');
 const isEnd = ref(false);
 
 useHead({
     title: "Home - JPTube Music"
+});
+
+definePageMeta({
+    layout: "music"
 });
 
 const LoadMore = async ({ done }: any) => {
@@ -19,7 +23,7 @@ const LoadMore = async ({ done }: any) => {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
             console.dir(continuationResults, { depth: null });
-            if (continuationResults?.sections) {
+            if (continuationResults?.sections && results.value) {
                 results.value.push(...continuationResults.sections);
             }
             sourceresults = continuationResults;
@@ -89,16 +93,16 @@ await fetchData();
 
         <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
             <v-row>
-                <template v-for="result in results" :key="result.id">
-                    <v-col v-if="result.type === 'MusicCarouselShelf'" cols="12">
-                        <strong>{{ result.header.title }}</strong>
+                <template v-for="result in results">
+                    <v-col v-if="(result instanceof YTNodes.MusicCarouselShelf)" cols="12">
+                        <strong>{{ result?.header?.title }}</strong>
                         <v-slide-group>
-                            <v-slide-item v-for="content in result.contents" :key="content.id" class="ma-2"
-                                v-bind:style="{ width: content.type === 'MusicResponsiveListItem' ? '500px' : '200px' }">
-                                <template v-if="content.type === 'MusicResponsiveListItem'">
+                            <v-slide-item v-for="content in result.contents" class="ma-2"
+                                v-bind:style="{ width: (content instanceof YTNodes.MusicResponsiveListItem) ? '500px' : '200px' }">
+                                <template v-if="(content instanceof YTNodes.MusicResponsiveListItem)">
                                     <MusicResponsiveListItem :data="content" />
                                 </template>
-                                <template v-else-if="content.type === 'MusicTwoRowItem'">
+                                <template v-else-if="(content instanceof YTNodes.MusicTwoRowItem)">
                                     <MusicTwoRowItem :data="content" />
                                 </template>
                             </v-slide-item>

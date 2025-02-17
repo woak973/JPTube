@@ -44,6 +44,20 @@ watch(() => route.query.v, async (newVideoId, oldVideoId) => {
 
 });
 
+watch(() => route.query.list, async (newPLId, oldPLId) => {
+
+if (playerStore.player === 'shaka-player' && newPLId !== oldPLId) {
+    const playerComponent = child.value;
+    if (playerComponent && playerComponent.destroyPlayer) {
+        await playerComponent.destroyPlayer();
+    }
+}
+
+window.scrollTo(0, 0);
+await fetchVideoData();
+
+});
+
 onBeforeRouteUpdate(async (to, from, next) => {
     if (playerStore.player === 'shaka-player' && to.query.v !== from.query.v) {
         const playerComponent = child.value;

@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YTMusic, YTNodes } from 'youtubei.js';
+import { Innertube, UniversalCache, YTMusic, YTNodes, Helpers } from 'youtubei.js';
 
 
 const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 
-const results = ref();
-const Headerresults = ref();
+const results = ref<Helpers.ObservedArray<YTNodes.MusicResponsiveListItem>>();
+const Headerresults = ref<YTNodes.MusicResponsiveHeader | YTNodes.MusicDetailHeader | YTNodes.MusicEditablePlaylistDetailHeader | undefined>();
 let sourceresults: YTMusic.Playlist;
 const alert = ref(false);
-const errorMessage = ref('');
+const errorMessage = ref<string>('');
 
-watch(Headerresults, (newVal: YTNodes.MusicResponsiveHeader | YTNodes.MusicEditablePlaylistDetailHeader | YTNodes.MusicDetailHeader) => {
+watch(Headerresults, (newVal) => {
     if (newVal && !(newVal instanceof YTNodes.MusicEditablePlaylistDetailHeader)) {
         useHead({
             title: `${newVal.title.text} - JPTube Music` || "Playlist - JPTube Music"
@@ -20,12 +20,18 @@ watch(Headerresults, (newVal: YTNodes.MusicResponsiveHeader | YTNodes.MusicEdita
     }
 });
 
+definePageMeta({
+    layout: "music"
+});
+
 const LoadMore = async ({ done }: any) => {
     console.log(sourceresults.has_continuation)
     try {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
-            results.value.push(...await continuationResults.items);
+            if (results.value) {
+                results.value.push(...await continuationResults.items);
+            }
             sourceresults = continuationResults;
             done('ok');
         } else {
@@ -95,9 +101,9 @@ await fetchData();
         <v-row>
             <v-col cols="12" md="2">
                 <template v-if="Headerresults">
-                    <template v-if="Headerresults.type === 'MusicResponsiveHeader'">
+                    <template v-if="(Headerresults instanceof YTNodes.MusicResponsiveHeader)">
                         <MusicResponsiveHeader :data="Headerresults" />
-                    </template>          
+                    </template>
                 </template>
 
             </v-col>
@@ -106,7 +112,7 @@ await fetchData();
                 <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
                     <v-row style="width: 100%; margin-left: 0;">
                         <template v-for="result in results" :key="result.id">
-                            <template v-if="result.type === 'MusicResponsiveListItem'">
+                            <template v-if="(result instanceof YTNodes.MusicResponsiveListItem)">
                                 <v-col cols="12">
                                     <MusicResponsiveListItem :data="result" />
                                 </v-col>
