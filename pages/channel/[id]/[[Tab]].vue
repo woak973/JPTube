@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, YTNodes, ReloadContinuationItemsCommand } from 'youtubei.js';
+import { Innertube, UniversalCache, YT, YTNodes, ReloadContinuationItemsCommand, Helpers } from 'youtubei.js';
 
 
 
@@ -9,7 +9,7 @@ const route = useRoute();
 const router = useRouter();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
-const results = ref();
+const results = ref<Helpers.ObservedArray<Helpers.YTNode> | null>();
 const Tabresults = ref();
 const filter = ref();
 const Headerresults = ref();
@@ -94,7 +94,9 @@ const LoadMore = async ({ done }: any) => {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
             if (continuationResults.contents && continuationResults.contents.contents) {
-                results.value.push(...continuationResults.contents.contents);
+                if (results.value) {
+                    results.value.push(...continuationResults.contents.contents);
+                }
             }
             sourceresults = continuationResults;
             done('ok');
@@ -218,7 +220,7 @@ const fetchData = async () => {
             if ('contents' in AddResultsPage) {
                 results.value = AddResultsPage.contents;
             } else {
-                results.value = [];
+                results.value = null;
             }
             sourceresults = searchResults;
         }
@@ -259,7 +261,8 @@ await fetchData();
                 <v-card>
                     <v-card-title class="headline">Search</v-card-title>
                     <v-card-text>
-                        <v-text-field v-model="searchQuery" label="SearchWord" @keyup.enter="performSearch"></v-text-field>
+                        <v-text-field v-model="searchQuery" label="SearchWord"
+                            @keyup.enter="performSearch"></v-text-field>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
@@ -310,140 +313,10 @@ await fetchData();
 
         <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
             <v-row style="width: 100%; margin-left: 0;">
-                <template v-for="result in results" :key="result.id">
-
-                    <v-col v-if="result.type === 'RichItem'" cols="12" md="3" lg="2" sm="6">
-                        <template v-if="result.content?.type === 'Video'">
-                            <FeedVideo :data="result?.content" />
-                        </template>
-                        <template v-else-if="result.content?.type === 'ShortsLockupView'">
-                            <Shorts :data="result?.content" />
-                        </template>
-                        <template v-else-if="result.content?.type === 'LockupView'">
-                            <FeedPlaylists :data="result?.content" />
-                        </template>
-                    </v-col>
-
-                    <v-col v-if="result.type === 'ItemSection'" cols="12">
-                        <template v-for="content in result.contents" :key="content.id">
-                            <template v-if="content.type === 'Video'">
-                                <Video :data="content" />
-                            </template>
-                            <template v-if="content.type === 'Shelf'">
-                                <strong>{{ content.title.text }}</strong>
-                                <v-slide-group>
-                                    <v-slide-item v-for="innerresult in content.content.items" :key="innerresult.id"
-                                        class="ma-2" style="width: 200px;">
-                                        <template v-if="innerresult.type === 'GridVideo'">
-                                            <GridVideoFeed :data="innerresult" />
-                                        </template>
-                                        <template v-else-if="innerresult.type === 'LockupView'">
-                                            <FeedPlaylists :data="innerresult" />
-                                        </template>
-                                        <template v-else-if="innerresult.type === 'GridChannel'">
-                                            <FeedChannel :data="innerresult" />
-                                        </template>
-                                    </v-slide-item>
-                                </v-slide-group>
-                            </template>
-                            <template v-if="content.type === 'ReelShelf'">
-                                <strong>{{ content.title.text }}</strong>
-                                <v-slide-group>
-                                    <v-slide-item v-for="innerresult in content.items" :key="innerresult.id"
-                                        class="ma-2" style="width: 200px;">
-                                        <template v-if="innerresult.type === 'ShortsLockupView'">
-                                            <Shorts :data="innerresult" />
-                                        </template>
-                                    </v-slide-item>
-                                </v-slide-group>
-                            </template>
-                            <template v-if="content.type === 'Grid'">
-                                <v-row>
-                                    <template v-for="inresult in content.items">
-                                        <v-col v-if="inresult.type === 'LockupView'" cols="12" md="3" lg="2" sm="6">
-                                            <FeedPlaylists :data="inresult" />
-                                        </v-col>
-                                    </template>
-                                </v-row>
-                            </template>
-                            <template v-if="content.type === 'ChannelFeaturedContent'">
-                                <strong>{{ content.title.text }}</strong>
-                                <v-row>
-                                    <template v-for="inresult in content.items">
-                                        <v-col v-if="inresult.type === 'Video'" cols="12" lg="8">
-                                            <Video :data="inresult" />
-                                        </v-col>
-                                    </template>
-
-                                </v-row>
-                            </template>
-
-                            <template v-if="content.type === 'ChannelVideoPlayer'">
-                            </template>
-
-
-                            <v-col v-if="content.type === 'HorizontalCardList'">
-                                <strong>{{ content.header.title.text }}</strong>
-                                <v-slide-group>
-                                    <v-slide-item v-for="innerresult in content.cards" :key="innerresult.id"
-                                        class="ma-2" style="width: 200px;">
-                                        <template v-if="innerresult.type === 'GameCard'">
-                                            <GameCard :data="innerresult" />
-                                        </template>
-                                        <template v-if="innerresult.type === 'VideoCard'">
-                                            <FeedVideoCard :data="innerresult" />
-                                        </template>
-                                    </v-slide-item>
-                                </v-slide-group>
-                            </v-col>
-                        </template>
-                    </v-col>
-                    <v-col v-if="result.type === 'ItemSection'" cols="12" style="padding: 0%">
-                        <template v-for="content in result.contents" :key="content.id">
-                            <template v-if="content.type === 'BackstagePostThread'">
-                                <v-col v-if="content.post.type === 'BackstagePost'" cols="12">
-                                    <Community :data="content.post" />
-                                </v-col>
-                                <v-col v-else-if="content.post.type === 'SharedPost'" cols="12">
-                                    <SharedPost :data="content.post" />
-                                </v-col>
-                            </template>
-                        </template>
-                    </v-col>
-
-                    <v-col v-if="result.type === 'GridPlaylist'" cols="12" md="3" lg="2" sm="6">
-                        <ContFeedPlaylists :data="result" />
-                    </v-col>
-
-                    <template v-if="result.type === 'BackstagePostThread'">
-                        <v-col v-if="result.post.type === 'BackstagePost'" cols="12">
-                            <Community :data="result.post" />
-                        </v-col>
-                        <v-col v-if="result.post.type === 'SharedPost'" cols="12">
-                            <SharedPost :data="result.post" />
-                        </v-col>
+                <template v-for="result in results">
+                    <template v-if="(result instanceof Helpers.YTNode)">
+                        <YTNode :data="result" />
                     </template>
-
-                    <v-col v-if="result.type === 'RichSection'" cols="12">
-                        <template v-if="result.content.type === 'RichShelf'">
-                            <strong>{{ result.content.title.text }}</strong>
-                            <v-slide-group>
-                                <v-slide-item v-for="content in result.content.contents" :key="content.id" class="ma-2"
-                                    style="width: 200px;">
-                                    <template v-if="content.type === 'RichItem'">
-                                        <template v-if="content.content.type === 'Video'">
-                                            <HomeFeed :data="content.content" />
-                                        </template>
-
-                                    </template>
-                                </v-slide-item>
-                            </v-slide-group>
-                        </template>
-                    </v-col>
-
-                    <v-col v-if="result.type === 'ChannelOwnerEmptyState'">
-                        <Empty :data="result" />
-                    </v-col>
                 </template>
             </v-row>
         </v-infinite-scroll>

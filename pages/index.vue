@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, Mixins, APIResponseTypes } from 'youtubei.js';
+import { Innertube, UniversalCache, Mixins, APIResponseTypes, Helpers, YTNodes } from 'youtubei.js';
 
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 
-const results = ref();
+const results = ref<Helpers.ObservedArray<YTNodes.Video | YTNodes.CompactVideo | YTNodes.GridVideo | YTNodes.PlaylistPanelVideo | YTNodes.PlaylistVideo | YTNodes.ReelItem | YTNodes.ShortsLockupView | YTNodes.WatchCardCompactVideo>>();
 const alert = ref(false);
-const errorMessage = ref('');
-const isEnd = ref(false);
-const TitleResult = ref();
-const StrongResult = ref();
+const errorMessage = ref<string>('');
+const TitleResult = ref<Mixins.TabbedFeed<APIResponseTypes.IBrowseResponse>>();
+const StrongResult = ref<string>();
 
 watch(TitleResult, (newVal) => {
     if (newVal) {
@@ -30,7 +29,7 @@ const fetchData = async () => {
             location: location
         });
 
-        const searchResults: Mixins.TabbedFeed<APIResponseTypes.IBrowseResponse> = await yt.getTrending();
+        const searchResults = await yt.getTrending();
         TitleResult.value = searchResults;
         StrongResult.value = await searchResults.title;
 
@@ -70,9 +69,9 @@ await fetchData();
         </template>
 
         <v-row>
-            <template v-for="result in results" :key="result.id">
+            <template v-for="result in results">
                 <v-col v-if="result.type === 'Video'" cols="12" md="3" lg="2" sm="6">
-                    <template v-if="result.type === 'Video'">
+                    <template v-if="(result instanceof YTNodes.Video)">
                         <HomeFeed :data="result" />
                     </template>
                 </v-col>

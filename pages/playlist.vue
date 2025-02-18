@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, YTNodes } from 'youtubei.js';
+import { Innertube, UniversalCache, YT, YTNodes, Helpers } from 'youtubei.js';
 
 
 const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 
-const results = ref();
-const Headerresults = ref();
+const results = ref<Helpers.ObservedArray<YTNodes.PlaylistVideo | YTNodes.ReelItem | YTNodes.ShortsLockupView>>();
+const Headerresults = ref<YT.Playlist>();
 let sourceresults: YT.Playlist;
 const alert = ref(false);
-const errorMessage = ref('');
+const errorMessage = ref<string>('');
 
-watch(Headerresults, (newVal: YT.Playlist) => {
+watch(Headerresults, (newVal) => {
     if (newVal) {
         useHead({
             title: `${newVal.info.title} - JPTube` || "Playlist - JPTube"
@@ -25,7 +25,9 @@ const LoadMore = async ({ done }: any) => {
     try {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
-            results.value.push(...await continuationResults.items);
+            if (results.value) {
+                results.value.push(...await continuationResults.items);
+            }
             sourceresults = continuationResults;
             done('ok');
         } else {
@@ -102,8 +104,8 @@ await fetchData();
             <v-col cols="12" md="10">
                 <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
                     <v-row style="width: 100%; margin-left: 0;">
-                        <template v-for="result in results" :key="result.id">
-                            <template v-if="result.type === 'PlaylistVideo'">
+                        <template v-for="result in results">
+                            <template v-if="(result instanceof YTNodes.PlaylistVideo)">
                                 <v-col cols="12">
                                     <PlaylistVideo :data="result" />
                                 </v-col>
