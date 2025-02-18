@@ -29,7 +29,7 @@ const getLink = () => {
         } else if (['album'].includes(props.data.item_type)) {
             return props.data ? `/music/album?id=${props.data.id}` : '';
         } else if (['artist', 'library_artist'].includes(props.data.item_type)) {
-            return props.data ? `/channel/${props.data.id}` : '';
+            return props.data ? `/music/channel/${props.data.id}` : '';
         } else if (['video', 'non_music_track', 'song'].includes(props.data.item_type)) {
             return props.data ? `/music/watch?v=${props.data.id}` : '';
         } else {
