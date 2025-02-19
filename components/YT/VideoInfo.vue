@@ -87,7 +87,7 @@
 
 
                     <template v-if="showFullDescription" v-for="result in data.secondary_info.metadata?.rows">
-                        <v-row style="margin-top: 0; margin-bottom: 0;">
+                        <v-row style="margin: 0;">
                             <template v-if="(result instanceof Helpers.YTNode)">
                                 <YTNode :data="result" />
                             </template>
