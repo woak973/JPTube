@@ -11,26 +11,26 @@ const Relatedresults = ref<YTNodes.NavigationEndpoint[] | undefined>();
 const HeaderResults = ref<YT.VideoInfo>();
 const RelatedTypicalresults = ref<Helpers.ObservedArray<Helpers.YTNode> | null | undefined>();
 const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>();
-const tab = ref('option-1');
+const tab = ref<string>('option-1');
 
-const videoId = ref(route.params.v as string);
+const videoId = ref<string>(route.params.v as string);
 
 let sourceresults: YTShorts.ShortFormVideoInfo;
 let comsource: YT.Comments;
 let typicalsource: YT.VideoInfo;
 let yt: Innertube;
 
-const alert = ref(false);
-const errorMessage = ref('');
-const fatalError = ref(false);
+const alert = ref<boolean>(false);
+const errorMessage = ref<string>('');
+const fatalError = ref<boolean>(false);
 
-const downloading = ref(false);
+const downloading = ref<boolean>(false);
 const child = ref<{ seek: (seconds: number) => void; destroyPlayer?: () => Promise<void> } | null>(null);
 
 
 const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
 
-const showFullDescription = ref(false);
+const showFullDescription = ref<boolean>(false);
 
 
 const toggleDescription = () => {
