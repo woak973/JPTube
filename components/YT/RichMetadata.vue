@@ -10,7 +10,7 @@
                     </template>
                 </v-img>
             </v-col>
-            <v-col cols="12" md="4" class="description">
+            <v-col cols="12" md="8" class="description">
                 <v-card-title class="small-text omit">{{
                     data.title?.text
                     }}</v-card-title>
