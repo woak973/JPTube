@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, Mixins, YTShorts } from 'youtubei.js';
+import { Innertube, UniversalCache, YT, Helpers, YTNodes, YTShorts } from 'youtubei.js';
 
 
 const route = useRoute();
@@ -7,13 +7,10 @@ const langStore = useLangStore();
 const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
 
-const Relatedresults = ref();
-const RelatedTypicalresults = ref();
-const Primary_Informationresults = ref();
-const Secondary_Informationresults = ref();
-const Basic_Informationresults = ref();
-
-const Commentresults = ref();
+const Relatedresults = ref<YTNodes.NavigationEndpoint[] | undefined>();
+const HeaderResults = ref<YT.VideoInfo>();
+const RelatedTypicalresults = ref<Helpers.ObservedArray<Helpers.YTNode> | null | undefined>();
+const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>();
 const tab = ref('option-1');
 
 const videoId = ref(route.params.v as string);
@@ -40,10 +37,10 @@ const toggleDescription = () => {
     showFullDescription.value = !showFullDescription.value;
 };
 
-watch(Primary_Informationresults, (newVal) => {
+watch(HeaderResults, (newVal) => {
     if (newVal) {
         useHead({
-            title: `${newVal.title.text} - JPTube` || "Watch - JPTube"
+            title: `${newVal.primary_info?.title.text} - JPTube` || "Shorts - JPTube"
         });
     }
 });
@@ -121,7 +118,9 @@ const LoadMore = async ({ done }: any) => {
         if (sourceresults && sourceresults.wn_has_continuation) {
             const continuationResults: YTShorts.ShortFormVideoInfo = await sourceresults.getWatchNextContinuation();
             if (continuationResults.watch_next_feed) {
-                Relatedresults.value.push(...continuationResults.watch_next_feed);
+                if (Relatedresults.value) {
+                    Relatedresults.value.push(...continuationResults.watch_next_feed);
+                }
             }
             sourceresults = continuationResults;
             done('ok');
@@ -146,7 +145,9 @@ const TypicalLoadMore = async ({ done }: any) => {
         if (typicalsource && typicalsource.wn_has_continuation) {
             const continuationResults = await typicalsource.getWatchNextContinuation();
             if (continuationResults.watch_next_feed) {
-                RelatedTypicalresults.value.push(...continuationResults.watch_next_feed);
+                if (RelatedTypicalresults.value) {
+                    RelatedTypicalresults.value.push(...continuationResults.watch_next_feed);
+                }
             }
             typicalsource = continuationResults;
             done('ok');
@@ -175,7 +176,9 @@ const ComLoadMore = async ({ done }: any) => {
                     await comment.getReplies();
                 }
             }
-            Commentresults.value.push(...await continuationResults.contents);
+            if (Commentresults.value) {
+                Commentresults.value.push(...await continuationResults.contents);
+            }
             comsource = continuationResults;
             done('ok');
         } else {
@@ -285,9 +288,7 @@ const fetchData = async () => {
 
         typicalsource = typicalsearchResults;
         RelatedTypicalresults.value = await typicalsearchResults.watch_next_feed;
-        Primary_Informationresults.value = await typicalsearchResults.primary_info;
-        Secondary_Informationresults.value = await typicalsearchResults.secondary_info;
-        Basic_Informationresults.value = await typicalsearchResults.basic_info;
+        HeaderResults.value = await typicalsearchResults;
 
 
         try {
@@ -353,128 +354,8 @@ await fetchData();
                 <Player v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError"
                     style="height: 1px;" />
 
-                <v-card v-if="Primary_Informationresults && Secondary_Informationresults">
-                    <v-card-title class="titletext" style="padding-bottom: 0">{{ Primary_Informationresults.title.text
-                        }}</v-card-title>
-                    <v-card-actions>
-                        <v-row justify="space-between">
-                            <v-col cols="auto">
-                                <v-list-item :to="`/channel/${Secondary_Informationresults.owner.author.id}/featured`"
-                                    link>
-                                    <template v-slot:prepend>
-                                        <v-avatar color="grey-darken-3" size="36"
-                                            :image="Secondary_Informationresults.owner.author.thumbnails[0].url"></v-avatar>
-
-                                    </template>
-
-                                    <v-list-item-title>{{ Secondary_Informationresults.owner.author.name
-                                        }}</v-list-item-title>
-                                    <v-list-item-subtitle>{{ Secondary_Informationresults.owner.subscriber_count.text
-                                        }}</v-list-item-subtitle>
-
-                                </v-list-item>
-                            </v-col>
-                            <v-col cols="auto">
-                                <v-list-item>
-                                    <v-slide-group>
-                                        <v-slide-item>
-                                            <v-btn :disabled="downloading" @click="downloadVideo" variant="tonal"
-                                                class="rounded-pill mx-2">
-                                                <v-icon v-if="!downloading">mdi-download</v-icon>
-                                                <v-progress-circular v-else indeterminate
-                                                    size="20"></v-progress-circular>
-                                                Download
-                                            </v-btn>
-                                        </v-slide-item>
-                                        <v-slide-item>
-                                            <v-btn variant="tonal" class="rounded-pill mx-2" readonly>
-                                                <v-icon>mdi-thumb-up</v-icon>
-                                                {{ Basic_Informationresults.like_count }}
-                                            </v-btn>
-                                        </v-slide-item>
-                                        <v-slide-item>
-                                            <v-btn @click.stop="share" variant="tonal" class="rounded-pill mx-2">
-                                                <v-icon>mdi-share</v-icon>
-                                                Share
-                                            </v-btn>
-                                        </v-slide-item>
-                                    </v-slide-group>
-                                </v-list-item>
-                            </v-col>
-
-                        </v-row>
-                    </v-card-actions>
-                    <v-card-subtitle v-if="!showFullDescription">{{ Primary_Informationresults?.relative_date?.text
-                        }}・{{
-                            Primary_Informationresults?.view_count?.short_view_count?.text ||
-                            Primary_Informationresults?.view_count?.view_count?.text
-                        }}</v-card-subtitle>
-                    <v-card-subtitle v-else>{{ Primary_Informationresults?.published?.text }}・{{
-                        Primary_Informationresults?.view_count?.view_count?.text
-                        }}</v-card-subtitle>
-                    <v-card-text>
-                        <div :class="{ 'line-clamp': !showFullDescription }">
-                            <template v-for="result in Secondary_Informationresults?.description?.runs">
-                                <template v-if="result.endpoint">
-                                    <span style="white-space: pre-wrap; word-break: break-all;">
-                                        <NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink>
-                                    </span>
-                                </template>
-                                <template v-else-if="result.emoji">
-                                    <span style="white-space: pre-wrap; word-break: break-all;">{{ result.text }}</span>
-                                </template>
-                                <template v-else>
-                                    <span style="white-space: pre-wrap; word-break: break-all;">{{ result.text }}</span>
-                                </template>
-                            </template>
-                        </div>
-
-
-                        <template v-if="showFullDescription"
-                            v-for="result in Secondary_Informationresults?.metadata?.rows">
-                            <template v-if="result.type === 'RichMetadataRow'">
-                                <v-row>
-                                    <template v-for="innerresult in result.contents">
-                                        <v-col cols="6" v-if="innerresult.type === 'RichMetadata'">
-                                            <v-card elevation="16" :to="innerresult?.endpoint?.metadata?.url" link>
-                                                <v-row>
-                                                    <v-col cols="4" class="d-flex align-center justify-center image">
-                                                        <v-img :src="getProxifiedUrl(innerresult?.thumbnail[0]?.url)">
-                                                            <template v-slot:placeholder>
-                                                                <div
-                                                                    class="d-flex align-center justify-center fill-height">
-                                                                    <v-progress-circular color="grey-lighten-4"
-                                                                        indeterminate></v-progress-circular>
-                                                                </div>
-                                                            </template>
-                                                        </v-img>
-                                                    </v-col>
-                                                    <v-col cols="8" class="description">
-                                                        <v-card-title class="small-text omit">{{
-                                                            innerresult?.title?.text
-                                                        }}</v-card-title>
-                                                        <v-card-subtitle class="tiny-text">{{
-                                                            innerresult?.subtitle?.text
-                                                        }}</v-card-subtitle>
-                                                        <v-card-subtitle class="tiny-text">{{
-                                                            innerresult?.call_to_action?.text
-                                                        }}</v-card-subtitle>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-card>
-                                        </v-col>
-                                    </template>
-                                </v-row>
-                            </template>
-
-                        </template>
-
-                        <v-btn @click="toggleDescription">
-                            {{ showFullDescription ? Secondary_Informationresults?.show_less_text :
-                                Secondary_Informationresults?.show_more_text }}
-                        </v-btn>
-                    </v-card-text>
-                </v-card>
+                <VideoInfo :data="HeaderResults" :downloading="downloading" :showFullDescription="showFullDescription"
+                    @downloadVideo="downloadVideo" @share="share" @toggleDescription="toggleDescription" />
             </v-col>
             <v-col cols="12" md="4">
                 <v-tabs v-model="tab">
@@ -486,35 +367,16 @@ await fetchData();
                 <v-tabs-window v-model="tab">
                     <v-tabs-window-item value="option-1">
                         <template v-if="Commentresults">
-                            <v-col>
-                                <strong>{{ comsource?.header?.count.text }}</strong>
-                                <v-menu transition="scale-transition">
-                                    <template v-slot:activator="{ isActive, props, targetRef }">
-                                        <v-btn color="primary" dark v-bind="props" v-on="props">
-                                            <v-icon left>mdi-sort</v-icon>
-                                            {{ comsource?.header?.sort_menu?.title }}
-                                        </v-btn>
-                                    </template>
-                                    <v-list>
-                                        <v-list-item @click="selectedSort = 'TOP_COMMENTS'; ApplyComSort()">
-                                            <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
-                                                comsource.header.sort_menu.sub_menu_items[0].title
-                                                }}</v-list-item-title>
-                                        </v-list-item>
-                                        <v-list-item @click="selectedSort = 'NEWEST_FIRST'; ApplyComSort()">
-                                            <v-list-item-title v-if="comsource?.header?.sort_menu?.sub_menu_items">{{
-                                                comsource.header.sort_menu.sub_menu_items[1].title
-                                                }}</v-list-item-title>
-                                        </v-list-item>
-                                    </v-list>
-                                </v-menu>
-                            </v-col>
+                            <template v-if="comsource.header">
+                                <CommentsHeader :data="comsource.header" @update:selectedSort="selectedSort = $event"
+                                    @apply-com-sort="ApplyComSort" />
+                            </template>
 
                             <v-infinite-scroll mode="intersect" @load="ComLoadMore" v-if="Commentresults.length">
                                 <v-row style="width: 100%; margin-left: 0;">
-                                    <template v-for="result in Commentresults" :key="result.id">
-                                        <v-col v-if="result.type === 'CommentThread'" cols="12">
-                                            <Comments :data="result" />
+                                    <template v-for="result in Commentresults">
+                                        <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
+                                            <CommentThread :data="result" />
                                         </v-col>
                                     </template>
                                 </v-row>
@@ -525,9 +387,9 @@ await fetchData();
                         <template v-if="Relatedresults">
                             <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="Relatedresults.length">
                                 <v-row style="width: 100%; margin-left: 0;">
-                                    <template v-for="result in Relatedresults" :key="result.id">
-                                        <v-col v-if="result.type === 'NavigationEndpoint'" cols="4">
-                                            <ReelWatchEndpoint :data="result" />
+                                    <template v-for="result in Relatedresults">
+                                        <v-col v-if="(result instanceof YTNodes.NavigationEndpoint)" cols="4">
+                                            <NavigationEndpoint :data="result" />
                                         </v-col>
                                     </template>
                                 </v-row>
@@ -539,18 +401,10 @@ await fetchData();
                             <v-infinite-scroll mode="intersect" @load="TypicalLoadMore"
                                 v-if="RelatedTypicalresults.length">
                                 <v-row style="width: 100%; margin-left: 0;">
-                                    <template v-for="result in RelatedTypicalresults" :key="result.id">
-                                        <v-col v-if="result.type === 'CompactVideo'" cols="12">
-                                            <CompactVideo :data="result" />
-                                        </v-col>
-                                        <v-col v-else-if="result.type === 'LockupView'" cols="12">
-                                            <template v-if="result.content_type === 'PLAYLIST'">
-                                                <CompactPlaylists :data="result" />
-                                            </template>
-                                            <template v-else-if="result.content_type === 'VIDEO'">
-                                                <LockUpCompactVideo :data="result" />
-                                            </template>
-                                        </v-col>
+                                    <template v-for="result in RelatedTypicalresults">
+                                        <template v-if="(result instanceof Helpers.YTNode)">
+                                            <YTNode :data="result" :page="'Watch'" />
+                                        </template>
                                     </template>
                                 </v-row>
                             </v-infinite-scroll>

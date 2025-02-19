@@ -183,15 +183,15 @@ const fetchVideoData = async () => {
 
                 while (!flag) {
                     PLcontents.items.forEach((video) => {
-                        if (video.type === 'PlaylistVideo') {
-                            if (route.query.index === (video as YTNodes.PlaylistVideo).index.text) {
-                                PLvideoId = (video as YTNodes.PlaylistVideo).id;
+                        if ((video instanceof YTNodes.PlaylistVideo)) {
+                            if (route.query.index === video.index.text) {
+                                PLvideoId = video.id;
                                 flag = true;
-                            } else if (route.query.v === (video as YTNodes.PlaylistVideo).id) {
-                                PLvideoId = (video as YTNodes.PlaylistVideo).id;
+                            } else if (route.query.v === video.id) {
+                                PLvideoId = video.id;
                                 flag = true;
                             }
-                            PLResults.value.push(video as YTNodes.PlaylistVideo);
+                            PLResults.value.push(video);
                         }
                     });
 
