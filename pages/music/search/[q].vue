@@ -7,7 +7,7 @@ const langStore = useLangStore();
 const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicShelf | YTNodes.MusicCardShelf | YTNodes.ItemSection>>();
-const Headerresults = ref<YTNodes.ChipCloud | undefined>();
+const HeaderResults = ref<YTNodes.ChipCloud | undefined>();
 
 let sourceresults: YTMusic.Search;
 const alert = ref<boolean>(false);
@@ -48,7 +48,7 @@ const fetchData = async (filter?: string): Promise<void> => {
 
 
         results.value = await searchResults.contents;
-        Headerresults.value = await searchResults.header;
+        HeaderResults.value = await searchResults.header;
 
 
     } catch (error) {
@@ -82,7 +82,7 @@ await fetchData();
 
         <v-row>
             <v-chip-group>
-                <v-chip v-for="chip in Headerresults?.chips" :key="chip.text" :text="chip.text"
+                <v-chip v-for="chip in HeaderResults?.chips" :key="chip.text" :text="chip.text"
                     @click="fetchData(chip.text)">
 
                 </v-chip>

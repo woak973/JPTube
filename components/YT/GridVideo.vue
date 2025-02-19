@@ -10,7 +10,7 @@
         </v-img>
         <v-list-item>
             <v-row dense>
-                <template v-if="data.author.thumbnails[0]">
+                <template v-if="data.author?.thumbnails && data.author?.thumbnails[0]">
                     <v-col cols="auto">
                         <v-list-item :to="`/channel/${data.author.id}/featured`" style="padding: 0;">
                             <v-avatar :image="getProxifiedUrl(data.author.thumbnails[0]?.url)" class="mr-2"
@@ -20,8 +20,9 @@
                 </template>
                 <v-col>
                     <div class="omit">{{ data.title }}</div>
-                    <v-card-subtitle class="subomit">{{ data.author.name }}</v-card-subtitle>
-                    <v-card-subtitle class="subomit">{{ data.short_view_count.text }}・{{ data.published.text
+                    <v-card-subtitle class="subomit" v-if="data.author?.name !== 'N/A'">{{ data.author?.name
+                        }}</v-card-subtitle>
+                    <v-card-subtitle class="subomit">{{ data.short_view_count?.text }}・{{ data.published?.text
                     }}</v-card-subtitle>
                 </v-col>
             </v-row>

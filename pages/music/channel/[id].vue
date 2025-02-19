@@ -6,12 +6,12 @@ const langStore = useLangStore();
 const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf | YTNodes.MusicShelf>>();
-const Headerresults = ref<YTNodes.MusicHeader | YTNodes.MusicImmersiveHeader | YTNodes.MusicVisualHeader | undefined>();
+const HeaderResults = ref<YTNodes.MusicHeader | YTNodes.MusicImmersiveHeader | YTNodes.MusicVisualHeader | undefined>();
 let sourceresults: YTMusic.Artist;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
-watch(Headerresults, (newVal): void => {
+watch(HeaderResults, (newVal): void => {
     if (newVal) {
         useHead({
             title: `${newVal?.title?.text} - JPTube Music` || "Channel - JPTube Music"
@@ -42,7 +42,7 @@ const fetchData = async (): Promise<void> => {
 
 
         results.value = await searchResults?.sections;
-        Headerresults.value = searchResults.header;
+        HeaderResults.value = searchResults.header;
 
 
     } catch (error) {
@@ -72,12 +72,12 @@ await fetchData();
             </v-dialog>
         </div>
 
-        <template v-if="Headerresults">
-            <template v-if="(Headerresults instanceof YTNodes.MusicImmersiveHeader)">
-                <MusicImmersiveHeader :data="Headerresults" />
+        <template v-if="HeaderResults">
+            <template v-if="(HeaderResults instanceof YTNodes.MusicImmersiveHeader)">
+                <MusicImmersiveHeader :data="HeaderResults" />
             </template>
-            <template v-else-if="(Headerresults instanceof YTNodes.MusicVisualHeader)">
-                <MusicVisualHeader :data="Headerresults" />
+            <template v-else-if="(HeaderResults instanceof YTNodes.MusicVisualHeader)">
+                <MusicVisualHeader :data="HeaderResults" />
             </template>
         </template>
 

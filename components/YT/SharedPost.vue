@@ -14,7 +14,7 @@
                 </v-col>
             </v-row>
         </v-list-item>
-        <Community :data="data.original_post"/>
+        <YTNode v-if="data.original_post" :data="data.original_post"/>
     </v-card>
     <div v-else>
         データがありません
@@ -23,7 +23,9 @@
 
 <script setup lang="ts">
 
+import { YTNodes } from 'youtubei.js';
+
 const props = defineProps({
-    data: Object
+    data: YTNodes.SharedPost
 });
 </script>

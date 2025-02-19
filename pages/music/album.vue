@@ -7,11 +7,11 @@ const langStore = useLangStore();
 const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicResponsiveListItem>>();
-const Headerresults = ref<YTNodes.MusicResponsiveHeader | YTNodes.MusicDetailHeader | undefined>();
+const HeaderResults = ref<YTNodes.MusicResponsiveHeader | YTNodes.MusicDetailHeader | undefined>();
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
-watch(Headerresults, (newVal): void => {
+watch(HeaderResults, (newVal): void => {
     if (newVal) {
         useHead({
             title: `${newVal.title.text} - JPTube Music` || "Album - JPTube Music"
@@ -38,7 +38,7 @@ const fetchData = async (): Promise<void> => {
         const ytmusic = await yt.music;
 
         const searchResults: YTMusic.Album = await ytmusic.getAlbum(route.query.id as string);
-        Headerresults.value = searchResults.header;
+        HeaderResults.value = searchResults.header;
         if (searchResults.contents) {
             results.value = await searchResults.contents;
         } else {
@@ -73,9 +73,9 @@ await fetchData();
         </div>
         <v-row>
             <v-col cols="12" md="2">
-                <template v-if="Headerresults">
-                    <template v-if="(Headerresults instanceof YTNodes.MusicResponsiveHeader)">
-                        <MusicResponsiveHeader :data="Headerresults" />
+                <template v-if="HeaderResults">
+                    <template v-if="(HeaderResults instanceof YTNodes.MusicResponsiveHeader)">
+                        <MusicResponsiveHeader :data="HeaderResults" />
                     </template>
                 </template>
 

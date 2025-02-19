@@ -12,7 +12,7 @@ const locationStore = useLocationStore();
 const results = ref<Helpers.ObservedArray<Helpers.YTNode> | null>();
 const Tabresults = ref();
 const filter = ref();
-const Headerresults = ref();
+const HeaderResults = ref();
 const about = ref();
 let sourceresults: YT.Channel | YT.ChannelListContinuation;
 let sourceTab: YT.Channel;
@@ -67,7 +67,7 @@ const updateTab = (newTab: string) => {
     router.push({ params: { ...route.params, Tab: newTab } });
 };
 
-watch(Headerresults, (newVal) => {
+watch(HeaderResults, (newVal) => {
     if (newVal) {
         switch (newVal.header.type) {
             case 'PageHeader':
@@ -136,7 +136,7 @@ const fetchData = async () => {
 
         const searchResults: YT.Channel = await yt.getChannel(searchID.payload.browseId);
 
-        Headerresults.value = searchResults;
+        HeaderResults.value = searchResults;
         sourceTab = searchResults;
         if (searchResults.has_about) {
             about.value = await searchResults.getAbout();
@@ -271,15 +271,15 @@ await fetchData();
                 </v-card>
             </v-dialog>
         </div>
-        <template v-if="Headerresults">
-            <template v-if="Headerresults.header.type === 'PageHeader'">
-                <ChannelHeader :data="Headerresults" :about="about" />
+        <template v-if="HeaderResults">
+            <template v-if="HeaderResults.header.type === 'PageHeader'">
+                <ChannelHeader :data="HeaderResults" :about="about" />
             </template>
-            <template v-else-if="Headerresults.header.type === 'CarouselHeader'">
-                <CarouselHeader :data="Headerresults" />
+            <template v-else-if="HeaderResults.header.type === 'CarouselHeader'">
+                <CarouselHeader :data="HeaderResults" />
             </template>
-            <template v-else-if="Headerresults.header.type === 'InteractiveTabbedHeader'">
-                <InteractiveTabbedHeader :data="Headerresults" />
+            <template v-else-if="HeaderResults.header.type === 'InteractiveTabbedHeader'">
+                <InteractiveTabbedHeader :data="HeaderResults" />
             </template>
 
         </template>

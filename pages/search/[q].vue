@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, Types } from 'youtubei.js';
+import { Innertube, UniversalCache, YT, Types, Helpers } from 'youtubei.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -140,12 +140,12 @@ await fetchData();
                         <v-card-text class="headline">Upload date</v-card-text>
                         <v-chip-group v-model="selectedFilter.upload_date" column>
                             <v-chip v-for="option in uploadDateOptions" :key="option" :value="option">{{ option
-                                }}</v-chip>
+                            }}</v-chip>
                         </v-chip-group>
                         <v-card-text class="headline">Duration</v-card-text>
                         <v-chip-group v-model="selectedFilter.duration" column>
                             <v-chip v-for="option in durationOptions" :key="option" :value="option">{{ option
-                                }}</v-chip>
+                            }}</v-chip>
                         </v-chip-group>
                         <v-card-text class="headline">Sort by</v-card-text>
                         <v-chip-group v-model="selectedFilter.sort_by" column>
@@ -170,58 +170,10 @@ await fetchData();
 
         <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
             <v-row :items="results" style="width: 100%; margin-left: 0;">
-                <template v-for="result in results" :key="result.id">
-                    <v-col v-if="result.type === 'Video'" cols="12">
-                        <Video :data="result" />
-                    </v-col>
-                    <v-col v-else-if="result.type === 'Channel'" cols="12">
-                        <Channel :data="result" />
-                    </v-col>
-                    <v-col v-else-if="result.type === 'LockupView'" cols="12">
-                        <Playlists :data="result" />
-                    </v-col>
-                    <v-col v-else-if="result.type === 'ReelShelf'">
-                        <strong>{{ result.title.text }}</strong>
-                        <v-slide-group>
-                            <v-slide-item v-for="innerresult in result.items" :key="innerresult.id" class="ma-2"
-                                style="width: 200px;">
-                                <template v-if="innerresult.type === 'ShortsLockupView'">
-                                    <Shorts :data="innerresult" />
-                                </template>
-                            </v-slide-item>
-                        </v-slide-group>
-                    </v-col>
-                    <v-col v-else-if="result.type === 'IncludingResultsFor'">
-                        <strong>{{ result.including_results_for.text }}{{ result.corrected_query.text }}</strong>
-                    </v-col>
-                    <v-col v-else-if="result.type === 'ShowingResultsFor'">
-                        <strong>{{ result.search_instead_for.text }}{{ result.original_query.text }}・{{
-                            result.showing_results_for.text }}{{
-                                result.corrected_query.text }}</strong>
-                    </v-col>
-                    <v-col v-else-if="result.type === 'Shelf'">
-                        <strong>{{ result.title.text }}</strong>
-                        <v-slide-group>
-                            <v-slide-item v-for="innerresult in result.content.items" :key="innerresult.id" class="ma-2"
-                                v-bind:style="{ width: innerresult.type === 'Post' ? '500px' : '200px' }">
-                                <template v-if="innerresult.type === 'GridVideo'">
-                                    <GridVideoFeed :data="innerresult" />
-                                </template>
-                                <template v-else-if="innerresult.type === 'ShortsLockupView'">
-                                    <Shorts :data="innerresult" />
-                                </template>
-                                <template v-else-if="innerresult.type === 'Video'">
-                                    <HomeFeed :data="innerresult" />
-                                </template>
-                                <template v-else-if="innerresult.type === 'Post'">
-                                    <FeedPost :data="innerresult" />
-                                </template>
-                            </v-slide-item>
-                        </v-slide-group>
-                    </v-col>
-                    <v-col v-else-if="result.type === 'HashtagTile'" cols="12">
-                        <Hashtag :data="result" />
-                    </v-col>
+                <template v-for="result in results">
+                    <template v-if="(result instanceof Helpers.YTNode)">
+                        <YTNode :data="result" :page="'Search'"/>
+                    </template>
                 </template>
             </v-row>
         </v-infinite-scroll>

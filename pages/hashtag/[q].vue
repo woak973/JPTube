@@ -7,7 +7,7 @@ const langStore = useLangStore();
 const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<Helpers.YTNode>>();
-const Headerresults = ref<YT.HashtagFeed>();
+const HeaderResults = ref<YT.HashtagFeed>();
 let sourceresults: YT.HashtagFeed | Mixins.Feed;
 const alert = ref(false);
 const errorMessage = ref<string>('');
@@ -58,7 +58,7 @@ const fetchData = async () => {
 
         const searchResults: YT.HashtagFeed = await yt.getHashtag(route.params.q as string);
         sourceresults = searchResults;
-        Headerresults.value = searchResults;
+        HeaderResults.value = searchResults;
         results.value = await searchResults.contents.contents;
 
 
@@ -89,9 +89,9 @@ await fetchData();
             </v-dialog>
 
         </div>
-        <template v-if="Headerresults && Headerresults.header">
-            <template v-if="(Headerresults.header instanceof YTNodes.PageHeader)">
-                <PageHeader :data="Headerresults.header"/>
+        <template v-if="HeaderResults && HeaderResults.header">
+            <template v-if="(HeaderResults.header instanceof YTNodes.PageHeader)">
+                <PageHeader :data="HeaderResults.header"/>
             </template>
         </template>
 

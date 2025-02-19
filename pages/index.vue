@@ -70,11 +70,11 @@ await fetchData();
 
         <v-row>
             <template v-for="result in results">
-                <v-col v-if="result.type === 'Video'" cols="12" md="3" lg="2" sm="6">
-                    <template v-if="(result instanceof YTNodes.Video)">
-                        <HomeFeed :data="result" />
+                <template v-if="result.type === 'Video'">
+                    <template v-if="(result instanceof Helpers.YTNode)">
+                        <YTNode :data="result" />
                     </template>
-                </v-col>
+                </template>
             </template>
         </v-row>
     </v-container>

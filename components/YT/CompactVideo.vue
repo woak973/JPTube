@@ -2,7 +2,7 @@
     <v-card v-if="data" elevation="16" :to="`/watch?v=${data.id}`" link>
         <v-row>
             <v-col cols="4" class="d-flex align-center justify-center image">
-                <v-img :src="getProxifiedUrl(data.thumbnails[0].url)" aspect-ratio="16/9" rounded>
+                <v-img :src="getProxifiedUrl(data.thumbnails[0]?.url)" aspect-ratio="16/9" rounded>
                     <template v-slot:placeholder>
                         <div class="d-flex align-center justify-center fill-height">
                             <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
@@ -13,7 +13,8 @@
             </v-col>
             <v-col cols="8" class="description">
                 <v-card-title class="small-text omit">{{ data.title }}</v-card-title>
-                <v-card-subtitle class="tiny-text">{{ data.short_view_count.text }}・{{ data.published.text }}</v-card-subtitle>
+                <v-card-subtitle class="tiny-text">{{ data.short_view_count.text }}・{{ data.published.text
+                    }}</v-card-subtitle>
                 <v-card-subtitle class="tiny-text">{{ data.author.name }}</v-card-subtitle>
             </v-col>
         </v-row>
@@ -25,28 +26,38 @@
 
 <script setup lang="ts">
 
+import { YTNodes } from 'youtubei.js';
+
 const props = defineProps({
-    data: Object
+    data: YTNodes.CompactVideo
 });
 </script>
 
 <style scoped>
 .small-text {
-    font-size: 0.875rem; /* 14px */
+    font-size: 0.875rem;
+    /* 14px */
 }
+
 .tiny-text {
-    font-size: 0.75rem; /* 12px */
+    font-size: 0.75rem;
+    /* 12px */
 }
 
 .duration-overlay {
-  position: absolute;
-  bottom: 0.5rem; /* 8px */
-  right: 0.5rem; /* 8px */
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 0.125rem 0.25rem; /* 2px 4px */
-  border-radius: 0.25rem; /* 4px */
-  font-size: 0.75rem; /* 12px */
+    position: absolute;
+    bottom: 0.5rem;
+    /* 8px */
+    right: 0.5rem;
+    /* 8px */
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.125rem 0.25rem;
+    /* 2px 4px */
+    border-radius: 0.25rem;
+    /* 4px */
+    font-size: 0.75rem;
+    /* 12px */
 }
 
 .omit {

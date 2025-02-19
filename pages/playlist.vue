@@ -7,12 +7,12 @@ const langStore = useLangStore();
 const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<YTNodes.PlaylistVideo | YTNodes.ReelItem | YTNodes.ShortsLockupView>>();
-const Headerresults = ref<YT.Playlist>();
+const HeaderResults = ref<YT.Playlist>();
 let sourceresults: YT.Playlist;
 const alert = ref(false);
 const errorMessage = ref<string>('');
 
-watch(Headerresults, (newVal) => {
+watch(HeaderResults, (newVal) => {
     if (newVal) {
         useHead({
             title: `${newVal.info.title} - JPTube` || "Playlist - JPTube"
@@ -60,7 +60,7 @@ const fetchData = async () => {
 
         const searchResults: YT.Playlist = await yt.getPlaylist(route.query.list as string);
         sourceresults = searchResults;
-        Headerresults.value = searchResults;
+        HeaderResults.value = searchResults;
         if (searchResults.page_contents instanceof YTNodes.SectionList) {
             results.value = await searchResults.items;
         } else {
@@ -95,8 +95,8 @@ await fetchData();
         </div>
         <v-row>
             <v-col cols="12" md="2">
-                <template v-if="Headerresults">
-                    <Playlistinfo :data="Headerresults" />
+                <template v-if="HeaderResults">
+                    <Playlist-Info :data="HeaderResults" />
                 </template>
 
             </v-col>
@@ -105,10 +105,8 @@ await fetchData();
                 <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
                     <v-row style="width: 100%; margin-left: 0;">
                         <template v-for="result in results">
-                            <template v-if="(result instanceof YTNodes.PlaylistVideo)">
-                                <v-col cols="12">
-                                    <PlaylistVideo :data="result" />
-                                </v-col>
+                            <template v-if="(result instanceof Helpers.YTNode)">
+                                <YTNode :data="result" />
                             </template>
                         </template>
                     </v-row>
