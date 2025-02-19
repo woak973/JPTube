@@ -14,18 +14,18 @@ const Nextresults = ref<YTNodes.PlaylistPanel>();
 const Lyricsresults = ref<YTNodes.MusicDescriptionShelf>();
 const Relatedresults = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf | YTNodes.MusicDescriptionShelf>>();
 const Playlistresults = ref<YTNodes.MusicResponsiveListItem[]>([]);
-const alert = ref(false);
+const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
-const fatalError = ref<Boolean>(false);
+const fatalError = ref<boolean>(false);
 
 
-const downloading = ref<Boolean>(false);
+const downloading = ref<boolean>(false);
 const child = ref<{ seek: (seconds: number) => void; destroyPlayer?: () => Promise<void> } | null>(null);
 
-const tab = ref('option-2');
-const PLBtn = ref<Boolean>(false);
+const tab = ref<string>('option-2');
+const PLBtn = ref<boolean>(false);
 
-watch(results, (newVal) => {
+watch(results, (newVal): void => {
     if (newVal) {
         useHead({
             title: `${newVal.basic_info.title} - JPTube Music` || "Watch - JPTube Music"
@@ -37,7 +37,7 @@ definePageMeta({
     layout: "music"
 });
 
-watch(() => route.query.v, async (newVideoId, oldVideoId) => {
+watch(() => route.query.v, async (newVideoId, oldVideoId): Promise<void> => {
 
     if (playerStore.player === 'shaka-player' && newVideoId !== oldVideoId) {
         const playerComponent = child.value;
@@ -51,7 +51,7 @@ watch(() => route.query.v, async (newVideoId, oldVideoId) => {
 
 });
 
-onBeforeRouteUpdate(async (to, from, next) => {
+onBeforeRouteUpdate(async (to, from, next): Promise<void> => {
     if (playerStore.player === 'shaka-player' && to.query.v !== from.query.v) {
         const playerComponent = child.value;
         if (playerComponent && playerComponent.destroyPlayer) {
@@ -61,7 +61,7 @@ onBeforeRouteUpdate(async (to, from, next) => {
     next();
 });
 
-onBeforeRouteLeave(async (to, from, next) => {
+onBeforeRouteLeave(async (to, from, next): Promise<void> => {
     if (playerStore.player === 'shaka-player') {
         const playerComponent = child.value;
         if (playerComponent && playerComponent.destroyPlayer) {
@@ -72,12 +72,12 @@ onBeforeRouteLeave(async (to, from, next) => {
 });
 
 
-const handleError = (message: string) => {
+const handleError = (message: string): void => {
     alert.value = true;
     errorMessage.value = message;
 };
 
-const downloadVideo = async () => {
+const downloadVideo = async (): Promise<void> => {
     downloading.value = true;
     try {
         const stream = await sourceresults.download();
@@ -113,7 +113,7 @@ const downloadVideo = async () => {
     }
 };
 
-const share = () => {
+const share = (): void => {
     if (navigator.share) {
         navigator.share({
             title: document.title,
@@ -126,7 +126,7 @@ const share = () => {
     }
 };
 
-const fetchData = async () => {
+const fetchData = async (): Promise<void> => {
     try {
         const lang = langStore.lang || 'ja';
         const location = locationStore.location || 'JP';
@@ -259,7 +259,7 @@ await fetchData();
                                     <template v-for="result in Playlistresults">
                                         <v-col v-if="(result instanceof YTNodes.MusicResponsiveListItem)" cols="12">
                                             <MusicResponsiveListItem :data="result"
-                                                :PLid="route.query.list as string" />
+                                                :PLid="(route.query.list as string)" />
                                         </v-col>
                                     </template>
                                 </v-row>

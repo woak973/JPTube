@@ -8,11 +8,10 @@ const locationStore = useLocationStore();
 const results = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf | YTNodes.MusicShelf>>();
 const Headerresults = ref<YTNodes.MusicHeader | YTNodes.MusicImmersiveHeader | YTNodes.MusicVisualHeader | undefined>();
 let sourceresults: YTMusic.Artist;
-const alert = ref(false);
+const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
-const isEnd = ref(false);
 
-watch(Headerresults, (newVal) => {
+watch(Headerresults, (newVal): void => {
     if (newVal) {
         useHead({
             title: `${newVal?.title?.text} - JPTube Music` || "Channel - JPTube Music"
@@ -25,7 +24,7 @@ definePageMeta({
 });
 
 
-const fetchData = async () => {
+const fetchData = async (): Promise<void> => {
     try {
         const lang = langStore.lang || 'ja';
         const location = locationStore.location || 'JP';

@@ -10,9 +10,8 @@ const results = ref<Helpers.ObservedArray<YTNodes.MusicShelf | YTNodes.MusicCard
 const Headerresults = ref<YTNodes.ChipCloud | undefined>();
 
 let sourceresults: YTMusic.Search;
-const alert = ref(false);
+const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
-const isEnd = ref(false);
 
 useHead({
     title: `${route.params.q as string} - JPTube Music` || "Search - JPTube Music"
@@ -25,7 +24,7 @@ definePageMeta({
 
 
 
-const fetchData = async (filter?: string) => {
+const fetchData = async (filter?: string): Promise<void> => {
     try {
         const lang = langStore.lang || 'ja';
         const location = locationStore.location || 'JP';

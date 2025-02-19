@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache } from 'youtubei.js';
 
-const drawer = ref(false);
-const searchQuery = ref('');
-const value = ref('');
+const drawer = ref<boolean>(false);
+const searchQuery = ref<string>('');
+const value = ref<string>('');
 const suggestions = ref<string[]>([]);
 const langDialog = ref<HTMLElement | null>(null);
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 
-const createYTInstance = async () => {
+const createYTInstance = async (): Promise<Innertube> => {
   const lang = langStore.lang || 'ja';
   const location = locationStore.location || 'JP';
   return await Innertube.create({
@@ -20,7 +20,7 @@ const createYTInstance = async () => {
   });
 };
 
-watch(searchQuery, (newQuery) => {
+watch(searchQuery, (newQuery): void => {
   if (newQuery) {
     fetchSuggestions(newQuery);
   } else {
@@ -28,7 +28,7 @@ watch(searchQuery, (newQuery) => {
   }
 });
 
-const search = async () => {
+const search = async (): Promise<void> => {
   if (searchQuery.value) {
     const yt = await createYTInstance();
     try {
@@ -47,7 +47,7 @@ const search = async () => {
   }
 };
 
-const clearSearch = () => {
+const clearSearch = (): void => {
   searchQuery.value = '';
 };
 
@@ -61,7 +61,7 @@ const fetchSuggestions = async (query: string): Promise<void> => {
   }
 };
 
-const openLangDialog = () => {
+const openLangDialog = (): void => {
   if (langDialog.value) {
     (langDialog.value as any).open();
   }

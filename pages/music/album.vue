@@ -8,10 +8,10 @@ const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicResponsiveListItem>>();
 const Headerresults = ref<YTNodes.MusicResponsiveHeader | YTNodes.MusicDetailHeader | undefined>();
-const alert = ref(false);
+const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
-watch(Headerresults, (newVal) => {
+watch(Headerresults, (newVal): void => {
     if (newVal) {
         useHead({
             title: `${newVal.title.text} - JPTube Music` || "Album - JPTube Music"
@@ -25,7 +25,7 @@ definePageMeta({
 
 
 
-const fetchData = async () => {
+const fetchData = async (): Promise<void> => {
     try {
         const lang = langStore.lang || 'ja';
         const location = locationStore.location || 'JP';

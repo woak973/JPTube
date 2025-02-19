@@ -9,10 +9,10 @@ const locationStore = useLocationStore();
 const results = ref<Helpers.ObservedArray<YTNodes.MusicResponsiveListItem>>();
 const Headerresults = ref<YTNodes.MusicResponsiveHeader | YTNodes.MusicDetailHeader | YTNodes.MusicEditablePlaylistDetailHeader | undefined>();
 let sourceresults: YTMusic.Playlist;
-const alert = ref(false);
+const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
-watch(Headerresults, (newVal) => {
+watch(Headerresults, (newVal): void => {
     if (newVal && !(newVal instanceof YTNodes.MusicEditablePlaylistDetailHeader)) {
         useHead({
             title: `${newVal.title.text} - JPTube Music` || "Playlist - JPTube Music"
@@ -24,7 +24,7 @@ definePageMeta({
     layout: "music"
 });
 
-const LoadMore = async ({ done }: any) => {
+const LoadMore = async ({ done }: any): Promise<void> => {
     console.log(sourceresults.has_continuation)
     try {
         if (sourceresults && sourceresults.has_continuation) {
@@ -51,7 +51,7 @@ const LoadMore = async ({ done }: any) => {
 
 };
 
-const fetchData = async () => {
+const fetchData = async (): Promise<void> => {
     try {
         const lang = langStore.lang || 'ja';
         const location = locationStore.location || 'JP';

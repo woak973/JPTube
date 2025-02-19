@@ -6,9 +6,8 @@ const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf | YTNodes.MusicTastebuilderShelf> | undefined>();
 let sourceresults: YTMusic.HomeFeed;
-const alert = ref(false);
+const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
-const isEnd = ref(false);
 
 useHead({
     title: "Home - JPTube Music"
@@ -18,7 +17,7 @@ definePageMeta({
     layout: "music"
 });
 
-const LoadMore = async ({ done }: any) => {
+const LoadMore = async ({ done }: any): Promise<void> => {
     try {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
@@ -44,7 +43,7 @@ const LoadMore = async ({ done }: any) => {
 
 };
 
-const fetchData = async () => {
+const fetchData = async (): Promise<void> => {
     try {
         const lang = langStore.lang || 'ja';
         const location = locationStore.location || 'JP';

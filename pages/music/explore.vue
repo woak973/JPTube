@@ -6,9 +6,8 @@ const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf> | undefined>();
 let sourceresults: YTMusic.Explore;
-const alert = ref(false);
+const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
-const isEnd = ref(false);
 
 useHead({
     title: "Explore - JPTube Music"
@@ -19,7 +18,7 @@ definePageMeta({
 });
 
 
-const fetchData = async () => {
+const fetchData = async (): Promise<void> => {
     try {
         const lang = langStore.lang || 'ja';
         const location = locationStore.location || 'JP';
