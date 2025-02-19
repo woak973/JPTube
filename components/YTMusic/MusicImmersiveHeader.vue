@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :image="data.thumbnail?.contents[0]?.url">
+    <v-card v-if="data" elevation="16" :image="getProxifiedUrl(data.thumbnail?.contents[0]?.url || '')">
 
         <v-card-title class="semi-transparent-background">{{ data.title.text }}</v-card-title>
         <v-card-text class="omit semi-transparent-background">{{ data.description.text

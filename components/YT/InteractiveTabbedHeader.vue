@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :image="data?.header?.banner[0]?.url">
+    <v-card v-if="data" elevation="16" :image="getProxifiedUrl(data?.header?.banner[0]?.url)">
         <v-row>
             <v-col cols="4" class="d-flex align-center justify-center">
                 <v-img v-if="data.header.box_art && data.header.box_art[0]?.url" :src="getProxifiedUrl(data.header.box_art[0]?.url)"
