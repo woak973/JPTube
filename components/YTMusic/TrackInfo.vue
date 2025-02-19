@@ -13,20 +13,20 @@
                 <v-col cols="auto">
                     <v-list-item>
                         <v-slide-group>
-                            <v-slide-item>
+                            <div>
                                 <v-btn :disabled="downloading" @click="$emit('downloadVideo')" variant="tonal"
                                     class="rounded-pill mx-2">
                                     <v-icon v-if="!downloading">mdi-download</v-icon>
                                     <v-progress-circular v-else indeterminate size="20"></v-progress-circular>
                                     Download
                                 </v-btn>
-                            </v-slide-item>
-                            <v-slide-item>
+                            </div>
+                            <div>
                                 <v-btn @click.stop="$emit('share')" variant="tonal" class="rounded-pill mx-2">
                                     <v-icon>mdi-share</v-icon>
                                     Share
                                 </v-btn>
-                            </v-slide-item>
+                            </div>
                         </v-slide-group>
                     </v-list-item>
                 </v-col>

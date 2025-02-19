@@ -343,12 +343,12 @@
         <template v-else-if="data.type === 'HorizontalList'">
             <v-col cols="12">
                 <v-slide-group>
-                    <v-slide-item v-for="content in (data as YTNodes.HorizontalList).contents" class="ma-2"
+                    <div v-for="content in (data as YTNodes.HorizontalList).contents" class="ma-2"
                         :style="{ width: content.type === 'Post' ? '500px' : '200px' }">
                         <template v-if="(content instanceof Helpers.YTNode)">
                             <YTNode :data="content" :attribute="'slide'" :page="page" />
                         </template>
-                    </v-slide-item>
+                    </div>
                 </v-slide-group>
             </v-col>
         </template>
@@ -357,12 +357,12 @@
             <v-col cols="12">
                 <YTNode :data="(data as YTNodes.HorizontalCardList).header" :attribute="attribute" />
                 <v-slide-group>
-                    <v-slide-item v-for="card in (data as YTNodes.HorizontalCardList).cards" class="ma-2"
+                    <div v-for="card in (data as YTNodes.HorizontalCardList).cards" class="ma-2"
                         style="width: 200px;">
                         <template v-if="(card instanceof Helpers.YTNode)">
                             <YTNode :data="card" :attribute="'slide'" :page="page" />
                         </template>
-                    </v-slide-item>
+                    </div>
                 </v-slide-group>
             </v-col>
         </template>
@@ -370,12 +370,12 @@
         <template v-else-if="data.type === 'VerticalList'">
             <v-col cols="12">
                 <v-slide-group>
-                    <v-slide-item v-for="content in (data as YTNodes.VerticalList).contents" class="ma-2"
+                    <div v-for="content in (data as YTNodes.VerticalList).contents" class="ma-2"
                         style="width: 200px;">
                         <template v-if="(content instanceof Helpers.YTNode)">
                             <YTNode :data="content" :attribute="'slide'" :page="page" />
                         </template>
-                    </v-slide-item>
+                    </div>
                 </v-slide-group>
             </v-col>
         </template>
@@ -384,11 +384,11 @@
             <v-col cols="12">
                 <strong>{{ (data as YTNodes.ReelShelf).title.text }}</strong>
                 <v-slide-group>
-                    <v-slide-item v-for="item in (data as YTNodes.ReelShelf).items" class="ma-2" style="width: 200px;">
+                    <div v-for="item in (data as YTNodes.ReelShelf).items" class="ma-2" style="width: 200px;">
                         <template v-if="(item instanceof Helpers.YTNode)">
                             <YTNode :data="item" :attribute="'slide'" :page="page" />
                         </template>
-                    </v-slide-item>
+                    </div>
                 </v-slide-group>
             </v-col>
         </template>
@@ -397,12 +397,12 @@
             <v-col cols="12">
                 <strong>{{ (data as YTNodes.RichShelf).title.text }}</strong>
                 <v-slide-group>
-                    <v-slide-item v-for="content in (data as YTNodes.RichShelf).contents" class="ma-2"
+                    <div v-for="content in (data as YTNodes.RichShelf).contents" class="ma-2"
                         style="width: 200px;">
                         <template v-if="(content instanceof Helpers.YTNode)">
                             <YTNode :data="content" :attribute="'slide'" :page="page" />
                         </template>
-                    </v-slide-item>
+                    </div>
                 </v-slide-group>
             </v-col>
         </template>

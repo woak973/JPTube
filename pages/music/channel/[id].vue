@@ -86,7 +86,7 @@ await fetchData();
                 <v-col v-if="(result instanceof YTNodes.MusicCarouselShelf)" cols="12">
                     <strong>{{ result?.header?.title }}</strong>
                     <v-slide-group>
-                        <v-slide-item v-for="content in result.contents" class="ma-2"
+                        <div v-for="content in result.contents" class="ma-2"
                             v-bind:style="{ width: (content instanceof YTNodes.MusicResponsiveListItem) ? '500px' : '200px' }">
                             <template v-if="(content instanceof YTNodes.MusicResponsiveListItem)">
                                 <MusicResponsiveListItem :data="content" />
@@ -94,7 +94,7 @@ await fetchData();
                             <template v-else-if="(content instanceof YTNodes.MusicTwoRowItem)">
                                 <MusicTwoRowItem :data="content" />
                             </template>
-                        </v-slide-item>
+                        </div>
                     </v-slide-group>
                 </v-col>
             </template>
