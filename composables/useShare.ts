@@ -1,5 +1,5 @@
 export const useShare = () => {
-    const share = () => {
+    const share = (): void => {
         if (navigator.share) {
             navigator.share({
                 title: document.title,

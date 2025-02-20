@@ -388,8 +388,8 @@ await fetchData();
                             <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="Relatedresults.length">
                                 <v-row style="width: 100%; margin-left: 0;">
                                     <template v-for="result in Relatedresults">
-                                        <v-col v-if="(result instanceof YTNodes.NavigationEndpoint)" cols="4">
-                                            <NavigationEndpoint :data="result" />
+                                        <v-col v-if="(result instanceof YTNodes.NavigationEndpoint) && result.type === 'reelWatchEndpoint'" cols="4">
+                                            <NavigationEndpoint-reelWatchEndpoint :data="result" />
                                         </v-col>
                                     </template>
                                 </v-row>

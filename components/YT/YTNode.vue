@@ -279,6 +279,17 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'SearchRefinementCard'">
+            <template v-if="attribute === 'slide'">
+                <SearchRefinementCard :data="(data as YTNodes.SearchRefinementCard)" />
+            </template>
+            <template v-else>
+                <v-col cols="6">
+                    <SearchRefinementCard :data="(data as YTNodes.SearchRefinementCard)" />
+                </v-col>
+            </template>
+        </template>
+
 
         <!-- Recursion Components -->
 
