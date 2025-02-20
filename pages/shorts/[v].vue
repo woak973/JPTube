@@ -351,10 +351,10 @@ await fetchData();
                         allowfullscreen></iframe>
                 </div>
 
-                <Player v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError"
+                <YTCommonPlayer v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError"
                     style="height: 1px;" />
 
-                <VideoInfo :data="HeaderResults" :downloading="downloading" :showFullDescription="showFullDescription"
+                <YTCommonVideoInfo :data="HeaderResults" :downloading="downloading" :showFullDescription="showFullDescription"
                     @downloadVideo="downloadVideo" @share="share" @toggleDescription="toggleDescription" />
             </v-col>
             <v-col cols="12" md="4">
@@ -368,7 +368,7 @@ await fetchData();
                     <v-tabs-window-item value="option-1">
                         <template v-if="Commentresults">
                             <template v-if="comsource.header">
-                                <CommentsHeader :data="comsource.header" @update:selectedSort="selectedSort = $event"
+                                <YTCommonCommentsHeader :data="comsource.header" @update:selectedSort="selectedSort = $event"
                                     @apply-com-sort="ApplyComSort" />
                             </template>
 
@@ -376,7 +376,7 @@ await fetchData();
                                 <v-row style="width: 100%; margin-left: 0;">
                                     <template v-for="result in Commentresults">
                                         <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
-                                            <CommentThread :data="result" />
+                                            <YTCommonCommentThread :data="result" />
                                         </v-col>
                                     </template>
                                 </v-row>
@@ -389,7 +389,7 @@ await fetchData();
                                 <v-row style="width: 100%; margin-left: 0;">
                                     <template v-for="result in Relatedresults">
                                         <v-col v-if="(result instanceof YTNodes.NavigationEndpoint) && result.type === 'reelWatchEndpoint'" cols="4">
-                                            <NavigationEndpoint-reelWatchEndpoint :data="result" />
+                                            <YTCommonNavigationEndpointReelWatchEndpoint :data="result" />
                                         </v-col>
                                     </template>
                                 </v-row>

@@ -91,7 +91,7 @@ await fetchData();
         </div>
         <template v-if="HeaderResults && HeaderResults.header">
             <template v-if="(HeaderResults.header instanceof YTNodes.PageHeader)">
-                <PageHeader :data="HeaderResults.header"/>
+                <YTCommonPageHeader :data="HeaderResults.header"/>
             </template>
         </template>
 

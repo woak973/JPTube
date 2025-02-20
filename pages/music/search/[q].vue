@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache, Helpers, YTNodes, YTMusic } from 'youtubei.js';
-import MusicCardShelf from '~/components/YTMusic/MusicCardShelf.vue';
 
 const route = useRoute();
 const langStore = useLangStore();
@@ -94,7 +93,7 @@ await fetchData();
                     <v-row>
                         <template v-for="content in result.contents">
                             <v-col cols="12" v-if="(content instanceof YTNodes.MusicResponsiveListItem)">
-                                <MusicResponsiveListItem :data="content" />
+                                <YTMusicCommonMusicResponsiveListItem :data="content" />
                             </v-col>
                         </template>
                     </v-row>
@@ -104,7 +103,7 @@ await fetchData();
                 </v-col>
                 <v-col v-else-if="(result instanceof YTNodes.MusicCardShelf)" cols="12">
                     <strong>{{ result.header?.title.text }}</strong>
-                    <MusicCardShelf :data="result" />
+                    <YTMusicCommonMusicCardShelf :data="result" />
                 </v-col>
             </template>
         </v-row>

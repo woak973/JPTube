@@ -102,7 +102,7 @@ await fetchData();
             <v-col cols="12" md="2">
                 <template v-if="HeaderResults">
                     <template v-if="(HeaderResults instanceof YTNodes.MusicResponsiveHeader)">
-                        <MusicResponsiveHeader :data="HeaderResults" />
+                        <YTMusicCommonMusicResponsiveHeader :data="HeaderResults" />
                     </template>
                 </template>
 
@@ -114,7 +114,7 @@ await fetchData();
                         <template v-for="result in results" :key="result.id">
                             <template v-if="(result instanceof YTNodes.MusicResponsiveListItem)">
                                 <v-col cols="12">
-                                    <MusicResponsiveListItem :data="result" />
+                                    <YTMusicCommonMusicResponsiveListItem :data="result" />
                                 </v-col>
                             </template>
                         </template>

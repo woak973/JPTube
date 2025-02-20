@@ -274,13 +274,13 @@ await fetchData();
         </div>
         <template v-if="HeaderResults">
             <template v-if="(HeaderResults instanceof  YTNodes.PageHeader)">
-                <PageHeader :data="HeaderResults" :about="about" :metadata="MetaResults"/>
+                <YTCommonPageHeader :data="HeaderResults" :about="about" :metadata="MetaResults"/>
             </template>
             <template v-else-if="(HeaderResults instanceof YTNodes.CarouselHeader)">
-                <CarouselHeader :data="HeaderResults" />
+                <YTCommonCarouselHeader :data="HeaderResults" />
             </template>
             <template v-else-if="(HeaderResults instanceof YTNodes.InteractiveTabbedHeader)">
-                <InteractiveTabbedHeader :data="HeaderResults" />
+                <YTCommonInteractiveTabbedHeader :data="HeaderResults" />
             </template>
 
         </template>

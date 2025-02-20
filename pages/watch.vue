@@ -453,9 +453,9 @@ function useShare(): { share: any; } {
                         allowfullscreen></iframe>
                 </div>
 
-                <Player v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError" />
+                <YTCommonPlayer v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError" />
 
-                <VideoInfo :data="HeaderResults" :downloading="downloading" :showFullDescription="showFullDescription"
+                <YTCommonVideoInfo :data="HeaderResults" :downloading="downloading" :showFullDescription="showFullDescription"
                     @downloadVideo="downloadVideo" @share="share" @toggleDescription="toggleDescription" />
 
                 <template v-if="isMobile">
@@ -474,7 +474,7 @@ function useShare(): { share: any; } {
                 <template v-else>
                     <template v-if="Commentresults">
                         <template v-if="comsource.header">
-                            <CommentsHeader :data="comsource.header" @update:selectedSort="selectedSort = $event"
+                            <YTCommonCommentsHeader :data="comsource.header" @update:selectedSort="selectedSort = $event"
                                 @apply-com-sort="ApplyComSort" />
                         </template>
 
@@ -482,7 +482,7 @@ function useShare(): { share: any; } {
                             <v-row style="width: 100%; margin-left: 0;">
                                 <template v-for="result in Commentresults">
                                     <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
-                                        <CommentThread :data="result" />
+                                        <YTCommonCommentThread :data="result" />
                                     </v-col>
                                 </template>
                             </v-row>
@@ -520,7 +520,7 @@ function useShare(): { share: any; } {
                             <template v-for="result in PLResults" :key="result.id">
                                 <template v-if="(result instanceof YTNodes.PlaylistVideo)">
                                     <v-col cols="12">
-                                        <PlaylistVideo-Watch :data="result" />
+                                        <YTCommonPlaylistVideoWatch :data="result" />
                                     </v-col>
                                 </template>
                             </template>
@@ -532,7 +532,7 @@ function useShare(): { share: any; } {
                 <template v-if="isMobile">
                     <template v-if="Commentresults">
                         <template v-if="comsource.header">
-                            <CommentsHeader :data="comsource.header" @update:selectedSort="selectedSort = $event"
+                            <YTCommonCommentsHeader :data="comsource.header" @update:selectedSort="selectedSort = $event"
                                 @apply-com-sort="ApplyComSort" />
                         </template>
 
@@ -540,7 +540,7 @@ function useShare(): { share: any; } {
                             <v-row style="width: 100%; margin-left: 0;">
                                 <template v-for="result in Commentresults">
                                     <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
-                                        <CommentThread :data="result" />
+                                        <YTCommonCommentThread :data="result" />
                                     </v-col>
                                 </template>
                             </v-row>

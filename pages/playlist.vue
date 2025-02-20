@@ -96,7 +96,7 @@ await fetchData();
         <v-row>
             <v-col cols="12" md="2">
                 <template v-if="HeaderResults">
-                    <Playlist-Info :data="HeaderResults" />
+                    <YTCommonPlaylistInfo :data="HeaderResults" />
                 </template>
 
             </v-col>

@@ -108,6 +108,6 @@ const openLangDialog = (): void => {
       <slot :value="value" />
     </v-main>
 
-    <LangDialog ref="langDialog" />
+    <YTCommonLangDialog ref="langDialog" />
   </v-app>
 </template>

@@ -74,10 +74,10 @@ await fetchData();
 
         <template v-if="HeaderResults">
             <template v-if="(HeaderResults instanceof YTNodes.MusicImmersiveHeader)">
-                <MusicImmersiveHeader :data="HeaderResults" />
+                <YTMusicCommonMusicImmersiveHeader :data="HeaderResults" />
             </template>
             <template v-else-if="(HeaderResults instanceof YTNodes.MusicVisualHeader)">
-                <MusicVisualHeader :data="HeaderResults" />
+                <YTMusicCommonMusicVisualHeader :data="HeaderResults" />
             </template>
         </template>
 
@@ -89,10 +89,10 @@ await fetchData();
                         <div v-for="content in result.contents" class="ma-2"
                             v-bind:style="{ width: (content instanceof YTNodes.MusicResponsiveListItem) ? '500px' : '200px' }">
                             <template v-if="(content instanceof YTNodes.MusicResponsiveListItem)">
-                                <MusicResponsiveListItem :data="content" />
+                                <YTMusicCommonMusicResponsiveListItem :data="content" />
                             </template>
                             <template v-else-if="(content instanceof YTNodes.MusicTwoRowItem)">
-                                <MusicTwoRowItem :data="content" />
+                                <YTMusicCommonMusicTwoRowItem :data="content" />
                             </template>
                         </div>
                     </v-slide-group>

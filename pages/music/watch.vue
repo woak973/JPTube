@@ -236,9 +236,9 @@ await fetchData();
                         allowfullscreen></iframe>
                 </div>
 
-                <Player v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError" />
+                <YTCommonPlayer v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError" />
 
-                <TrackInfo :data="results" :downloading="downloading" @downloadVideo="downloadVideo" @share="share" />
+                <YTMusicCommonTrackInfo :data="results" :downloading="downloading" @downloadVideo="downloadVideo" @share="share" />
             </v-col>
             <v-col cols="12" md="4">
                 <v-tabs v-model="tab">
@@ -255,7 +255,7 @@ await fetchData();
                                 <v-row style="width: 100%; margin-left: 0;">
                                     <template v-for="result in Playlistresults">
                                         <v-col v-if="(result instanceof YTNodes.MusicResponsiveListItem)" cols="12">
-                                            <MusicResponsiveListItem :data="result"
+                                            <YTMusicCommonMusicResponsiveListItem :data="result"
                                                 :PLid="(route.query.list as string)" />
                                         </v-col>
                                     </template>
@@ -268,7 +268,7 @@ await fetchData();
                             <v-row style="width: 100%; margin-left: 0;">
                                 <template v-for="result in Nextresults.contents">
                                     <v-col v-if="(result instanceof YTNodes.PlaylistPanelVideo)" cols="12">
-                                        <PlaylistPanelVideo :data="result" />
+                                        <YTMusicCommonPlaylistPanelVideo :data="result" />
                                     </v-col>
                                 </template>
                             </v-row>
@@ -289,7 +289,7 @@ await fetchData();
                                         <template v-for="content in result.contents">
                                             <v-col v-if="(content instanceof YTNodes.MusicResponsiveListItem)"
                                                 cols="12">
-                                                <MusicResponsiveListItem :data="content" />
+                                                <YTMusicCommonMusicResponsiveListItem :data="content" />
                                             </v-col>
                                         </template>
                                     </v-row>
