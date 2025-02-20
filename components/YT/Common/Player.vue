@@ -97,7 +97,7 @@ onMounted(async () => {
                     },
                     fadeDelay: 0,
                     preferDocumentPictureInPicture: false,
-                    overflowMenuButtons: ['captions', 'quality', 'language', 'picture_in_picture']
+                    overflowMenuButtons: ['quality', 'language', 'picture_in_picture', 'playback_rate', 'loop', 'statistics', 'save_video_frame']
                 };
 
                 ui.configure(config);
