@@ -422,9 +422,6 @@ const handleError = (message: string) => {
 await fetchVideoData();
 
 
-function useShare(): { share: any; } {
-    throw new Error('Function not implemented.');
-}
 </script>
 
 <template>
