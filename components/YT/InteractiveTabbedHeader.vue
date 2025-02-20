@@ -1,8 +1,8 @@
 <template>
-    <v-card v-if="data" elevation="16" :image="getProxifiedUrl(data?.header?.banner[0]?.url)">
+    <v-card v-if="data" elevation="16" :image="getProxifiedUrl(data.banner[0]?.url)">
         <v-row>
             <v-col cols="4" class="d-flex align-center justify-center">
-                <v-img v-if="data.header.box_art && data.header.box_art[0]?.url" :src="getProxifiedUrl(data.header.box_art[0]?.url)"
+                <v-img v-if="data.box_art && data.box_art[0]?.url" :src="getProxifiedUrl(data.box_art[0]?.url)"
                     max-width="50%">
                     <template v-slot:placeholder>
                         <div class="d-flex align-center justify-center fill-height">
@@ -12,9 +12,9 @@
                 </v-img>
             </v-col>
             <v-col cols="8">
-                <v-card-title class="semi-transparent-background">{{ data?.header?.title?.text }}</v-card-title>
-                <v-card-text class="omit semi-transparent-background">{{ data?.header?.description?.text }}</v-card-text>
-                <v-card-subtitle class="bg-white">{{ data?.header?.metadata?.text }}</v-card-subtitle>
+                <v-card-title class="semi-transparent-background">{{ data.title?.text }}</v-card-title>
+                <v-card-text class="omit semi-transparent-background">{{ data.description?.text }}</v-card-text>
+                <v-card-subtitle class="bg-white">{{ data.metadata?.text }}</v-card-subtitle>
             </v-col>
         </v-row>
 
@@ -27,8 +27,10 @@
 
 <script setup lang="ts">
 
+import { YTNodes } from 'youtubei.js';
+
 const props = defineProps({
-    data: Object
+    data: YTNodes.InteractiveTabbedHeader
 });
 
 </script>
@@ -47,7 +49,7 @@ const props = defineProps({
 }
 
 .semi-transparent-background {
-  background-color: rgba(255, 255, 255, 0.6); /* 白色の半透明背景 */
+    background-color: rgba(255, 255, 255, 0.6);
+    /* 白色の半透明背景 */
 }
-
 </style>

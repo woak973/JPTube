@@ -9,7 +9,7 @@ const locationStore = useLocationStore();
 const results = ref<Helpers.ObservedArray<Helpers.YTNode>>();
 const HeaderResults = ref<YT.HashtagFeed>();
 let sourceresults: YT.HashtagFeed | Mixins.Feed;
-const alert = ref(false);
+const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
 useHead({

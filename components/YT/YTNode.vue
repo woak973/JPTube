@@ -125,6 +125,17 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'DefaultPromoPanel'">
+            <template v-if="attribute === 'slide'">
+                <DefaultPromoPanel :data="(data as YTNodes.DefaultPromoPanel)" />
+            </template>
+            <template v-else>
+                <v-col cols="12" md="3" lg="2" sm="6">
+                    <DefaultPromoPanel :data="(data as YTNodes.DefaultPromoPanel)" />
+                </v-col>
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'ChannelOwnerEmptyState'">
             <template v-if="attribute === 'slide'">
                 <ChannelOwnerEmptyState :data="(data as YTNodes.ChannelOwnerEmptyState)" />
@@ -284,11 +295,26 @@
                 <SearchRefinementCard :data="(data as YTNodes.SearchRefinementCard)" />
             </template>
             <template v-else>
-                <v-col cols="6">
+                <v-col cols="12">
                     <SearchRefinementCard :data="(data as YTNodes.SearchRefinementCard)" />
                 </v-col>
             </template>
         </template>
+
+        <template v-else-if="data.type === 'TopicChannelDetails'">
+            <template v-if="attribute === 'slide'">
+                <TopicChannelDetails :data="(data as YTNodes.TopicChannelDetails)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <TopicChannelDetails :data="(data as YTNodes.TopicChannelDetails)" />
+                </v-col>
+            </template>
+        </template>
+
+
+
+
 
 
         <!-- Recursion Components -->
@@ -368,8 +394,7 @@
             <v-col cols="12">
                 <YTNode :data="(data as YTNodes.HorizontalCardList).header" :attribute="attribute" />
                 <v-slide-group>
-                    <div v-for="card in (data as YTNodes.HorizontalCardList).cards" class="ma-2"
-                        style="width: 200px;">
+                    <div v-for="card in (data as YTNodes.HorizontalCardList).cards" class="ma-2" style="width: 200px;">
                         <template v-if="(card instanceof Helpers.YTNode)">
                             <YTNode :data="card" :attribute="'slide'" :page="page" />
                         </template>
@@ -381,8 +406,19 @@
         <template v-else-if="data.type === 'VerticalList'">
             <v-col cols="12">
                 <v-slide-group>
-                    <div v-for="content in (data as YTNodes.VerticalList).contents" class="ma-2"
-                        style="width: 200px;">
+                    <div v-for="content in (data as YTNodes.VerticalList).contents" class="ma-2" style="width: 200px;">
+                        <template v-if="(content instanceof Helpers.YTNode)">
+                            <YTNode :data="content" :attribute="'slide'" :page="page" />
+                        </template>
+                    </div>
+                </v-slide-group>
+            </v-col>
+        </template>
+
+        <template v-else-if="data.type === 'CarouselItem'">
+            <v-col cols="12">
+                <v-slide-group>
+                    <div v-for="content in (data as YTNodes.CarouselItem).contents" class="ma-2" style="width: 200px;">
                         <template v-if="(content instanceof Helpers.YTNode)">
                             <YTNode :data="content" :attribute="'slide'" :page="page" />
                         </template>
@@ -408,8 +444,7 @@
             <v-col cols="12">
                 <strong>{{ (data as YTNodes.RichShelf).title.text }}</strong>
                 <v-slide-group>
-                    <div v-for="content in (data as YTNodes.RichShelf).contents" class="ma-2"
-                        style="width: 200px;">
+                    <div v-for="content in (data as YTNodes.RichShelf).contents" class="ma-2" style="width: 200px;">
                         <template v-if="(content instanceof Helpers.YTNode)">
                             <YTNode :data="content" :attribute="'slide'" :page="page" />
                         </template>

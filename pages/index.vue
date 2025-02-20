@@ -5,7 +5,7 @@ const langStore = useLangStore();
 const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<YTNodes.Video | YTNodes.CompactVideo | YTNodes.GridVideo | YTNodes.PlaylistPanelVideo | YTNodes.PlaylistVideo | YTNodes.ReelItem | YTNodes.ShortsLockupView | YTNodes.WatchCardCompactVideo>>();
-const alert = ref(false);
+const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 const TitleResult = ref<Mixins.TabbedFeed<APIResponseTypes.IBrowseResponse>>();
 const StrongResult = ref<string>();

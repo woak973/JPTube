@@ -6,17 +6,17 @@ const router = useRouter();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 
-const results = ref();
+const results = ref<Helpers.ObservedArray<Helpers.YTNode>>();
 let sourceresults: YT.Search;
-const alert = ref(false);
-const errorMessage = ref('');
-const filterDialog = ref(false);
-const uploadDateOptions = ['all', 'hour', 'today', 'week', 'month', 'year'];
-const durationOptions = ['all', 'short', 'medium', 'long'];
-const sortOptions = ['relevance', 'rating', 'upload_date', 'view_count'];
-const typeOptions = ['all', 'video', 'channel', 'playlist', 'movie'];
-const featureOptions = ['hd', 'subtitles', 'creative_commons', '3d', 'live', 'purchased', '4k', '360', 'location', 'hdr', 'vr180'];
-const applyFilters: any = () => {
+const alert = ref<boolean>(false);
+const errorMessage = ref<string>('');
+const filterDialog = ref<boolean>(false);
+const uploadDateOptions: string[] = ['all', 'hour', 'today', 'week', 'month', 'year'];
+const durationOptions: string[] = ['all', 'short', 'medium', 'long'];
+const sortOptions: string[] = ['relevance', 'rating', 'upload_date', 'view_count'];
+const typeOptions: string[] = ['all', 'video', 'channel', 'playlist', 'movie'];
+const featureOptions: string[] = ['hd', 'subtitles', 'creative_commons', '3d', 'live', 'purchased', '4k', '360', 'location', 'hdr', 'vr180'];
+const applyFilters = async () => {
     const query = {
         ...route.query,
         upload_date: selectedFilter.value.upload_date,
@@ -25,9 +25,8 @@ const applyFilters: any = () => {
         type: selectedFilter.value.type,
         features: selectedFilter.value.features
     };
-    router.replace({ query }).then(() => {
-        location.reload();
-    });
+    await router.replace({ query });
+    await fetchData();
     filterDialog.value = false;
 };
 
@@ -50,7 +49,9 @@ const LoadMore = async ({ done }: any) => {
     try {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
-            results.value.push(...continuationResults.results);
+            if (results.value) {
+                results.value.push(...continuationResults.results);
+            }
             sourceresults = continuationResults;
             done('ok');
         } else {
@@ -140,12 +141,12 @@ await fetchData();
                         <v-card-text class="headline">Upload date</v-card-text>
                         <v-chip-group v-model="selectedFilter.upload_date" column>
                             <v-chip v-for="option in uploadDateOptions" :key="option" :value="option">{{ option
-                            }}</v-chip>
+                                }}</v-chip>
                         </v-chip-group>
                         <v-card-text class="headline">Duration</v-card-text>
                         <v-chip-group v-model="selectedFilter.duration" column>
                             <v-chip v-for="option in durationOptions" :key="option" :value="option">{{ option
-                            }}</v-chip>
+                                }}</v-chip>
                         </v-chip-group>
                         <v-card-text class="headline">Sort by</v-card-text>
                         <v-chip-group v-model="selectedFilter.sort_by" column>
@@ -172,7 +173,7 @@ await fetchData();
             <v-row :items="results" style="width: 100%; margin-left: 0;">
                 <template v-for="result in results">
                     <template v-if="(result instanceof Helpers.YTNode)">
-                        <YTNode :data="result" :page="'Search'"/>
+                        <YTNode :data="result" :page="'Search'" />
                     </template>
                 </template>
             </v-row>

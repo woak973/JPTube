@@ -4,31 +4,31 @@ import { Innertube, UniversalCache, YT, YTNodes, ReloadContinuationItemsCommand,
 
 
 
-
 const route = useRoute();
 const router = useRouter();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
+
 const results = ref<Helpers.ObservedArray<Helpers.YTNode> | null>();
-const Tabresults = ref();
-const filter = ref();
-const HeaderResults = ref();
-const about = ref();
+const filter = ref<Array<string>>();
+const HeaderResults = ref<YTNodes.C4TabbedHeader | YTNodes.CarouselHeader | YTNodes.InteractiveTabbedHeader | YTNodes.PageHeader | undefined>();
+const MetaResults = ref();
+const about = ref<YTNodes.ChannelAboutFullMetadata | YTNodes.AboutChannel>();
 let sourceresults: YT.Channel | YT.ChannelListContinuation;
 let sourceTab: YT.Channel;
 let sourcefilter: YT.Channel | undefined;
-const alert = ref(false);
-const errorMessage = ref('');
-const has_contents = ref(true);
-const tab = ref(route.params.Tab || 'featured');
-const selectedFilters = ref([]);
-const searchDialog = ref(false);
-const searchQuery = ref('');
+const alert = ref<boolean>(false);
+const errorMessage = ref<string>('');
+const has_contents = ref<boolean>(true);
+const tab = ref<string>(route.params.Tab as string || 'featured');
+const selectedFilters = ref<string>();
+const searchDialog = ref<boolean>(false);
+const searchQuery = ref<string>('');
 
-const applyFilters = async (filter: never[]) => {
+const applyFilters = async (filter: string) => {
     try {
         if (sourcefilter && filter) {
-            const filteredResults = await sourcefilter.applyFilter(filter as unknown as string);
+            const filteredResults = await sourcefilter.applyFilter(filter);
             results.value = filteredResults?.contents?.contents;
             sourceresults = filteredResults;
         }
@@ -49,11 +49,13 @@ const performSearch = () => {
     }
 };
 
-watch(selectedFilters, (newValue: never[]) => {
-    applyFilters(newValue);
+watch(selectedFilters, (newValue) => {
+    if (newValue !== undefined) {
+        applyFilters(newValue);
+    }
 });
 
-watch(() => route.params.Tab, (newTab) => {
+watch(() => route.params.Tab as string, (newTab) => {
     tab.value = newTab || 'featured';
 });
 
@@ -69,25 +71,23 @@ const updateTab = (newTab: string) => {
 
 watch(HeaderResults, (newVal) => {
     if (newVal) {
-        switch (newVal.header.type) {
-            case 'PageHeader':
-                useHead({
-                    title: `${newVal.header.page_title} - JPTube` || "Watch"
-                });
-                break;
-            case 'CarouselHeader':
-                useHead({
-                    title: `${newVal.header.contents[1].title.text} - JPTube` || "Watch"
-                });
-                break;
-            case 'InteractiveTabbedHeader':
-                useHead({
-                    title: `${newVal.header.title.text} - JPTube` || "Watch"
-                });
-                break;
+        if (newVal instanceof YTNodes.PageHeader) {
+            useHead({
+                title: `${newVal.page_title} - JPTube` || "Watch"
+            });
+        } else if (newVal instanceof YTNodes.CarouselHeader) {
+            useHead({
+                title: `${(newVal.contents[1] as YTNodes.TopicChannelDetails).title.text} - JPTube` || "Watch"
+            });
+        } else if (newVal instanceof YTNodes.InteractiveTabbedHeader) {
+            useHead({
+                title: `${newVal.title.text
+                    } - JPTube` || "Watch"
+            });
         }
     }
-});
+}
+);
 
 const LoadMore = async ({ done }: any) => {
     try {
@@ -136,7 +136,8 @@ const fetchData = async () => {
 
         const searchResults: YT.Channel = await yt.getChannel(searchID.payload.browseId);
 
-        HeaderResults.value = searchResults;
+        HeaderResults.value = searchResults.header;
+        MetaResults.value = searchResults.metadata;
         sourceTab = searchResults;
         if (searchResults.has_about) {
             about.value = await searchResults.getAbout();
@@ -272,13 +273,13 @@ await fetchData();
             </v-dialog>
         </div>
         <template v-if="HeaderResults">
-            <template v-if="HeaderResults.header.type === 'PageHeader'">
-                <ChannelHeader :data="HeaderResults" :about="about" />
+            <template v-if="(HeaderResults instanceof  YTNodes.PageHeader)">
+                <PageHeader :data="HeaderResults" :about="about" :metadata="MetaResults"/>
             </template>
-            <template v-else-if="HeaderResults.header.type === 'CarouselHeader'">
+            <template v-else-if="(HeaderResults instanceof YTNodes.CarouselHeader)">
                 <CarouselHeader :data="HeaderResults" />
             </template>
-            <template v-else-if="HeaderResults.header.type === 'InteractiveTabbedHeader'">
+            <template v-else-if="(HeaderResults instanceof YTNodes.InteractiveTabbedHeader)">
                 <InteractiveTabbedHeader :data="HeaderResults" />
             </template>
 
