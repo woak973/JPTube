@@ -8,6 +8,7 @@ const router = useRouter()
 const route = useRoute()
 
 onBeforeMount(() => {
-    router.push({ path: '/search', query: { search_query: route.query.search_query } })
+    const searchQuery = route.query.search_query
+    router.push({ path: `/search/${searchQuery}` })
 })
 </script>
