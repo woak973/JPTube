@@ -5,10 +5,11 @@ const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
+const { share } = useShare();
+
 
 const videoId = ref<string>(route.query.v as string);
 
-let sourceresults: YTMusic.TrackInfo;
 const results = ref<YTMusic.TrackInfo>();
 const Nextresults = ref<YTNodes.PlaylistPanel>();
 const Lyricsresults = ref<YTNodes.MusicDescriptionShelf>();
@@ -80,7 +81,16 @@ const handleError = (message: string): void => {
 const downloadVideo = async (): Promise<void> => {
     downloading.value = true;
     try {
-        const stream = await sourceresults.download();
+        const DLlang = langStore.lang || 'ja';
+        const DLlocation = locationStore.location || 'JP';
+        const DLyt = await Innertube.create({
+            fetch: PlayerfetchFn,
+            cache: new UniversalCache(false),
+            lang: DLlang,
+            location: DLlocation
+        });
+        const DLResults = await DLyt.getInfo(route.query.v as string);
+        const stream = await DLResults.download();
         const reader = stream.getReader();
         const chunks = [];
         let receivedLength = 0;
@@ -113,18 +123,6 @@ const downloadVideo = async (): Promise<void> => {
     }
 };
 
-const share = (): void => {
-    if (navigator.share) {
-        navigator.share({
-            title: document.title,
-            url: window.location.href
-        }).then(() => {
-            console.log('Thanks for sharing!');
-        }).catch(console.error);
-    } else {
-        console.log('Share not supported on this browser, do it the old way.');
-    }
-};
 
 const fetchData = async (): Promise<void> => {
     try {
@@ -187,7 +185,6 @@ const fetchData = async (): Promise<void> => {
 
 
 
-        sourceresults = searchResults;
         results.value = searchResults;
         Nextresults.value = await searchResults?.getUpNext();
         Relatedresults.value = await searchResults?.getRelated();

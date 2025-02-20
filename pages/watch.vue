@@ -5,6 +5,7 @@ const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
+const { share } = useShare();
 
 const Relatedresults = ref<Helpers.ObservedArray<Helpers.YTNode> | null | undefined>();
 const HeaderResults = ref<YT.VideoInfo>();
@@ -371,7 +372,16 @@ const ApplyComSort = async () => {
 const downloadVideo = async () => {
     downloading.value = true;
     try {
-        const stream = await sourceresults.download();
+        const DLlang = langStore.lang || 'ja';
+        const DLlocation = locationStore.location || 'JP';
+        const DLyt = await Innertube.create({
+            fetch: PlayerfetchFn,
+            cache: new UniversalCache(false),
+            lang: DLlang,
+            location: DLlocation
+        });
+        const DLResults = await DLyt.getInfo(route.query.v as string);
+        const stream = await DLResults.download();
         const reader = stream.getReader();
         const chunks = [];
         let receivedLength = 0;
@@ -410,6 +420,11 @@ const handleError = (message: string) => {
 };
 
 await fetchVideoData();
+
+
+function useShare(): { share: any; } {
+    throw new Error('Function not implemented.');
+}
 </script>
 
 <template>
@@ -608,20 +623,6 @@ export default {
     computed: {
         isMobile() {
             return this.$vuetify.display.smAndDown
-        }
-    },
-    methods: {
-        share() {
-            if (navigator.share) {
-                navigator.share({
-                    title: document.title,
-                    url: window.location.href
-                }).then(() => {
-                    console.log('Thanks for sharing!');
-                }).catch(console.error);
-            } else {
-                console.log('Share not supported on this browser, do it the old way.');
-            }
         }
     },
     watch: {

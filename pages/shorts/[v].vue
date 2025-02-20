@@ -6,6 +6,8 @@ const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
+const { share } = useShare();
+
 
 const Relatedresults = ref<YTNodes.NavigationEndpoint[] | undefined>();
 const HeaderResults = ref<YT.VideoInfo>();
@@ -205,7 +207,16 @@ const handleError = (message: string) => {
 const downloadVideo = async () => {
     downloading.value = true;
     try {
-        const stream = await sourceresults.download();
+        const DLlang = langStore.lang || 'ja';
+        const DLlocation = locationStore.location || 'JP';
+        const DLyt = await Innertube.create({
+            fetch: PlayerfetchFn,
+            cache: new UniversalCache(false),
+            lang: DLlang,
+            location: DLlocation
+        });
+        const DLResults = await DLyt.getInfo(route.query.v as string);
+        const stream = await DLResults.download();
         const reader = stream.getReader();
         const chunks = [];
         let receivedLength = 0;
@@ -238,18 +249,7 @@ const downloadVideo = async () => {
     }
 };
 
-const share = () => {
-    if (navigator.share) {
-        navigator.share({
-            title: document.title,
-            url: window.location.href
-        }).then(() => {
-            console.log('Thanks for sharing!');
-        }).catch(console.error);
-    } else {
-        console.log('Share not supported on this browser, do it the old way.');
-    }
-};
+
 
 const ApplyComSort = async () => {
     try {
