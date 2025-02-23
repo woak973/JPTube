@@ -7,8 +7,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "patch-package && nuxt prepare",
-    "heroku-postbuild": "npm run build"
+    "postinstall": "patch-package && nuxt prepare"
   },
   "dependencies": {
     "axios": "^1.7.7",
