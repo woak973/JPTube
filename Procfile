@@ -1,1 +1,1 @@
-web: nuxt start
+web: node .output/server/index.mjs
