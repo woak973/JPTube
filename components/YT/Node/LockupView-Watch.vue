@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="`/watch?list=${data.content_id}`" link>
+    <v-card v-if="data" elevation="16" :to="data.renderer_context.command_context.on_tap?.metadata?.url" link>
         <v-row>
             <v-col cols="4" class="d-flex align-center justify-center image">
                 <v-img :src="getProxifiedUrl(getImageUrl(data.content_image))" aspect-ratio="16/9" rounded>
@@ -32,14 +32,12 @@
             </v-col>
             <v-col cols="8" class="description">
                 <v-card-title class="small-text omit">{{ data.metadata?.title.text }}</v-card-title>
-                <template v-if="data.metadata?.metadata?.metadata_rows">
-                    <template v-if="data.metadata?.metadata?.metadata_rows[0].metadata_parts">
-                        <v-card-subtitle class="tiny-text">{{
-                            data.metadata.metadata.metadata_rows[0].metadata_parts[0].text
-                            }}</v-card-subtitle>
+                <template v-for="row in data.metadata?.metadata?.metadata_rows.slice().reverse()">
+                    <template style="min-height: 0px;" v-for="part in row.metadata_parts?.slice().reverse()"
+                        :to="part.text?.endpoint?.metadata?.url">
+                        <v-card-subtitle class="tiny-text">{{ part.text }}</v-card-subtitle>
                     </template>
                 </template>
-
             </v-col>
         </v-row>
     </v-card>

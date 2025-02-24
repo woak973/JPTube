@@ -86,31 +86,18 @@
 
         <template v-else-if="data.type === 'LockupView'">
             <template v-if="attribute === 'slide'">
-                <template v-if="(data as YTNodes.LockupView).content_type === 'PLAYLIST' || 'PODCAST'">
-                    <YTNodeLockupViewPlaylist :data="(data as YTNodes.LockupView)" />
-                </template>
-                <template v-else-if="(data as YTNodes.LockupView).content_type === 'VIDEO'">
-                    <YTNodeLockupViewVideo :data="(data as YTNodes.LockupView)" />
-                </template>
-
+                <YTNodeLockupView :data="(data as YTNodes.LockupView)" />
             </template>
             <template v-else>
-                <template v-if="(data as YTNodes.LockupView).content_type === 'PLAYLIST' || 'PODCAST'">
-                    <v-col v-if="page === 'Search'" cols="12">
-                        <YTNodeLockupViewPlaylistSearch :data="(data as YTNodes.LockupView)" />
-                    </v-col>
-                    <v-col v-else-if="page === 'Watch'" cols="12">
-                        <YTNodeLockupViewPlaylistWatch :data="(data as YTNodes.LockupView)" />
-                    </v-col>
-                    <v-col v-else cols="12" md="3" lg="2" sm="6">
-                        <YTNodeLockupViewPlaylist :data="(data as YTNodes.LockupView)" />
-                    </v-col>
-                </template>
-                <template v-else-if="(data as YTNodes.LockupView).content_type === 'VIDEO'">
-                    <v-col cols="12">
-                        <YTNodeLockupViewVideo :data="(data as YTNodes.LockupView)" />
-                    </v-col>
-                </template>
+                <v-col v-if="page === 'Search'" cols="12">
+                    <YTNodeLockupViewSearch :data="(data as YTNodes.LockupView)" />
+                </v-col>
+                <v-col v-else-if="page === 'Watch'" cols="12">
+                    <YTNodeLockupViewWatch :data="(data as YTNodes.LockupView)" />
+                </v-col>
+                <v-col v-else cols="12" md="3" lg="2" sm="6">
+                    <YTNodeLockupView :data="(data as YTNodes.LockupView)" />
+                </v-col>
             </template>
         </template>
 
@@ -432,7 +419,7 @@
                 <strong>{{ (data as YTNodes.ReelShelf).title.text }}</strong>
                 <v-slide-group>
                     <div v-for="item in (data as YTNodes.ReelShelf).items" class="ma-2"
-                    :style="{ width: page === 'Watch' ? '150px' : '200px' }">
+                        :style="{ width: page === 'Watch' ? '150px' : '200px' }">
                         <template v-if="(item instanceof Helpers.YTNode)">
                             <YTNode :data="item" :attribute="'slide'" :page="page" />
                         </template>
