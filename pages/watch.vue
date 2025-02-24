@@ -92,7 +92,6 @@ let comsource: YT.Comments;
 let yt: Innertube;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
-const DownloadDialog = ref<boolean>(false);
 const fatalError = ref<boolean>(false);
 const showFullDescription = ref<boolean>(false);
 
@@ -416,10 +415,6 @@ const downloadVideo = async () => {
     }
 };
 
-const showDLDialog = async () => {
-
-};
-
 const handleError = (message: string) => {
     alert.value = true;
     errorMessage.value = message;
@@ -443,9 +438,6 @@ await fetchVideoData();
                         <v-btn color="primary" @click="alert = false">Close</v-btn>
                     </v-card-actions>
                 </v-card>
-            </v-dialog>
-
-            <v-dialog v-model="DownloadDialog" max-width="500">
             </v-dialog>
         </div>
 
