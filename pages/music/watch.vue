@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache, Helpers, YTNodes, YTMusic } from 'youtubei.js';
+import YTNode from '~/components/YT/YTNode.vue';
 
 const route = useRoute();
 const langStore = useLangStore();
@@ -167,7 +168,9 @@ const fetchData = async (): Promise<void> => {
                 }
 
                 if (PLvideoId === '') {
-                    PLvideoId = PL.items[0].id as string;
+                    if ((PL.items[0] instanceof YTNodes.MusicResponsiveListItem)) {
+                        PLvideoId = PL.items[0].id as string;
+                    }
                 }
 
 
@@ -238,7 +241,8 @@ await fetchData();
 
                 <YTCommonPlayer v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError" />
 
-                <YTMusicCommonTrackInfo :data="results" :downloading="downloading" @downloadVideo="downloadVideo" @share="share" />
+                <YTMusicCommonTrackInfo :data="results" :downloading="downloading" @downloadVideo="downloadVideo"
+                    @share="share" />
             </v-col>
             <v-col cols="12" md="4">
                 <v-tabs v-model="tab">

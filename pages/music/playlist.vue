@@ -6,7 +6,7 @@ const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 
-const results = ref<Helpers.ObservedArray<YTNodes.MusicResponsiveListItem>>();
+const results = ref<Helpers.ObservedArray<YTNodes.MusicResponsiveListItem | YTNodes.ContinuationItem>>();
 const HeaderResults = ref<YTNodes.MusicResponsiveHeader | YTNodes.MusicDetailHeader | YTNodes.MusicEditablePlaylistDetailHeader | undefined>();
 let sourceresults: YTMusic.Playlist;
 const alert = ref<boolean>(false);
@@ -111,7 +111,7 @@ await fetchData();
             <v-col cols="12" md="10">
                 <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
                     <v-row style="width: 100%; margin-left: 0;">
-                        <template v-for="result in results" :key="result.id">
+                        <template v-for="result in results">
                             <template v-if="(result instanceof YTNodes.MusicResponsiveListItem)">
                                 <v-col cols="12">
                                     <YTMusicCommonMusicResponsiveListItem :data="result" />

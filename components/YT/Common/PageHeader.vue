@@ -25,8 +25,8 @@
                         <span v-if="index < (data.content?.metadata?.metadata_rows.length || 0) - 1">・</span>
                     </template>
                 </v-card-subtitle>
-                <v-card-text>{{ data.content?.description?.description.text }}</v-card-text>
-                <v-card-text>{{ data.content?.description?.truncation_text.text }}</v-card-text>
+                <v-card-text>{{ data.content?.description?.description?.text }}</v-card-text>
+                <v-card-text>{{ data.content?.description?.truncation_text?.text }}</v-card-text>
             </v-col>
         </v-row>
     </v-card>
