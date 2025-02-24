@@ -239,7 +239,11 @@ await fetchData();
                         allowfullscreen></iframe>
                 </div>
 
-                <YTCommonPlayer v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError" />
+                <YTCommonPlayer v-else-if="playerStore.player === 'shaka-player'" ref="child" :videoId="videoId"
+                    :key="videoId" @errors="handleError" />
+
+                <YTCommonVideoJS v-else-if="playerStore.player === 'VideoJS'" ref="child" :videoId="videoId"
+                    :key="videoId + 'JS'" @errors="handleError" />
 
                 <YTMusicCommonTrackInfo :data="results" :downloading="downloading" @downloadVideo="downloadVideo"
                     @share="share" />

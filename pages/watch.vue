@@ -450,10 +450,15 @@ await fetchVideoData();
                         allowfullscreen></iframe>
                 </div>
 
-                <YTCommonPlayer v-else-if="playerStore.player === 'shaka-player'" ref="child" :videoId="videoId" :key="videoId" @errors="handleError" />
+                <YTCommonPlayer v-else-if="playerStore.player === 'shaka-player'" ref="child" :videoId="videoId"
+                    :key="videoId" @errors="handleError" />
 
-                <YTCommonVideoInfo :data="HeaderResults" :downloading="downloading" :showFullDescription="showFullDescription"
-                    @downloadVideo="downloadVideo" @share="share" @toggleDescription="toggleDescription" />
+                <YTCommonVideoJS v-else-if="playerStore.player === 'VideoJS'" ref="child" :videoId="videoId"
+                    :key="videoId + 'JS'" @errors="handleError" />
+
+                <YTCommonVideoInfo :data="HeaderResults" :downloading="downloading"
+                    :showFullDescription="showFullDescription" @downloadVideo="downloadVideo" @share="share"
+                    @toggleDescription="toggleDescription" />
 
                 <template v-if="isMobile">
                     <template v-if="Relatedresults">
@@ -471,8 +476,8 @@ await fetchVideoData();
                 <template v-else>
                     <template v-if="Commentresults">
                         <template v-if="comsource.header">
-                            <YTCommonCommentsHeader :data="comsource.header" @update:selectedSort="selectedSort = $event"
-                                @apply-com-sort="ApplyComSort" />
+                            <YTCommonCommentsHeader :data="comsource.header"
+                                @update:selectedSort="selectedSort = $event" @apply-com-sort="ApplyComSort" />
                         </template>
 
                         <v-infinite-scroll mode="intersect" @load="ComLoadMore" v-if="Commentresults.length">
@@ -529,8 +534,8 @@ await fetchVideoData();
                 <template v-if="isMobile">
                     <template v-if="Commentresults">
                         <template v-if="comsource.header">
-                            <YTCommonCommentsHeader :data="comsource.header" @update:selectedSort="selectedSort = $event"
-                                @apply-com-sort="ApplyComSort" />
+                            <YTCommonCommentsHeader :data="comsource.header"
+                                @update:selectedSort="selectedSort = $event" @apply-com-sort="ApplyComSort" />
                         </template>
 
                         <v-infinite-scroll :mode="mode" @load="ComLoadMore" v-if="Commentresults.length">

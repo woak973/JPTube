@@ -1,23 +1,29 @@
 <template>
-    <div>
-        <video id="videojs-player" class="video-js vjs-default-skin" controls preload="auto" width="640"
-            height="264"><source src="//vjs.zencdn.net/v/oceans.mp4">
+    <div class="videojs-container">
+        <video id="videojs-player" class="video-js vjs-default-skin" controls preload="auto" width="640" height="264">
         </video>
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
 import { Innertube, UniversalCache } from 'youtubei.js';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import Player from 'video.js/dist/types/player';
 
 const props = defineProps({
-    route: String,
+    videoId: String,
 });
 
+let player:Player;
+
+
 onMounted(async () => {
-    if (props.route) {
+    console.log("s");
+    if (props.videoId) {
+        player = videojs('videojs-player');
+        console.log(player);
+        console.log("a");
         const langStore = useLangStore();
         const locationStore = useLocationStore();
 
@@ -30,7 +36,7 @@ onMounted(async () => {
             location: DLlocation,
         });
 
-        const DLResults = await DLyt.getInfo(props.route);
+        const DLResults = await DLyt.getInfo(props.videoId);
         const stream = await DLResults.download();
         const reader = stream.getReader();
         const chunks = [];
@@ -48,10 +54,33 @@ onMounted(async () => {
         console.log(url);
 
         // Initialize Video.js player and set the source
-        const player = videojs('videojs-player');
         player.src({
-            src: url
+            src: url,
+            type: "video/webm"
         });
     }
 });
+
+onBeforeUnmount(() => {
+  if (player) {
+    player.dispose();
+  }
+});
 </script>
+
+<style scoped>
+.videojs-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+
+}
+
+.video-js {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+</style>

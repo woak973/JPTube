@@ -343,7 +343,7 @@ await fetchData();
 
         <v-row wrap v-if="!fatalError">
             <v-col cols="12" md="8">
-                <div v-if="playerStore.player !== 'shaka-player'" class="video-container">
+                <div v-if="playerStore.player === 'embed'" class="video-container">
                     <iframe
                         :src="`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1`"
                         id="youtubeiframechild" frameborder="0"
@@ -351,11 +351,15 @@ await fetchData();
                         allowfullscreen></iframe>
                 </div>
 
-                <YTCommonPlayer v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError"
-                    style="height: 1px;" />
+                <YTCommonPlayer v-else-if="playerStore.player === 'shaka-player'" ref="child" :videoId="videoId"
+                    :key="videoId" @errors="handleError" />
 
-                <YTCommonVideoInfo :data="HeaderResults" :downloading="downloading" :showFullDescription="showFullDescription"
-                    @downloadVideo="downloadVideo" @share="share" @toggleDescription="toggleDescription" />
+                <YTCommonVideoJS v-else-if="playerStore.player === 'VideoJS'" ref="child" :videoId="videoId"
+                    :key="videoId + 'JS'" @errors="handleError" />
+
+                <YTCommonVideoInfo :data="HeaderResults" :downloading="downloading"
+                    :showFullDescription="showFullDescription" @downloadVideo="downloadVideo" @share="share"
+                    @toggleDescription="toggleDescription" />
             </v-col>
             <v-col cols="12" md="4">
                 <v-tabs v-model="tab">
@@ -368,8 +372,8 @@ await fetchData();
                     <v-tabs-window-item value="option-1">
                         <template v-if="Commentresults">
                             <template v-if="comsource.header">
-                                <YTCommonCommentsHeader :data="comsource.header" @update:selectedSort="selectedSort = $event"
-                                    @apply-com-sort="ApplyComSort" />
+                                <YTCommonCommentsHeader :data="comsource.header"
+                                    @update:selectedSort="selectedSort = $event" @apply-com-sort="ApplyComSort" />
                             </template>
 
                             <v-infinite-scroll mode="intersect" @load="ComLoadMore" v-if="Commentresults.length">
@@ -388,7 +392,9 @@ await fetchData();
                             <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="Relatedresults.length">
                                 <v-row style="width: 100%; margin-left: 0;">
                                     <template v-for="result in Relatedresults">
-                                        <v-col v-if="(result instanceof YTNodes.NavigationEndpoint) && result.type === 'reelWatchEndpoint'" cols="4">
+                                        <v-col
+                                            v-if="(result instanceof YTNodes.NavigationEndpoint) && result.type === 'reelWatchEndpoint'"
+                                            cols="4">
                                             <YTCommonNavigationEndpointReelWatchEndpoint :data="result" />
                                         </v-col>
                                     </template>
