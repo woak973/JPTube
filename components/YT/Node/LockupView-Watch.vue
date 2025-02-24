@@ -32,10 +32,26 @@
             </v-col>
             <v-col cols="8" class="description">
                 <v-card-title class="small-text omit">{{ data.metadata?.title.text }}</v-card-title>
-                <template v-for="row in data.metadata?.metadata?.metadata_rows.slice().reverse()">
-                    <template style="min-height: 0px;" v-for="part in row.metadata_parts?.slice().reverse()"
-                        :to="part.text?.endpoint?.metadata?.url">
-                        <v-card-subtitle class="tiny-text">{{ part.text }}</v-card-subtitle>
+                <template v-for="(row, index) in data.metadata?.metadata?.metadata_rows">
+                    <template v-if="index === 0">
+                        <template style="min-height: 0px;" v-for="part in row.metadata_parts"
+                            :to="part.text?.endpoint?.metadata?.url">
+                            <v-card-subtitle class="tiny-text">{{ part.text }}</v-card-subtitle>
+                        </template>
+                    </template>
+                    <template v-else-if="index === 1">
+                        <template style="min-height: 0px;" v-for="(part, INDEX) in row.metadata_parts"
+                            :to="part.text?.endpoint?.metadata?.url">
+                            <template v-if="INDEX === 0">
+                                <v-card-subtitle class="tiny-text"
+                                    style="display: inline-block; padding-right: 0">{{ part.text +
+                                    '・'}}</v-card-subtitle>
+                            </template>
+                            <template v-else-if="INDEX === 1">
+                                <v-card-subtitle class="tiny-text"
+                                    style="display: inline-block; padding-right: 0; padding-left: 0;">{{ part.text }}</v-card-subtitle>
+                            </template>
+                        </template>
                     </template>
                 </template>
             </v-col>
