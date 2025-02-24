@@ -15,15 +15,21 @@ const props = defineProps({
     videoId: String,
 });
 
-let player:Player;
+let player: Player;
+
+const seek = (seconds: number) => {
+    if (player) {
+        player.currentTime(seconds);
+        console.log('Seeking to', seconds);
+    } else {
+        console.error('Video element is not found');
+    }
+};
 
 
 onMounted(async () => {
-    console.log("s");
     if (props.videoId) {
         player = videojs('videojs-player');
-        console.log(player);
-        console.log("a");
         const langStore = useLangStore();
         const locationStore = useLocationStore();
 
@@ -37,35 +43,48 @@ onMounted(async () => {
         });
 
         const DLResults = await DLyt.getInfo(props.videoId);
-        const stream = await DLResults.download();
-        const reader = stream.getReader();
-        const chunks = [];
-        let receivedLength = 0;
+        try {
+            const stream = await DLResults.download();
+            const reader = stream.getReader();
+            const chunks = [];
+            let receivedLength = 0;
 
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-            receivedLength += value.length;
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                receivedLength += value.length;
+            }
+
+            const blob = new Blob(chunks);
+            const url = URL.createObjectURL(blob);
+
+            player.src({
+                src: url,
+                type: "video/webm"
+            });
+        } catch (e) {
+            if (DLResults.streaming_data && DLResults.streaming_data.hls_manifest_url) {
+                const uri = DLResults.streaming_data.hls_manifest_url;
+                player.src({
+                    src: uri,
+                    type: "application/x-mpegURL"
+                });
+            } else {
+                throw e;
+            }
         }
-
-        const blob = new Blob(chunks);
-        const url = URL.createObjectURL(blob);
-        console.log(url);
-
-        // Initialize Video.js player and set the source
-        player.src({
-            src: url,
-            type: "video/webm"
-        });
     }
 });
 
 onBeforeUnmount(() => {
-  if (player) {
-    player.dispose();
-  }
+    if (player) {
+        player.dispose();
+    }
 });
+
+defineExpose({ seek });
+
 </script>
 
 <style scoped>
