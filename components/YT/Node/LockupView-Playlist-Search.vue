@@ -2,33 +2,32 @@
   <v-card v-if="data" elevation="16" :to="`/watch?list=${data.content_id}`" link>
     <v-row>
       <v-col cols="12" sm="4" class="d-flex align-center justify-center">
-        <v-img :src="getProxifiedUrl(getImageUrl(data.content_image))" aspect-ratio="16/9"
-          rounded>
+        <v-img :src="getProxifiedUrl(getImageUrl(data.content_image))" aspect-ratio="16/9" rounded>
           <template v-slot:placeholder>
             <div class="d-flex align-center justify-center fill-height">
               <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
             </div>
           </template>
           <div class="duration-overlay">
-                <template v-if="(data.content_image instanceof YTNodes.CollectionThumbnailView)">
-                    <template v-for="overlay in data.content_image.primary_thumbnail?.overlays">
-                        <template v-if="(overlay instanceof YTNodes.ThumbnailOverlayBadgeView)">
-                            <template v-for="badge in overlay.badges">
-                                {{ badge.text }}
-                            </template>
-                        </template>
-                    </template>
+            <template v-if="(data.content_image instanceof YTNodes.CollectionThumbnailView)">
+              <template v-for="overlay in data.content_image.primary_thumbnail?.overlays">
+                <template v-if="(overlay instanceof YTNodes.ThumbnailOverlayBadgeView)">
+                  <template v-for="badge in overlay.badges">
+                    {{ badge.text }}
+                  </template>
                 </template>
-                <template v-else-if="(data.content_image instanceof YTNodes.ThumbnailView)">
-                    <template v-for="overlay in data.content_image.overlays">
-                        <template v-if="(overlay instanceof YTNodes.ThumbnailOverlayBadgeView)">
-                            <template v-for="badge in overlay.badges">
-                                {{ badge.text }}
-                            </template>
-                        </template>
-                    </template>
+              </template>
+            </template>
+            <template v-else-if="(data.content_image instanceof YTNodes.ThumbnailView)">
+              <template v-for="overlay in data.content_image.overlays">
+                <template v-if="(overlay instanceof YTNodes.ThumbnailOverlayBadgeView)">
+                  <template v-for="badge in overlay.badges">
+                    {{ badge.text }}
+                  </template>
                 </template>
-            </div>
+              </template>
+            </template>
+          </div>
         </v-img>
       </v-col>
       <v-col cols="12" sm="8">
@@ -57,14 +56,14 @@ const props = defineProps({
   data: YTNodes.LockupView
 });
 
-const getImageUrl = (content_image:YTNodes.CollectionThumbnailView | YTNodes.ThumbnailView | null):string => {
-    if((content_image instanceof YTNodes.CollectionThumbnailView)){
-        return content_image.primary_thumbnail?.image[0]?.url || '';
-    }else if(content_image instanceof YTNodes.ThumbnailView){
-        return content_image.image[0]?.url || '';
-    }else{
-        return '';
-    }
+const getImageUrl = (content_image: YTNodes.CollectionThumbnailView | YTNodes.ThumbnailView | null): string => {
+  if ((content_image instanceof YTNodes.CollectionThumbnailView)) {
+    return content_image.primary_thumbnail?.image[0]?.url || '';
+  } else if (content_image instanceof YTNodes.ThumbnailView) {
+    return content_image.image[0]?.url || '';
+  } else {
+    return '';
+  }
 
 };
 </script>
