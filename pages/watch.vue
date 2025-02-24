@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, YTNodes, Helpers } from 'youtubei.js';
+import { Innertube, UniversalCache, YT, YTNodes, Helpers, Types } from 'youtubei.js';
 
 const route = useRoute();
 const langStore = useLangStore();
@@ -92,6 +92,7 @@ let comsource: YT.Comments;
 let yt: Innertube;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
+const DownloadDialog = ref<boolean>(false);
 const fatalError = ref<boolean>(false);
 const showFullDescription = ref<boolean>(false);
 
@@ -381,7 +382,8 @@ const downloadVideo = async () => {
             location: DLlocation
         });
         const DLResults = await DLyt.getInfo(route.query.v as string);
-        const stream = await DLResults.download();
+        const DLOption: Types.DownloadOptions = { quality: 'best' }
+        const stream = await DLResults.download(DLOption);
         const reader = stream.getReader();
         const chunks = [];
         let receivedLength = 0;
@@ -414,6 +416,10 @@ const downloadVideo = async () => {
     }
 };
 
+const showDLDialog = async () => {
+
+};
+
 const handleError = (message: string) => {
     alert.value = true;
     errorMessage.value = message;
@@ -437,6 +443,9 @@ await fetchVideoData();
                         <v-btn color="primary" @click="alert = false">Close</v-btn>
                     </v-card-actions>
                 </v-card>
+            </v-dialog>
+
+            <v-dialog v-model="DownloadDialog" max-width="500">
             </v-dialog>
         </div>
 

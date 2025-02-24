@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, Helpers, YTNodes, YTMusic } from 'youtubei.js';
+import { Innertube, UniversalCache, Helpers, YTNodes, YTMusic, Types } from 'youtubei.js';
 import YTNode from '~/components/YT/YTNode.vue';
 
 const route = useRoute();
@@ -91,7 +91,8 @@ const downloadVideo = async (): Promise<void> => {
             location: DLlocation
         });
         const DLResults = await DLyt.getInfo(route.query.v as string);
-        const stream = await DLResults.download();
+        const DLOption: Types.DownloadOptions = { quality: 'best' }
+        const stream = await DLResults.download(DLOption);
         const reader = stream.getReader();
         const chunks = [];
         let receivedLength = 0;

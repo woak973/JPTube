@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { Innertube, UniversalCache } from 'youtubei.js';
+import { Innertube, UniversalCache, Types } from 'youtubei.js';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import Player from 'video.js/dist/types/player';
@@ -44,7 +44,8 @@ onMounted(async () => {
 
         const DLResults = await DLyt.getInfo(props.videoId);
         try {
-            const stream = await DLResults.download();
+            const DLOption: Types.DownloadOptions = { quality: 'best' }
+            const stream = await DLResults.download(DLOption);
             const reader = stream.getReader();
             const chunks = [];
             let receivedLength = 0;
