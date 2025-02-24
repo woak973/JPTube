@@ -431,7 +431,8 @@
             <v-col cols="12">
                 <strong>{{ (data as YTNodes.ReelShelf).title.text }}</strong>
                 <v-slide-group>
-                    <div v-for="item in (data as YTNodes.ReelShelf).items" class="ma-2" style="width: 200px;">
+                    <div v-for="item in (data as YTNodes.ReelShelf).items" class="ma-2"
+                    :style="{ width: page === 'Watch' ? '150px' : '200px' }">
                         <template v-if="(item instanceof Helpers.YTNode)">
                             <YTNode :data="item" :attribute="'slide'" :page="page" />
                         </template>
