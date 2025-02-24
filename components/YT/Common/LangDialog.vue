@@ -25,6 +25,8 @@
                 <v-radio-group v-model="selectedPlayer" column>
                     <v-radio label="embed" value="embed"></v-radio>
                     <v-radio label="shaka-player" value="shaka-player"></v-radio>
+                    <v-radio label="VideoJS" value="VideoJS"></v-radio>
+
                 </v-radio-group>
                 <v-text-field v-model="selectedBackend" label="Backend"></v-text-field>
                 <v-text-field v-model="selectedPlayerBackend" label="PlayerBackend"></v-text-field>

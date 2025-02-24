@@ -442,7 +442,7 @@ await fetchVideoData();
 
         <v-row wrap v-if="!fatalError">
             <v-col cols="12" md="8">
-                <div v-if="playerStore.player !== 'shaka-player'" class="video-container">
+                <div v-if="playerStore.player === 'embed'" class="video-container">
                     <iframe
                         :src="`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1`"
                         id="youtubeiframechild" frameborder="0"
@@ -450,7 +450,7 @@ await fetchVideoData();
                         allowfullscreen></iframe>
                 </div>
 
-                <YTCommonPlayer v-else ref="child" :videoId="videoId" :key="videoId" @errors="handleError" />
+                <YTCommonPlayer v-else-if="playerStore.player === 'shaka-player'" ref="child" :videoId="videoId" :key="videoId" @errors="handleError" />
 
                 <YTCommonVideoInfo :data="HeaderResults" :downloading="downloading" :showFullDescription="showFullDescription"
                     @downloadVideo="downloadVideo" @share="share" @toggleDescription="toggleDescription" />
