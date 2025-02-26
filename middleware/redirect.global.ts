@@ -9,4 +9,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
   if (to.path === '/results' && to.query.search_query) {
     return navigateTo(`/search/${to.query.search_query}`); // results.vue のリダイレクト
   }
+  if (to.query.pp) {
+    const { pp, ...query } = to.query;
+    return navigateTo({ path: to.path, query });
+  }
 });
