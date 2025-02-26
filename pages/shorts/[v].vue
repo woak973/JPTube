@@ -394,7 +394,7 @@ await fetchData();
                                 <v-row style="width: 100%; margin-left: 0;">
                                     <template v-for="result in Relatedresults">
                                         <v-col
-                                            v-if="(result instanceof YTNodes.NavigationEndpoint) && result.type === 'reelWatchEndpoint'"
+                                            v-if="(result instanceof YTNodes.NavigationEndpoint)"
                                             cols="4">
                                             <YTCommonNavigationEndpointReelWatchEndpoint :data="result" />
                                         </v-col>
