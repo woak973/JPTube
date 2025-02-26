@@ -2,7 +2,7 @@
     <v-list-item v-if="data">
         <v-row dense>
             <v-col cols="auto">
-                <v-list-item :to="data.author?.endpoint?.metadata.url" style="padding: 0;">
+                <v-list-item :to="data.author?.endpoint?.metadata?.url" style="padding: 0;">
                     <v-avatar :image="getProxifiedUrl(data.author?.thumbnails[0].url || '')" class="mr-2"></v-avatar>
                 </v-list-item>
             </v-col>

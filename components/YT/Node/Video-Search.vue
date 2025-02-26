@@ -15,7 +15,7 @@
         <v-card-title>{{ data.title }}</v-card-title>
         <v-card-subtitle>{{ data.short_view_count.text }}・{{ data.published.text }}</v-card-subtitle>
         <v-card-actions>
-          <v-list-item :to="data.author.endpoint?.metadata.url" link>
+          <v-list-item :to="data.author.endpoint?.metadata?.url" link>
             <template v-slot:prepend>
               <v-avatar :image="getProxifiedUrl(data.author.thumbnails[0].url)" size="24"></v-avatar>
             </template>

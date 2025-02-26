@@ -19,7 +19,7 @@
         </v-card-actions>
         <v-card-subtitle>{{ data.info.total_items }}・{{ data.info.views }}</v-card-subtitle>
         <v-card-text>{{ data.info.description }}</v-card-text>
-        <v-btn :to="data?.endpoint?.metadata.url">Play All</v-btn>
+        <v-btn :to="data?.endpoint?.metadata?.url">Play All</v-btn>
 
     </v-card>
     <div v-else>

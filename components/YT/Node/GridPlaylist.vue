@@ -9,7 +9,7 @@
             <div class="duration-overlay">{{ data.video_count.text }}</div>
         </v-img>
         <v-card-text class="omit">{{ data.title.text }}</v-card-text>
-        <v-list-item style="min-height: 0px;" :to="data.view_playlist.endpoint?.metadata.url">
+        <v-list-item style="min-height: 0px;" :to="data.view_playlist.endpoint?.metadata?.url">
             <v-list-item-subtitle>{{ data.view_playlist.text }}</v-list-item-subtitle>
         </v-list-item>
     </v-card>

@@ -9,7 +9,7 @@
                 <v-row justify="space-between">
                     <v-col cols="auto">
                         <template v-if="data.secondary_info">
-                            <v-list-item :to="data.secondary_info.owner?.author.endpoint?.metadata.url" link>
+                            <v-list-item :to="data.secondary_info.owner?.author.endpoint?.metadata?.url" link>
                                 <template v-slot:prepend>
                                     <v-avatar color="grey-darken-3" size="36"
                                         :image="getProxifiedUrl(data.secondary_info.owner?.author.thumbnails[0]?.url || '')"></v-avatar>

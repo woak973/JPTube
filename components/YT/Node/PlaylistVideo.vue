@@ -15,7 +15,7 @@
         <v-card-title>{{ data.title.text }}</v-card-title>
         <v-card-subtitle>{{ data.video_info.text }}</v-card-subtitle>
         <v-card-actions>
-          <v-list-item :to="data.author.endpoint?.metadata.url" link>
+          <v-list-item :to="data.author.endpoint?.metadata?.url" link>
             <v-list-item-title>{{ data.author.name }}</v-list-item-title>
           </v-list-item>
         </v-card-actions>
