@@ -57,7 +57,6 @@ const fetchData = async () => {
 
         results.value = await [searchResults.page_contents];
         sourceresults = searchResults;
-        console.log(results.value);
 
 
     } catch (error) {

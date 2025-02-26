@@ -479,6 +479,26 @@
             </v-row>
         </template>
 
+        <template v-else-if="data.type === 'SectionList'">
+            <v-row>
+                <template v-for="content in (data as YTNodes.SectionList).contents">
+                    <template v-if="(content instanceof Helpers.YTNode)">
+                        <YTNode :data="content" :attribute="attribute" :page="page" />
+                    </template>
+                </template>
+            </v-row>
+        </template>
+
+        <template v-else-if="data.type === 'ExpandedShelfContents'">
+            <v-row>
+                <template v-for="content in (data as YTNodes.ExpandedShelfContents).contents">
+                    <template v-if="(content instanceof Helpers.YTNode)">
+                        <YTNode :data="content" :attribute="attribute" :page="page" />
+                    </template>
+                </template>
+            </v-row>
+        </template>
+
         <template v-else-if="data.type === 'RichMetadataRow'">
             <v-row style="margin-top: 0; margin-bottom: 0;">
                 <template v-for="content in (data as YTNodes.RichMetadataRow).contents">
