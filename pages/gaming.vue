@@ -7,6 +7,6 @@
 const router = useRouter()
 
 onBeforeMount(() => {
-    router.push('/channel/UCOpNcN46UbXVtpKMrmU4Abg/featured')
+    router.push('/channel/UCOpNcN46UbXVtpKMrmU4Abg')
 })
 </script>

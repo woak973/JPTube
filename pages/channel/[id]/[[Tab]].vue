@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, YTNodes, ReloadContinuationItemsCommand, Helpers } from 'youtubei.js';
+import { Innertube, UniversalCache, YT, YTNodes, ReloadContinuationItemsCommand, Helpers, NavigateAction, ShowMiniplayerCommand } from 'youtubei.js';
 
 
 
@@ -29,7 +29,9 @@ const applyFilters = async (filter: string) => {
     try {
         if (sourcefilter && filter) {
             const filteredResults = await sourcefilter.applyFilter(filter);
-            results.value = filteredResults?.contents?.contents;
+            if (!(filteredResults?.contents instanceof YTNodes.OpenPopupAction) && !(filteredResults?.contents instanceof NavigateAction) && !(filteredResults?.contents instanceof ShowMiniplayerCommand)) {
+                results.value = filteredResults?.contents?.contents;
+            }
             sourceresults = filteredResults;
         }
     } catch (error) {
@@ -93,8 +95,8 @@ const LoadMore = async ({ done }: any) => {
     try {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
-            if (continuationResults.contents && continuationResults.contents.contents) {
-                if (results.value) {
+            if (continuationResults.contents && !(continuationResults?.contents instanceof YTNodes.OpenPopupAction) && !(continuationResults?.contents instanceof NavigateAction) && !(continuationResults?.contents instanceof ShowMiniplayerCommand)) {
+                if (results.value && continuationResults.contents.contents) {
                     results.value.push(...continuationResults.contents.contents);
                 }
             }
@@ -273,8 +275,8 @@ await fetchData();
             </v-dialog>
         </div>
         <template v-if="HeaderResults">
-            <template v-if="(HeaderResults instanceof  YTNodes.PageHeader)">
-                <YTCommonPageHeader :data="HeaderResults" :about="about" :metadata="MetaResults"/>
+            <template v-if="(HeaderResults instanceof YTNodes.PageHeader)">
+                <YTCommonPageHeader :data="HeaderResults" :about="about" :metadata="MetaResults" />
             </template>
             <template v-else-if="(HeaderResults instanceof YTNodes.CarouselHeader)">
                 <YTCommonCarouselHeader :data="HeaderResults" />
@@ -286,7 +288,7 @@ await fetchData();
         </template>
 
         <v-tabs v-model="tab" background-color="primary" dark @change="updateTab">
-            <v-tab v-if="sourceTab && sourceTab.has_home" :to="`/channel/${route.params.id}/featured`"
+            <v-tab v-if="sourceTab && sourceTab.has_home" :to="`/channel/${route.params.id}`"
                 value="featured">Home</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_videos" :to="`/channel/${route.params.id}/videos`"
                 value="videos">Videos</v-tab>

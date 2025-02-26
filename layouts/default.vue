@@ -89,15 +89,15 @@ const openLangDialog = (): void => {
       <v-divider></v-divider>
       <v-list-item prepend-icon="mdi-home" link title="Home(Trending)" to="/"></v-list-item>
       <v-list-item prepend-icon="mdi-music" link title="Music"
-        to="/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ/featured"></v-list-item>
+        to="/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ"></v-list-item>
       <v-list-item prepend-icon="mdi-access-point" link title="Live"
-        to="/channel/UC4R8DWoMoI7CAwX8_LjQHig/featured"></v-list-item>
+        to="/channel/UC4R8DWoMoI7CAwX8_LjQHig"></v-list-item>
       <v-list-item prepend-icon="mdi-gamepad-variant" link title="Gaming"
-        to="/channel/UCOpNcN46UbXVtpKMrmU4Abg/featured"></v-list-item>
+        to="/channel/UCOpNcN46UbXVtpKMrmU4Abg"></v-list-item>
       <v-list-item prepend-icon="mdi-newspaper" link title="News"
-        to="/channel/UCYfdidRxbB8Qhf0Nx7ioOYw/featured"></v-list-item>
+        to="/channel/UCYfdidRxbB8Qhf0Nx7ioOYw"></v-list-item>
       <v-list-item prepend-icon="mdi-trophy-variant" link title="Sports"
-        to="/channel/UCEgdi0XIXXZ-qJOFPf4JSKw/featured"></v-list-item>
+        to="/channel/UCEgdi0XIXXZ-qJOFPf4JSKw"></v-list-item>
       <v-divider></v-divider>
       <v-list-item title="Other Services" subtitle="Welcome"></v-list-item>
       <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music"></v-list-item>
