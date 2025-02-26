@@ -273,7 +273,11 @@ const destroyPlayer = async () => {
     }
 };
 
-defineExpose({ seek, destroyPlayer });
+onBeforeUnmount(async () => {
+    await destroyPlayer();
+})
+
+defineExpose({ seek });
 
 </script>
 <template>

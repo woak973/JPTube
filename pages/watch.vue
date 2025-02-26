@@ -37,52 +37,17 @@ watch(() => route.query.t, (newTime) => {
     }
 });
 
-watch(() => route.query.v, async (newVideoId, oldVideoId) => {
-
-    if (playerStore.player === 'shaka-player' && newVideoId !== oldVideoId) {
-        const playerComponent = child.value;
-        if (playerComponent && playerComponent.destroyPlayer) {
-            await playerComponent.destroyPlayer();
-        }
-    }
+watch(() => route.query.v, async (newVideoId) => {
     videoId.value = newVideoId as string;
     window.scrollTo(0, 0);
     await fetchVideoData();
 
 });
 
-watch(() => route.query.list, async (newPLId, oldPLId) => {
-
-    if (playerStore.player === 'shaka-player' && newPLId !== oldPLId) {
-        const playerComponent = child.value;
-        if (playerComponent && playerComponent.destroyPlayer) {
-            await playerComponent.destroyPlayer();
-        }
-    }
-
+watch(() => route.query.list, async () => {
     window.scrollTo(0, 0);
     await fetchVideoData();
 
-});
-
-onBeforeRouteUpdate(async (to, from, next) => {
-    if (playerStore.player === 'shaka-player' && to.query.v !== from.query.v) {
-        const playerComponent = child.value;
-        if (playerComponent && playerComponent.destroyPlayer) {
-            await playerComponent.destroyPlayer();
-        }
-    }
-    next();
-});
-
-onBeforeRouteLeave(async (to, from, next) => {
-    if (playerStore.player === 'shaka-player') {
-        const playerComponent = child.value;
-        if (playerComponent && playerComponent.destroyPlayer) {
-            await playerComponent.destroyPlayer();
-        }
-    }
-    next();
 });
 
 let livechat: YT.LiveChat;
@@ -107,7 +72,7 @@ const ChatComponent = ref<boolean>(false);
 const PLComponent = ref<boolean>(false);
 
 const downloading = ref<boolean>(false);
-const child = ref<{ seek: (seconds: number) => void; destroyPlayer?: () => Promise<void> } | null>(null);
+const child = ref<{ seek: (seconds: number) => void; } | null>(null);
 
 const toggleChatComponent = () => {
     ChatComponent.value = !ChatComponent.value;

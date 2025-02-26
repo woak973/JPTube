@@ -27,7 +27,7 @@ const errorMessage = ref<string>('');
 const fatalError = ref<boolean>(false);
 
 const downloading = ref<boolean>(false);
-const child = ref<{ seek: (seconds: number) => void; destroyPlayer?: () => Promise<void> } | null>(null);
+const child = ref<{ seek: (seconds: number) => void; } | null>(null);
 
 
 const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
@@ -57,26 +57,6 @@ watch(() => route.query.t, (newTime) => {
         window.scrollTo(0, 0);
 
     }
-});
-
-onBeforeRouteUpdate(async (to, from, next) => {
-    if (playerStore.player === 'shaka-player' && to.query.v !== from.query.v) {
-        const playerComponent = child.value;
-        if (playerComponent && playerComponent.destroyPlayer) {
-            await playerComponent.destroyPlayer();
-        }
-    }
-    next();
-});
-
-onBeforeRouteLeave(async (to, from, next) => {
-    if (playerStore.player === 'shaka-player') {
-        const playerComponent = child.value;
-        if (playerComponent && playerComponent.destroyPlayer) {
-            await playerComponent.destroyPlayer();
-        }
-    }
-    next();
 });
 
 const seekToTime = (time: number) => {

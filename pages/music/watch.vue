@@ -22,7 +22,7 @@ const fatalError = ref<boolean>(false);
 
 
 const downloading = ref<boolean>(false);
-const child = ref<{ seek: (seconds: number) => void; destroyPlayer?: () => Promise<void> } | null>(null);
+const child = ref<{ seek: (seconds: number) => void; } | null>(null);
 
 const tab = ref<string>('option-2');
 const PLBtn = ref<boolean>(false);
@@ -39,39 +39,14 @@ definePageMeta({
     layout: "music"
 });
 
-watch(() => route.query.v, async (newVideoId, oldVideoId): Promise<void> => {
-
-    if (playerStore.player === 'shaka-player' && newVideoId !== oldVideoId) {
-        const playerComponent = child.value;
-        if (playerComponent && playerComponent.destroyPlayer) {
-            await playerComponent.destroyPlayer();
-        }
-    }
+watch(() => route.query.v, async (newVideoId): Promise<void> => {
     videoId.value = newVideoId as string;
     window.scrollTo(0, 0);
     await fetchData();
 
 });
 
-onBeforeRouteUpdate(async (to, from, next): Promise<void> => {
-    if (playerStore.player === 'shaka-player' && to.query.v !== from.query.v) {
-        const playerComponent = child.value;
-        if (playerComponent && playerComponent.destroyPlayer) {
-            await playerComponent.destroyPlayer();
-        }
-    }
-    next();
-});
 
-onBeforeRouteLeave(async (to, from, next): Promise<void> => {
-    if (playerStore.player === 'shaka-player') {
-        const playerComponent = child.value;
-        if (playerComponent && playerComponent.destroyPlayer) {
-            await playerComponent.destroyPlayer();
-        }
-    }
-    next();
-});
 
 
 const handleError = (message: string): void => {
