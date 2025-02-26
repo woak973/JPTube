@@ -10,12 +10,8 @@ const errorMessage = ref<string>('');
 const TitleResult = ref<Mixins.TabbedFeed<APIResponseTypes.IBrowseResponse>>();
 const StrongResult = ref<string>();
 
-watch(TitleResult, (newVal) => {
-    if (newVal) {
-        useHead({
-            title: "Home - JPTube"
-        });
-    }
+useHead({
+    title: "Home - JPTube"
 });
 
 const fetchData = async () => {
