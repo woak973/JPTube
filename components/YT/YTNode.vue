@@ -123,6 +123,17 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'ChannelVideoPlayer'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeChannelVideoPlayer :data="(data as YTNodes.ChannelVideoPlayer)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeChannelVideoPlayer :data="(data as YTNodes.ChannelVideoPlayer)" />
+                </v-col>
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'ChannelOwnerEmptyState'">
             <template v-if="attribute === 'slide'">
                 <YTNodeChannelOwnerEmptyState :data="(data as YTNodes.ChannelOwnerEmptyState)" />
