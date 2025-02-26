@@ -9,7 +9,7 @@
                 <v-row justify="space-between">
                     <v-col cols="auto">
                         <template v-if="data.secondary_info">
-                            <v-list-item :to="`/channel/${data.secondary_info.owner?.author.id}/featured`" link>
+                            <v-list-item :to="data.secondary_info.owner?.author.endpoint?.metadata.url" link>
                                 <template v-slot:prepend>
                                     <v-avatar color="grey-darken-3" size="36"
                                         :image="getProxifiedUrl(data.secondary_info.owner?.author.thumbnails[0]?.url || '')"></v-avatar>
@@ -72,7 +72,7 @@
                             <template v-if="(result instanceof Misc.TextRun)">
                                 <template v-if="result.endpoint">
                                     <span style="white-space: pre-wrap; word-break: break-all;">
-                                        <NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}</NuxtLink>
+                                        <NuxtLink :to="result.endpoint?.metadata?.url">{{ result.text }}</NuxtLink>
                                     </span>
                                 </template>
                                 <template v-else>

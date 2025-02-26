@@ -10,7 +10,7 @@
 
         <v-card-title>{{ data.info.title }}</v-card-title>
         <v-card-actions>
-            <v-list-item :to="`/channel/${data.info.author.id}/featured`" link>
+            <v-list-item :to="data.info.author.endpoint?.metadata?.url" link>
                 <template v-slot:prepend>
                     <v-avatar :image="getProxifiedUrl(data.info.author?.thumbnails[0]?.url)" size="24"></v-avatar>
                 </template>

@@ -4,7 +4,7 @@
         <v-list-item>
             <v-row dense>
                 <v-col cols="auto">
-                    <v-list-item :to="`/channel/${data.author.id}/featured`" style="padding: 0;">
+                    <v-list-item :to="data.author.endpoint?.metadata?.url" style="padding: 0;">
                         <v-avatar :image="getProxifiedUrl(data.thumbnail[0].url)" class="mr-2"></v-avatar>
                     </v-list-item>
                 </v-col>

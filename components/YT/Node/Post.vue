@@ -1,11 +1,11 @@
 <template>
     <template v-if="data">
-        <v-card elevation="16" style="max-height: 500px;" :to="data.endpoint?.metadata.url" link>
+        <v-card elevation="16" style="max-height: 500px;" :to="data.endpoint?.metadata?.url" link>
 
             <v-list-item>
                 <v-row dense>
                     <v-col cols="auto">
-                        <v-list-item :to="`/channel/${data.author.id}/featured`" style="padding: 0;">
+                        <v-list-item :to="data.author.endpoint?.metadata?.url" style="padding: 0;">
                             <v-avatar :image="getProxifiedUrl(data.author.thumbnails[0]?.url)" class="mr-2"></v-avatar>
                         </v-list-item>
                     </v-col>
@@ -20,7 +20,7 @@
                                         <template v-if="(result instanceof Misc.TextRun)">
                                             <template v-if="result.endpoint">
                                                 <span style="white-space: pre-wrap; word-break: break-all;">
-                                                    <NuxtLink :to="result.endpoint.metadata.url">{{ result.text }}
+                                                    <NuxtLink :to="result.endpoint?.metadata?.url">{{ result.text }}
                                                     </NuxtLink>
                                                 </span>
                                             </template>

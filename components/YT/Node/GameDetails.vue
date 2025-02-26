@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="`${data.endpoint.payload.canonicalBaseUrl}/featured`" link>
+    <v-card v-if="data" elevation="16" :to="data.endpoint.payload.canonicalBaseUrl" link>
         <v-img :src="getProxifiedUrl(data.box_art[0]?.url)" aspect-ratio="16/9" rounded>
             <template v-slot:placeholder>
                 <div class="d-flex align-center justify-center fill-height">

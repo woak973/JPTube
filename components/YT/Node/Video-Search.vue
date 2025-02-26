@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="data" elevation="16" :to="`/watch?v=${data.id}`" link>
+  <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
     <v-row>
       <v-col cols="12" sm="4" class="d-flex align-center justify-center">
         <v-img :src="getProxifiedUrl(data.thumbnails[0].url)" aspect-ratio="16/9" rounded>
@@ -15,7 +15,7 @@
         <v-card-title>{{ data.title }}</v-card-title>
         <v-card-subtitle>{{ data.short_view_count.text }}・{{ data.published.text }}</v-card-subtitle>
         <v-card-actions>
-          <v-list-item :to="`/channel/${data.author.id}/featured`" link>
+          <v-list-item :to="data.author.endpoint?.metadata.url" link>
             <template v-slot:prepend>
               <v-avatar :image="getProxifiedUrl(data.author.thumbnails[0].url)" size="24"></v-avatar>
             </template>

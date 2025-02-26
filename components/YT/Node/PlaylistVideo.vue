@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="data" elevation="16" :to="data.endpoint.metadata.url" link>
+  <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
     <v-row>
       <v-col cols="12" sm="4" class="d-flex align-center justify-center">
         <v-img :src="getProxifiedUrl(data.thumbnails[0]?.url)" aspect-ratio="16/9" rounded>
@@ -15,7 +15,7 @@
         <v-card-title>{{ data.title.text }}</v-card-title>
         <v-card-subtitle>{{ data.video_info.text }}</v-card-subtitle>
         <v-card-actions>
-          <v-list-item :to="`/channel/${data.author.id}/featured`" link>
+          <v-list-item :to="data.author.endpoint?.metadata.url" link>
             <v-list-item-title>{{ data.author.name }}</v-list-item-title>
           </v-list-item>
         </v-card-actions>

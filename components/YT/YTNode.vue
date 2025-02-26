@@ -299,10 +299,16 @@
             </template>
         </template>
 
-
-
-
-
+        <template v-else-if="data.type === 'RecognitionShelf'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeRecognitionShelf :data="(data as YTNodes.RecognitionShelf)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeRecognitionShelf :data="(data as YTNodes.RecognitionShelf)" />
+                </v-col>
+            </template>
+        </template>
 
         <!-- Recursion Components -->
 

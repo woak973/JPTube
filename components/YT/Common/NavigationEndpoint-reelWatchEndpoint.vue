@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="data.metadata.url" link>
+    <v-card v-if="data" elevation="16" :to="data.metadata?.url" link>
         <v-img :src="getProxifiedUrl(data.payload.thumbnail.thumbnails[0].url)" aspect-ratio="16/9" rounded>
             <template v-slot:placeholder>
                 <div class="d-flex align-center justify-center fill-height">

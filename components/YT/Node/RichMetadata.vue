@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="data.endpoint.metadata?.url" link>
+    <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
         <v-row>
             <v-col cols="12" md="4" class="d-flex align-center justify-center image">
                 <v-img :src="getProxifiedUrl(data.thumbnail[0]?.url)">

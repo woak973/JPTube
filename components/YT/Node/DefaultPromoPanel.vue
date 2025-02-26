@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="data.endpoint.metadata.url" link>
+    <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
         <template v-if="(data.small_form_factor_background_thumbnail instanceof YTNodes.ThumbnailLandscapePortrait)">
             <v-img
                 :src="getProxifiedUrl((data.small_form_factor_background_thumbnail as YTNodes.ThumbnailLandscapePortrait).landscape[0]?.url)"
