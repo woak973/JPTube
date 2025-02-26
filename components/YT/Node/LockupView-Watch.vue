@@ -43,13 +43,14 @@
                         <template style="min-height: 0px;" v-for="(part, INDEX) in row.metadata_parts"
                             :to="part.text?.endpoint?.metadata?.url">
                             <template v-if="INDEX === 0">
-                                <v-card-subtitle class="tiny-text"
-                                    style="display: inline-block; padding-right: 0">{{ part.text +
+                                <v-card-subtitle class="tiny-text" style="display: inline-block; padding-right: 0">{{
+                                    part.text +
                                     '・'}}</v-card-subtitle>
                             </template>
                             <template v-else-if="INDEX === 1">
                                 <v-card-subtitle class="tiny-text"
-                                    style="display: inline-block; padding-right: 0; padding-left: 0;">{{ part.text }}</v-card-subtitle>
+                                    style="display: inline-block; padding-right: 0; padding-left: 0;">{{ part.text
+                                    }}</v-card-subtitle>
                             </template>
                         </template>
                     </template>
@@ -58,7 +59,7 @@
         </v-row>
     </v-card>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
 </template>
 

@@ -23,6 +23,9 @@
             </v-col>
         </v-row>
     </v-card>
+    <div v-else>
+        No data was provided
+    </div>
 </template>
 
 <script setup lang="ts">

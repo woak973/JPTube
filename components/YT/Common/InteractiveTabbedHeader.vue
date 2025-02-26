@@ -20,7 +20,7 @@
 
     </v-card>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
 
 </template>

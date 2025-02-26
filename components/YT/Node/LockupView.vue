@@ -1,7 +1,6 @@
 <template>
     <v-card v-if="data" elevation="16" :to="data.renderer_context.command_context.on_tap?.metadata?.url" link>
-        <v-img :src="getProxifiedUrl(getImageUrl(data.content_image))" aspect-ratio="16/9"
-            rounded>
+        <v-img :src="getProxifiedUrl(getImageUrl(data.content_image))" aspect-ratio="16/9" rounded>
             <template v-slot:placeholder>
                 <div class="d-flex align-center justify-center fill-height">
                     <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
@@ -37,7 +36,7 @@
         </template>
     </v-card>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
 </template>
 
@@ -49,12 +48,12 @@ const props = defineProps({
     data: YTNodes.LockupView
 });
 
-const getImageUrl = (content_image:YTNodes.CollectionThumbnailView | YTNodes.ThumbnailView | null):string => {
-    if((content_image instanceof YTNodes.CollectionThumbnailView)){
+const getImageUrl = (content_image: YTNodes.CollectionThumbnailView | YTNodes.ThumbnailView | null): string => {
+    if ((content_image instanceof YTNodes.CollectionThumbnailView)) {
         return content_image.primary_thumbnail?.image[0]?.url || '';
-    }else if(content_image instanceof YTNodes.ThumbnailView){
+    } else if (content_image instanceof YTNodes.ThumbnailView) {
         return content_image.image[0]?.url || '';
-    }else{
+    } else {
         return '';
     }
 

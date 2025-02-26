@@ -27,12 +27,12 @@
                                             <template v-else>
                                                 <span style="white-space: pre-wrap; word-break: break-all;">{{
                                                     result.text
-                                                    }}</span>
+                                                }}</span>
                                             </template>
                                         </template>
                                         <template v-else-if="(result instanceof Misc.EmojiRun)">
                                             <span style="white-space: pre-wrap; word-break: break-all;">{{ result.text
-                                                }}</span>
+                                            }}</span>
                                         </template>
                                     </template>
                                 </v-card-text>
@@ -55,7 +55,7 @@
         </v-card>
     </template>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
 </template>
 

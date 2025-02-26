@@ -11,7 +11,7 @@
         <v-card-subtitle>{{ data.subtitle.text }}</v-card-subtitle>
     </v-card>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
 </template>
 

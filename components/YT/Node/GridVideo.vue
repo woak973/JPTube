@@ -21,15 +21,15 @@
                 <v-col>
                     <div class="omit">{{ data.title }}</div>
                     <v-card-subtitle class="subomit" v-if="data.author?.name !== 'N/A'">{{ data.author?.name
-                        }}</v-card-subtitle>
-                    <v-card-subtitle class="subomit">{{ data.short_view_count?.text }}・{{ data.published?.text
                     }}</v-card-subtitle>
+                    <v-card-subtitle class="subomit">{{ data.short_view_count?.text }}・{{ data.published?.text
+                        }}</v-card-subtitle>
                 </v-col>
             </v-row>
         </v-list-item>
     </v-card>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
 </template>
 

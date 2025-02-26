@@ -9,9 +9,8 @@
         </template>
     </v-card>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
-
 </template>
 
 <script setup lang="ts">

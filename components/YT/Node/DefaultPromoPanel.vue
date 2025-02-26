@@ -16,13 +16,13 @@
                 <v-col>
                     <div class="omit">{{ data.title }}</div>
                     <v-card-subtitle class="subomit">{{ data.description
-                        }}</v-card-subtitle>
+                    }}</v-card-subtitle>
                 </v-col>
             </v-row>
         </v-list-item>
     </v-card>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
 </template>
 

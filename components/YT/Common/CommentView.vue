@@ -8,7 +8,7 @@
             </v-col>
             <v-col>
                 <v-card-subtitle style="white-space: pre-wrap; word-break: break-all;">{{ data.author?.name
-                }}・{{ data.published_time }}</v-card-subtitle>
+                    }}・{{ data.published_time }}</v-card-subtitle>
                 <v-card-text>
                     <template v-for="result in data.content?.runs">
                         <template v-if="(result instanceof Misc.TextRun)">
@@ -37,6 +37,9 @@
             </v-col>
         </v-row>
     </v-list-item>
+    <div v-else>
+        No data was provided
+    </div>
 </template>
 
 <script setup lang="ts">

@@ -10,13 +10,13 @@
                 </v-col>
                 <v-col>
                     <v-card-text style="word-break: break-all;">{{ data.author.name }} - {{ data.message.text
-                        }}</v-card-text>
+                    }}</v-card-text>
                 </v-col>
             </v-row>
         </v-list-item>
     </v-card>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
 </template>
 

@@ -11,7 +11,7 @@
         <v-card-subtitle>{{ data.overlay_metadata.secondary_text?.text }}</v-card-subtitle>
     </v-card>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
 </template>
 
@@ -24,7 +24,6 @@ const props = defineProps({
 </script>
 
 <style scoped>
-
 .omit {
     display: -webkit-box;
     -webkit-line-clamp: 2;

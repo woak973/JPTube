@@ -3,6 +3,9 @@
         <v-card-title>{{ data.title.text }}</v-card-title>
         <v-card-subtitle>{{ data.subtitle.text }}</v-card-subtitle>
     </v-card>
+    <div v-else>
+        No data was provided
+    </div>
 </template>
 
 <script setup lang="ts">

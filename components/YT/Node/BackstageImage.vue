@@ -6,6 +6,9 @@
             </div>
         </template>
     </v-img>
+    <div v-else>
+        No data was provided
+    </div>
 </template>
 
 <script setup lang="ts">

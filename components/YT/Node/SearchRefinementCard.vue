@@ -10,7 +10,7 @@
         <v-card-text class="omit">{{ data.query }}</v-card-text>
     </v-card>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
 </template>
 

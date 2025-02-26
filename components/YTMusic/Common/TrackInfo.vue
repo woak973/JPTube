@@ -1,13 +1,13 @@
 <template>
     <v-card v-if="data">
         <v-card-title class="titletext" style="padding-bottom: 0">{{ data.basic_info.title
-            }}</v-card-title>
+        }}</v-card-title>
         <v-card-actions>
             <v-row justify="space-between">
                 <v-col cols="auto">
                     <v-list-item :to="`/music/channel/${data.basic_info.channel_id}`" link>
                         <v-list-item-title>{{ data.basic_info.author
-                            }}</v-list-item-title>
+                        }}</v-list-item-title>
                     </v-list-item>
                 </v-col>
                 <v-col cols="auto">
@@ -34,6 +34,9 @@
             </v-row>
         </v-card-actions>
     </v-card>
+    <div v-else>
+        No data was provided
+    </div>
 </template>
 
 <script setup lang="ts">

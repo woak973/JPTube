@@ -4,6 +4,9 @@
             <v-img :src="getProxifiedUrl(img.image[0]?.url)" />
         </v-carousel-item>
     </v-carousel>
+    <div v-else>
+        No data was provided
+    </div>
 </template>
 
 <script setup lang="ts">

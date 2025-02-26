@@ -17,7 +17,7 @@
         <YTNode v-if="data.original_post" :data="data.original_post"/>
     </v-card>
     <div v-else>
-        データがありません
+        No data was provided
     </div>
 </template>
 
