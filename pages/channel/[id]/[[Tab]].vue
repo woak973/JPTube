@@ -58,17 +58,17 @@ watch(selectedFilters, (newValue) => {
 });
 
 watch(() => route.params.Tab as string, (newTab) => {
-    tab.value = newTab || 'featured';
+    tab.value = newTab;
 });
 
 watch(has_contents, (newValue) => {
     if (!newValue) {
-        updateTab('featured');
+        updateTab();
     }
 });
 
-const updateTab = (newTab: string) => {
-    router.push({ params: { ...route.params, Tab: newTab } });
+const updateTab = () => {
+    router.push({ params: { ...route.params } });
 };
 
 watch(HeaderResults, (newVal) => {
