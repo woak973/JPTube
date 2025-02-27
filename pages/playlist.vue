@@ -21,7 +21,6 @@ watch(HeaderResults, (newVal) => {
 });
 
 const LoadMore = async ({ done }: any) => {
-    console.log(sourceresults.has_continuation)
     try {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
