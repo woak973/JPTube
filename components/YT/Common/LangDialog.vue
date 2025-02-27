@@ -58,6 +58,7 @@ const backendStore = useBackendStore() as { backend: string; setBackend: (newBac
 const playerBackendStore = usePlayerBackendStore() as { playerbackend: string; setPlayerBackend: (newPlayerBackend: string) => void; resetPlayerBackend: () => void };
 
 const router = useRouter();
+const emit = defineEmits(['Refresh']);
 
 const open = () => {
     selectedLang.value = langStore.lang;
@@ -78,8 +79,8 @@ const save = () => {
     playerStore.setPlayer(selectedPlayer.value);
     backendStore.setBackend(selectedBackend.value);
     playerBackendStore.setPlayerBackend(selectedPlayerBackend.value);
+    emit('Refresh');
     close();
-    router.go(0);
 
 };
 
@@ -89,7 +90,6 @@ const reset = () => {
     playerStore.resetPlayer();
     backendStore.resetBackend();
     playerBackendStore.resetPlayerBackend();
-    open(); // Reset後に再度開くことでリセットされた値を表示
 };
 
 defineExpose({ open });

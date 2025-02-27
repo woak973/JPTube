@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache } from 'youtubei.js';
+import { randomUUID } from 'crypto';
 
 const drawer = ref<boolean>(false);
 const searchQuery = ref<string>('');
@@ -8,6 +9,7 @@ const suggestions = ref<string[]>([]);
 const langDialog = ref<HTMLElement | null>(null);
 const langStore = useLangStore();
 const locationStore = useLocationStore();
+const child = ref<string>(randomUUID());
 
 const createYTInstance = async (): Promise<Innertube> => {
   const lang = langStore.lang || 'ja';
@@ -66,6 +68,10 @@ const openLangDialog = (): void => {
     (langDialog.value as any).open();
   }
 };
+
+const Refresh = (): void => {
+  child.value = randomUUID();
+};
 </script>
 
 <template>
@@ -96,8 +102,7 @@ const openLangDialog = (): void => {
       <v-list-item prepend-icon="mdi-newspaper" link title="News" to="/channel/UCYfdidRxbB8Qhf0Nx7ioOYw"></v-list-item>
       <v-list-item prepend-icon="mdi-trophy-variant" link title="Sports"
         to="/channel/UCEgdi0XIXXZ-qJOFPf4JSKw"></v-list-item>
-      <v-list-item prepend-icon="mdi-school" link title="Courses"
-        to="/courses"></v-list-item>
+      <v-list-item prepend-icon="mdi-school" link title="Courses" to="/courses"></v-list-item>
       <v-divider></v-divider>
       <v-list-item title="Other Services" subtitle="Welcome"></v-list-item>
       <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music"></v-list-item>
@@ -105,9 +110,9 @@ const openLangDialog = (): void => {
     </v-navigation-drawer>
 
     <v-main class="bg-grey-lighten-2">
-      <slot :value="value" />
+      <slot :value="value" :key="child" />
     </v-main>
 
-    <YTCommonLangDialog ref="langDialog" />
+    <YTCommonLangDialog ref="langDialog" @Refresh="Refresh" />
   </v-app>
 </template>
