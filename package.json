@@ -16,6 +16,7 @@
     "googlevideo": "^2.0.0",
     "nuxt": "^3.14.159",
     "shaka-player": "4.13.0",
+    "uuid": "^11.1.0",
     "video.js": "^8.21.0",
     "vue": "latest",
     "vue-router": "latest",

@@ -385,7 +385,7 @@
             <v-col cols="12">
                 <v-slide-group>
                     <div v-for="content in (data as YTNodes.HorizontalList).contents" class="ma-2"
-                        :style="{ width: content.type === 'Post' ? '500px' : '200px' }">
+                        :style="{ width: (content.type === 'Post' || (content instanceof YTNodes.RichItem && content.content.type === 'Post')) ? '500px' : '200px' }">
                         <template v-if="(content instanceof Helpers.YTNode)">
                             <YTNode :data="content" :attribute="'slide'" :page="page" />
                         </template>
@@ -449,7 +449,8 @@
             <v-col cols="12">
                 <strong>{{ (data as YTNodes.RichShelf).title.text }}</strong>
                 <v-slide-group>
-                    <div v-for="content in (data as YTNodes.RichShelf).contents" class="ma-2" style="width: 200px;">
+                    <div v-for="content in (data as YTNodes.RichShelf).contents" class="ma-2"
+                        :style="{ width: (content.type === 'Post' || (content instanceof YTNodes.RichItem && content.content.type === 'Post')) ? '500px' : '200px' }">
                         <template v-if="(content instanceof Helpers.YTNode)">
                             <YTNode :data="content" :attribute="'slide'" :page="page" />
                         </template>

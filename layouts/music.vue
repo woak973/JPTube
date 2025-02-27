@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache } from 'youtubei.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const drawer = ref<boolean>(false);
 const searchQuery = ref<string>('');
@@ -8,6 +9,7 @@ const suggestions = ref<string[]>([]);
 const langDialog = ref<HTMLElement | null>(null);
 const langStore = useLangStore();
 const locationStore = useLocationStore();
+const child = ref<string>(uuidv4());
 
 const createYTInstance = async (): Promise<Innertube> => {
   const lang = langStore.lang || 'ja';
@@ -55,6 +57,10 @@ const openLangDialog = (): void => {
     (langDialog.value as any).open();
   }
 };
+
+const Refresh = (): void => {
+  child.value = uuidv4();
+};
 </script>
 
 <template>
@@ -85,9 +91,9 @@ const openLangDialog = (): void => {
     </v-navigation-drawer>
 
     <v-main class="bg-grey-lighten-2">
-      <slot :value="value" />
+      <slot :value="value" :key="child" />
     </v-main>
 
-    <YTCommonLangDialog ref="langDialog" />
+    <YTCommonLangDialog ref="langDialog" @Refresh="Refresh" />
   </v-app>
 </template>

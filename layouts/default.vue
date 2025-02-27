@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache } from 'youtubei.js';
-import { randomUUID } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 const drawer = ref<boolean>(false);
 const searchQuery = ref<string>('');
@@ -9,7 +9,7 @@ const suggestions = ref<string[]>([]);
 const langDialog = ref<HTMLElement | null>(null);
 const langStore = useLangStore();
 const locationStore = useLocationStore();
-const child = ref<string>(randomUUID());
+const child = ref<string>(uuidv4());
 
 const createYTInstance = async (): Promise<Innertube> => {
   const lang = langStore.lang || 'ja';
@@ -69,7 +69,7 @@ const openLangDialog = (): void => {
 };
 
 const Refresh = (): void => {
-  child.value = randomUUID();
+  child.value = uuidv4();
 };
 </script>
 
