@@ -195,7 +195,7 @@ const downloadVideo = async () => {
             lang: DLlang,
             location: DLlocation
         });
-        const DLResults = await DLyt.getInfo(route.query.v as string);
+        const DLResults = await DLyt.getInfo(route.params.v as string);
         const DLOption: Types.DownloadOptions = { quality: 'best' }
         const stream = await DLResults.download(DLOption);
         const reader = stream.getReader();
