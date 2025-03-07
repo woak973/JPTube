@@ -45,6 +45,6 @@ export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
 
 export function PlayerfetchFn(input: RequestInfo | URL, init?: RequestInit) {
     const playerbackendStore = usePlayerBackendStore();
-    const { request, headers } = createRequest(input, init, typeof playerbackendStore.playerbackend === 'string' ? playerbackendStore.playerbackend : 'official-jptube-proxy.onrender.com');
+    const { request, headers } = createRequest(input, init, typeof playerbackendStore.playerbackend === 'string' ? playerbackendStore.playerbackend : 'jptube-player-server.onrender.com');
     return fetch(request, init ? { ...init, headers } : { headers });
 }
