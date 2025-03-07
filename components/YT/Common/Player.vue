@@ -139,7 +139,7 @@ onMounted(async () => {
                     // For local development.
                     if ((url.host.endsWith('.googlevideo.com') || url.href.includes('drm'))) {
                         url.searchParams.set('__host', url.host);
-                        url.host = playerbackendStore.playerbackend as string || 'official-jptube-proxy.onrender.com';
+                        url.host = playerbackendStore.playerbackend as string || 'jptube-player-server.onrender.com';
                         url.protocol = 'https';
                     }
 
