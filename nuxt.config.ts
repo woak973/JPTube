@@ -13,6 +13,9 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate'
   ],
+  plugins: [
+    '~/plugins/firebase.ts',
+  ],
   vite: {
     server: {
       hmr: false

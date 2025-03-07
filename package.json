@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^1.7.7",
     "bgutils-js": "^3.1.2",
+    "firebase": "^11.4.0",
     "googlevideo": "^2.0.0",
     "nuxt": "^3.14.159",
     "shaka-player": "4.13.0",
