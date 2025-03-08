@@ -84,7 +84,7 @@ useHead({
 });
 
 definePageMeta({
-    layout: false
+    layout: "firebase"
 });
 
 onAuthStateChanged(auth, async (user) => {
