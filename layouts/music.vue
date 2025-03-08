@@ -87,6 +87,7 @@ const Refresh = (): void => {
       <v-divider></v-divider>
       <v-list-item title="Other Services" subtitle="Welcome"></v-list-item>
       <v-list-item prepend-icon="mdi-play-box" link title="JPTube" to="/"></v-list-item>
+      <v-list-item prepend-icon="mdi-forum" link title="JPTube Forum" to="/firebase/"></v-list-item>
 
     </v-navigation-drawer>
 

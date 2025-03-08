@@ -61,6 +61,14 @@ const errorMessage = ref('');
 const router = useRouter();
 const isServiceWorkerRegistered = ref(false);
 
+useHead({
+    title: "Login - JPTube Firebase"
+});
+
+definePageMeta({
+    layout: "firebase"
+});
+
 const showPassword = ref(false);
 const showNewPassword = ref(false);
 const showConfirmPassword = ref(false);

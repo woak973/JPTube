@@ -73,6 +73,14 @@ const db = getFirestore();
 const userId = route.params.id as string;
 const userDocRef = doc(db, 'users', userId);
 
+useHead({
+    title: "UserInfo - JPTube Firebase"
+});
+
+definePageMeta({
+    layout: "firebase"
+});
+
 onAuthStateChanged(auth, async (user) => {
     if (!user || !user.emailVerified) {
         router.push('/firebase/login');

@@ -1,0 +1,36 @@
+<script setup lang="ts">
+import { v4 as uuidv4 } from 'uuid';
+
+const drawer = ref<boolean>(false);
+const value = ref<string>('');
+const child = ref<string>(uuidv4());
+
+</script>
+
+<template>
+  <v-app id="inspire">
+    <v-app-bar>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <router-link to="/" style="text-decoration: none; color: inherit;">
+        <v-app-bar-title>JPTube Forum</v-app-bar-title>
+      </router-link>
+      <v-spacer></v-spacer>
+    </v-app-bar>
+
+    <v-navigation-drawer v-model="drawer" temporary>
+      <v-list-item title="JPTube Forum" subtitle="Welcome"></v-list-item>
+      <v-divider></v-divider>
+      <v-list-item prepend-icon="mdi-home" link title="Home" to="/firebase/"></v-list-item>
+      <v-divider></v-divider>
+      <v-list-item title="Other Services" subtitle="Welcome"></v-list-item>
+      <v-list-item prepend-icon="mdi-play-box" link title="JPTube" to="/"></v-list-item>
+      <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music"></v-list-item>
+
+    </v-navigation-drawer>
+
+    <v-main class="bg-grey-lighten-2">
+      <slot :value="value" :key="child" />
+    </v-main>
+
+  </v-app>
+</template>

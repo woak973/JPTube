@@ -79,6 +79,14 @@ const newTag = ref<string>('');
 
 const posts = ref<Array<any>>([]);
 
+useHead({
+    title: "Tags - JPTube Firebase"
+});
+
+definePageMeta({
+    layout: false
+});
+
 onAuthStateChanged(auth, async (user) => {
     if (user && user.emailVerified) {
         userId.value = user.uid;
