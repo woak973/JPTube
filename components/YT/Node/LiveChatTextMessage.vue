@@ -9,8 +9,12 @@
                     </v-list-item>
                 </v-col>
                 <v-col>
-                    <v-card-text style="word-break: break-all;">{{ data.author.name }} - {{ data.message.text
-                    }}</v-card-text>
+                    <v-card-text style="word-break: break-all;">
+                        {{ data.author.name }} -
+                        <template v-if="(data.message instanceof Misc.Text)">
+                            <YTMiscText :data="data.message" />
+                        </template>
+                    </v-card-text>
                 </v-col>
             </v-row>
         </v-list-item>
@@ -22,7 +26,7 @@
 
 <script setup lang="ts">
 
-import { YTNodes } from 'youtubei.js';
+import { YTNodes, Misc } from 'youtubei.js';
 
 const props = defineProps({
     data: YTNodes.LiveChatTextMessage
