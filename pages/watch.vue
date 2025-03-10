@@ -231,7 +231,6 @@ const fetchVideoData = async () => {
             livechat = await searchResults.getLiveChat();
 
             livechat.on('start', (initial_data) => {
-                console.log(initial_data)
                 if (!Chatresults.value) {
                     Chatresults.value = [];
                 }
