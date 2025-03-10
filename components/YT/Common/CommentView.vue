@@ -8,22 +8,10 @@
             </v-col>
             <v-col>
                 <v-card-subtitle style="white-space: pre-wrap; word-break: break-all;">{{ data.author?.name
-                    }}・{{ data.published_time }}</v-card-subtitle>
+                }}・{{ data.published_time }}</v-card-subtitle>
                 <v-card-text>
-                    <template v-for="result in data.content?.runs">
-                        <template v-if="(result instanceof Misc.TextRun)">
-                            <template v-if="result.endpoint">
-                                <span style="white-space: pre-wrap; word-break: break-all;">
-                                    <NuxtLink :to="result.endpoint?.metadata?.url">{{ result.text }}</NuxtLink>
-                                </span>
-                            </template>
-                            <template v-else>
-                                <span style="white-space: pre-wrap; word-break: break-all;">{{ result.text }}</span>
-                            </template>
-                        </template>
-                        <template v-else-if="(result instanceof Misc.EmojiRun)">
-                            <span style="white-space: pre-wrap; word-break: break-all;">{{ result.text }}</span>
-                        </template>
+                    <template v-if="(data.content instanceof Misc.Text)">
+                        <YTMiscText :data="data.content" />
                     </template>
                 </v-card-text>
                 <v-card-actions style="padding: 0">
@@ -51,6 +39,7 @@ import { YTNodes, Misc } from 'youtubei.js';
 const props = defineProps({
     data: YTNodes.CommentView
 });
+
 </script>
 
 <style scoped>
