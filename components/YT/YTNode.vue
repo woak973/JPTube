@@ -329,6 +329,12 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'LiveChatBanner'">
+            <template v-if="((data as YTNodes.LiveChatBanner).contents instanceof Helpers.YTNode)">
+                <YTNode :data="(data as YTNodes.LiveChatBanner).contents" :attribute="attribute" :page="page" />
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'RichSection'">
             <template v-if="attribute === 'slide'">
                 <template v-if="((data as YTNodes.RichSection).content instanceof Helpers.YTNode)">

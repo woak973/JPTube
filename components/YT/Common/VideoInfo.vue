@@ -68,20 +68,8 @@
             <template v-if="data.secondary_info">
                 <v-card-text>
                     <div :class="{ 'line-clamp': !showFullDescription }">
-                        <template v-for="result in data.secondary_info.description.runs">
-                            <template v-if="(result instanceof Misc.TextRun)">
-                                <template v-if="result.endpoint">
-                                    <span style="white-space: pre-wrap; word-break: break-all;">
-                                        <NuxtLink :to="result.endpoint?.metadata?.url">{{ result.text }}</NuxtLink>
-                                    </span>
-                                </template>
-                                <template v-else>
-                                    <span style="white-space: pre-wrap; word-break: break-all;">{{ result.text }}</span>
-                                </template>
-                            </template>
-                            <template v-else-if="(result instanceof Misc.EmojiRun)">
-                                <span style="white-space: pre-wrap; word-break: break-all;">{{ result.text }}</span>
-                            </template>
+                        <template v-if="(data.secondary_info.description instanceof Misc.Text)">
+                            <YTMiscText :data="data.secondary_info.description" />
                         </template>
                     </div>
 
