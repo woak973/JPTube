@@ -11,6 +11,7 @@ const Relatedresults = ref<Helpers.ObservedArray<Helpers.YTNode> | null | undefi
 const HeaderResults = ref<YT.VideoInfo>();
 const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>();
 const Chatresults = ref<Array<Helpers.YTNode>>([]);
+const ChatBannerResults = ref<Array<Helpers.YTNode>>([]);
 const PLResults = ref<Array<YTNodes.PlaylistVideo>>([]);
 const PLInfo = ref<YT.Playlist>();
 
@@ -48,6 +49,18 @@ watch(() => route.query.list, async () => {
     window.scrollTo(0, 0);
     await fetchVideoData();
 
+});
+
+onBeforeRouteUpdate(() => {
+    if (livechat) {
+        livechat.stop();
+    }
+});
+
+onBeforeRouteLeave(() => {
+    if (livechat) {
+        livechat.stop();
+    }
 });
 
 let livechat: YT.LiveChat;
@@ -217,25 +230,64 @@ const fetchVideoData = async () => {
             console.log('This video has a live chat.');
             livechat = await searchResults.getLiveChat();
 
-            livechat.on('start', (initial_data) => console.log(initial_data));
+            livechat.on('start', (initial_data) => {
+                console.log(initial_data)
+                if (!Chatresults.value) {
+                    Chatresults.value = [];
+                }
+
+                initial_data.actions.forEach((action) => {
+                    if (action instanceof YTNodes.AddChatItemAction) {
+                        const items = action.item;
+                        Chatresults.value.unshift(items);
+                    } else if (action instanceof YTNodes.ReplayChatItemAction) {
+                        action.actions.forEach((replayAction) => {
+                            if (replayAction instanceof YTNodes.AddChatItemAction) {
+                                const replayItems = replayAction.item;
+                                Chatresults.value.unshift(replayItems);
+                            }
+                        });
+                    } else if (action instanceof YTNodes.AddBannerToLiveChatCommand) {
+                        const banner = action.banner;
+                        if (banner) {
+                            ChatBannerResults.value = [banner];
+                        }
+                    }
+                });
+
+            });
             livechat.on('end', () => console.info('This live stream has ended.'));
             livechat.on('error', (error) => console.error('An error occurred:', error));
+            livechat.on('metadata-update', (metadata) => {
+                if (HeaderResults.value?.primary_info?.view_count?.view_count) {
+                    HeaderResults.value.primary_info.view_count.view_count.text = metadata.views?.view_count.text;
+                }
+                if (HeaderResults.value?.primary_info?.published) {
+                    HeaderResults.value.primary_info.published.text = metadata.date?.date_text;
+                }
+            });
             livechat.on('chat-update', (message) => {
                 if (!Chatresults.value) {
                     Chatresults.value = [];
                 }
-                switch (message.type) {
-                    case 'AddChatItemAction':
-                        const items = message.as(YTNodes.AddChatItemAction).item;
-                        Chatresults.value.unshift(items);
-                        break;
-                    case 'ReplayChatItemAction':
-                        message.as(YTNodes.ReplayChatItemAction).actions.forEach((action) => {
-                            const replayItems = action.as(YTNodes.AddChatItemAction).item;
+
+                if (message instanceof YTNodes.AddChatItemAction) {
+                    const items = message.item;
+                    Chatresults.value.unshift(items);
+                } else if (message instanceof YTNodes.ReplayChatItemAction) {
+                    message.actions.forEach((replayAction) => {
+                        if (replayAction instanceof YTNodes.AddChatItemAction) {
+                            const replayItems = replayAction.item;
                             Chatresults.value.unshift(replayItems);
-                        });
-                        break;
+                        }
+                    });
+                } else if (message instanceof YTNodes.AddBannerToLiveChatCommand) {
+                    const banner = message.banner;
+                    if (banner) {
+                        ChatBannerResults.value = [banner];
+                    }
                 }
+
                 if (Chatresults.value.length > 50) {
                     Chatresults.value.splice(50);
                 }
@@ -466,6 +518,13 @@ await fetchVideoData();
                 <v-btn v-if="ChatBtn" @click="toggleChatComponent">Toggle Chat</v-btn>
                 <v-expand-transition>
                     <div v-if="ChatComponent" class="scrollable-component">
+                        <v-row>
+                            <template v-for="BannerResult in ChatBannerResults">
+                                <template v-if="(BannerResult instanceof Helpers.YTNode)">
+                                    <YTNode :data="BannerResult" />
+                                </template>
+                            </template>
+                        </v-row>
                         <v-row>
                             <template v-for="result in Chatresults">
                                 <template v-if="(result instanceof Helpers.YTNode)">
