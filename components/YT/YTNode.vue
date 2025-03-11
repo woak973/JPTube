@@ -277,6 +277,17 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'LiveChatPaidMessage'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeLiveChatPaidMessage :data="(data as YTNodes.LiveChatPaidMessage)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeLiveChatPaidMessage :data="(data as YTNodes.LiveChatPaidMessage)" />
+                </v-col>
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'RichMetadata'">
             <template v-if="attribute === 'slide'">
                 <YTNodeRichMetadata :data="(data as YTNodes.RichMetadata)" />
