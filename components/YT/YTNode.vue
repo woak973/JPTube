@@ -288,6 +288,50 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'LiveChatMembershipItem'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeLiveChatMembershipItem :data="(data as YTNodes.LiveChatMembershipItem)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeLiveChatMembershipItem :data="(data as YTNodes.LiveChatMembershipItem)" />
+                </v-col>
+            </template>
+        </template>
+
+        <template v-else-if="data.type === 'LiveChatAuthorBadge'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeLiveChatAuthorBadge :data="(data as YTNodes.LiveChatAuthorBadge)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeLiveChatAuthorBadge :data="(data as YTNodes.LiveChatAuthorBadge)" />
+                </v-col>
+            </template>
+        </template>
+
+        <template v-else-if="data.type === 'LiveChatSponsorshipsGiftPurchaseAnnouncement'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeLiveChatSponsorshipsGiftPurchaseAnnouncement :data="(data as YTNodes.LiveChatSponsorshipsGiftPurchaseAnnouncement)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeLiveChatSponsorshipsGiftPurchaseAnnouncement :data="(data as YTNodes.LiveChatSponsorshipsGiftPurchaseAnnouncement)" />
+                </v-col>
+            </template>
+        </template>
+
+        <template v-else-if="data.type === 'LiveChatSponsorshipsGiftRedemptionAnnouncement'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeLiveChatSponsorshipsGiftRedemptionAnnouncement :data="(data as YTNodes.LiveChatSponsorshipsGiftRedemptionAnnouncement)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeLiveChatSponsorshipsGiftRedemptionAnnouncement :data="(data as YTNodes.LiveChatSponsorshipsGiftRedemptionAnnouncement)" />
+                </v-col>
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'RichMetadata'">
             <template v-if="attribute === 'slide'">
                 <YTNodeRichMetadata :data="(data as YTNodes.RichMetadata)" />

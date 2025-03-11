@@ -1,7 +1,6 @@
 <template>
     <template v-if="data">
-        <v-card v-if="data" elevation="16"
-            :image="data.header_overlay_image && data.header_overlay_image.length > 0 ? getProxifiedUrl(data.header_overlay_image[0].url) : ''">
+        <v-card v-if="data" elevation="16">
             <v-list-item>
                 <v-row dense>
                     <v-col cols="auto">
@@ -14,11 +13,16 @@
                             {{ data.author.name }}
                             <template v-if="data.author.badges">
                                 <template v-for="badge in data.author.badges">
-                                    <YTNode :data="badge" :attribute="'slide'" />
+                                    <YTNode :data="badge" :attribute="'slide'"/>
                                 </template>
                             </template>
-                            - {{ data.purchase_amount }}
                         </v-card-title>
+                        <v-card-subtitle style="white-space: pre-wrap; word-break: break-all;">
+                            {{ data.header_primary_text?.text }}
+                        </v-card-subtitle>
+                        <v-card-subtitle style="white-space: pre-wrap; word-break: break-all;">
+                            {{ data.header_subtext.text }}
+                        </v-card-subtitle>
                         <v-card-text style="word-break: break-all;">
                             <template v-if="(data.message instanceof Misc.Text)">
                                 <YTMiscText :data="data.message" />
@@ -39,6 +43,6 @@
 import { YTNodes, Misc } from 'youtubei.js';
 
 const props = defineProps({
-    data: YTNodes.LiveChatPaidMessage
+    data: YTNodes.LiveChatMembershipItem
 });
 </script>
