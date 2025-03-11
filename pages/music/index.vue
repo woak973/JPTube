@@ -91,7 +91,7 @@ await fetchData();
         </div>
 
         <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
-            <v-row>
+            <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="result in results">
                     <v-col v-if="(result instanceof YTNodes.MusicCarouselShelf)" cols="12">
                         <strong>{{ result?.header?.title }}</strong>

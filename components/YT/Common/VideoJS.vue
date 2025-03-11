@@ -15,6 +15,8 @@ const props = defineProps({
     videoId: String,
 });
 
+const emit = defineEmits(['errors']);
+
 let player: Player;
 
 const seek = (seconds: number) => {
@@ -72,7 +74,8 @@ onMounted(async () => {
                     type: "application/x-mpegURL"
                 });
             } else {
-                throw e;
+                console.error(e);
+                emit('errors', e);
             }
         }
     }
