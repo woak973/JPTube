@@ -467,7 +467,7 @@
 
         <template v-else-if="data.type === 'ChannelFeaturedContent'">
             <strong>{{ (data as YTNodes.ChannelFeaturedContent).title.text }}</strong>
-            <v-row>
+            <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="item in (data as YTNodes.ChannelFeaturedContent).items" class="ma-2"
                     style="width: 200px;">
                     <template v-if="(item instanceof Helpers.YTNode)">
@@ -478,7 +478,7 @@
         </template>
 
         <template v-else-if="data.type === 'Grid'">
-            <v-row>
+            <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="item in (data as YTNodes.Grid).items">
                     <template v-if="(item instanceof Helpers.YTNode)">
                         <YTNode :data="item" :attribute="attribute" :page="page" />
@@ -488,7 +488,7 @@
         </template>
 
         <template v-else-if="data.type === 'RichGrid'">
-            <v-row>
+            <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="content in (data as YTNodes.RichGrid).contents">
                     <template v-if="(content instanceof Helpers.YTNode)">
                         <YTNode :data="content" :attribute="attribute" :page="page" />
@@ -498,7 +498,7 @@
         </template>
 
         <template v-else-if="data.type === 'SectionList'">
-            <v-row>
+            <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="content in (data as YTNodes.SectionList).contents">
                     <template v-if="(content instanceof Helpers.YTNode)">
                         <YTNode :data="content" :attribute="attribute" :page="page" />
@@ -508,7 +508,7 @@
         </template>
 
         <template v-else-if="data.type === 'ExpandedShelfContents'">
-            <v-row>
+            <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="content in (data as YTNodes.ExpandedShelfContents).contents">
                     <template v-if="(content instanceof Helpers.YTNode)">
                         <YTNode :data="content" :attribute="attribute" :page="page" />
