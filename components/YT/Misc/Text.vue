@@ -1,6 +1,13 @@
 <template>
     <template v-if="data" v-for="result in data.runs">
         <template v-if="(result instanceof Misc.TextRun)">
+            <template v-if="result.attachment">
+                <template v-for="source in result.attachment?.element?.type?.imageType?.image?.sources">
+                    <v-avatar :image="getProxifiedUrl(source.url)"
+                        class="mr-2" rounded="0" size="14">
+                    </v-avatar>
+                </template>
+            </template>
             <template v-if="result.endpoint">
                 <span style="white-space: pre-wrap; word-break: break-all;">
                     <NuxtLink :to="result.endpoint?.metadata?.url">{{ result.text }}</NuxtLink>
