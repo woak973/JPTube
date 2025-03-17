@@ -237,7 +237,7 @@ await fetchData();
                             <div class="scrollable-component">
                                 <v-row style="width: 100%; margin-left: 0;">
                                     <template v-for="result in Playlistresults">
-                                        <YTMusicNode :data="result" :PLid="(route.query.list as string)"/>
+                                        <YTMusicNode :data="(result as unknown as Helpers.YTNode)" :PLid="(route.query.list as string)"/>
                                     </template>
                                 </v-row>
                             </div>
