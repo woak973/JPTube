@@ -83,28 +83,11 @@ await fetchData();
             <v-chip-group>
                 <v-chip v-for="chip in HeaderResults?.chips" :key="chip.text" :text="chip.text"
                     @click="fetchData(chip.text)">
-
                 </v-chip>
             </v-chip-group>
 
             <template v-for="result in results">
-                <v-col v-if="(result instanceof YTNodes.MusicShelf)" cols="12">
-                    <strong>{{ result.title.text }}</strong>
-                    <v-row>
-                        <template v-for="content in result.contents">
-                            <v-col cols="12" v-if="(content instanceof YTNodes.MusicResponsiveListItem)">
-                                <YTMusicCommonMusicResponsiveListItem :data="content" />
-                            </v-col>
-                        </template>
-                    </v-row>
-                    <v-btn @click="fetchData(result.title.text)" variant="tonal" class="rounded-pill mx-2">{{
-                        result.bottom_text?.text
-                        }}</v-btn>
-                </v-col>
-                <v-col v-else-if="(result instanceof YTNodes.MusicCardShelf)" cols="12">
-                    <strong>{{ result.header?.title.text }}</strong>
-                    <YTMusicCommonMusicCardShelf :data="result" />
-                </v-col>
+                <YTMusicNode :data="result" @fetchData="fetchData"/>
             </template>
         </v-row>
     </v-container>

@@ -39,16 +39,21 @@ const props = defineProps({
 
 const getLink = () => {
     if (props.data && props.data.item_type) {
-        if (['playlist', 'podcast_show'].includes(props.data.item_type)) {
-            return `/music/playlist?list=${props.data.id}`;
-        } else if (['album'].includes(props.data.item_type)) {
-            return props.data ? `/music/album?id=${props.data.id}` : '';
-        } else if (['artist', 'library_artist'].includes(props.data.item_type)) {
-            return props.data ? `/music/channel/${props.data.id}` : '';
-        } else if (['video', 'non_music_track', 'song'].includes(props.data.item_type)) {
-            return props.data ? `/music/watch?v=${props.data.id}${props.PLid ? `&list=${props.PLid}` : ''}` : '';
-        } else {
-            return '/music';
+        switch (props.data.item_type) {
+            case 'playlist':
+            case 'podcast_show':
+                return `/music/playlist?list=${props.data.id}`;
+            case 'album':
+                return props.data ? `/music/album?id=${props.data.id}` : '';
+            case 'artist':
+            case 'library_artist':
+                return props.data ? `/music/channel/${props.data.id}` : '';
+            case 'video':
+            case 'non_music_track':
+            case 'song':
+                return props.data ? `/music/watch?v=${props.data.id}${props.PLid ? `&list=${props.PLid}` : ''}` : '';
+            default:
+                return '/music';
         }
     } else {
         return '/music';

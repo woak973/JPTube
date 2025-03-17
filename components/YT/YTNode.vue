@@ -312,22 +312,26 @@
 
         <template v-else-if="data.type === 'LiveChatSponsorshipsGiftPurchaseAnnouncement'">
             <template v-if="attribute === 'slide'">
-                <YTNodeLiveChatSponsorshipsGiftPurchaseAnnouncement :data="(data as YTNodes.LiveChatSponsorshipsGiftPurchaseAnnouncement)" />
+                <YTNodeLiveChatSponsorshipsGiftPurchaseAnnouncement
+                    :data="(data as YTNodes.LiveChatSponsorshipsGiftPurchaseAnnouncement)" />
             </template>
             <template v-else>
                 <v-col cols="12">
-                    <YTNodeLiveChatSponsorshipsGiftPurchaseAnnouncement :data="(data as YTNodes.LiveChatSponsorshipsGiftPurchaseAnnouncement)" />
+                    <YTNodeLiveChatSponsorshipsGiftPurchaseAnnouncement
+                        :data="(data as YTNodes.LiveChatSponsorshipsGiftPurchaseAnnouncement)" />
                 </v-col>
             </template>
         </template>
 
         <template v-else-if="data.type === 'LiveChatSponsorshipsGiftRedemptionAnnouncement'">
             <template v-if="attribute === 'slide'">
-                <YTNodeLiveChatSponsorshipsGiftRedemptionAnnouncement :data="(data as YTNodes.LiveChatSponsorshipsGiftRedemptionAnnouncement)" />
+                <YTNodeLiveChatSponsorshipsGiftRedemptionAnnouncement
+                    :data="(data as YTNodes.LiveChatSponsorshipsGiftRedemptionAnnouncement)" />
             </template>
             <template v-else>
                 <v-col cols="12">
-                    <YTNodeLiveChatSponsorshipsGiftRedemptionAnnouncement :data="(data as YTNodes.LiveChatSponsorshipsGiftRedemptionAnnouncement)" />
+                    <YTNodeLiveChatSponsorshipsGiftRedemptionAnnouncement
+                        :data="(data as YTNodes.LiveChatSponsorshipsGiftRedemptionAnnouncement)" />
                 </v-col>
             </template>
         </template>
@@ -521,65 +525,77 @@
         </template>
 
         <template v-else-if="data.type === 'ChannelFeaturedContent'">
-            <strong>{{ (data as YTNodes.ChannelFeaturedContent).title.text }}</strong>
-            <v-row style="width: 100%; margin-left: 0;">
-                <template v-for="item in (data as YTNodes.ChannelFeaturedContent).items" class="ma-2"
-                    style="width: 200px;">
-                    <template v-if="(item instanceof Helpers.YTNode)">
-                        <YTNode :data="item" :attribute="attribute" :page="page" />
+            <v-col cols="12">
+                <strong>{{ (data as YTNodes.ChannelFeaturedContent).title.text }}</strong>
+                <v-row>
+                    <template v-for="item in (data as YTNodes.ChannelFeaturedContent).items" class="ma-2"
+                        style="width: 200px;">
+                        <template v-if="(item instanceof Helpers.YTNode)">
+                            <YTNode :data="item" :attribute="attribute" :page="page" />
+                        </template>
                     </template>
-                </template>
-            </v-row>
+                </v-row>
+            </v-col>
         </template>
 
         <template v-else-if="data.type === 'Grid'">
-            <v-row style="width: 100%; margin-left: 0;">
-                <template v-for="item in (data as YTNodes.Grid).items">
-                    <template v-if="(item instanceof Helpers.YTNode)">
-                        <YTNode :data="item" :attribute="attribute" :page="page" />
+            <v-col cols="12">
+                <v-row>
+                    <template v-for="item in (data as YTNodes.Grid).items">
+                        <template v-if="(item instanceof Helpers.YTNode)">
+                            <YTNode :data="item" :attribute="attribute" :page="page" />
+                        </template>
                     </template>
-                </template>
-            </v-row>
+                </v-row>
+            </v-col>
         </template>
 
         <template v-else-if="data.type === 'RichGrid'">
-            <v-row style="width: 100%; margin-left: 0;">
-                <template v-for="content in (data as YTNodes.RichGrid).contents">
-                    <template v-if="(content instanceof Helpers.YTNode)">
-                        <YTNode :data="content" :attribute="attribute" :page="page" />
+            <v-col cols="12">
+                <v-row>
+                    <template v-for="content in (data as YTNodes.RichGrid).contents">
+                        <template v-if="(content instanceof Helpers.YTNode)">
+                            <YTNode :data="content" :attribute="attribute" :page="page" />
+                        </template>
                     </template>
-                </template>
-            </v-row>
+                </v-row>
+            </v-col>
         </template>
 
         <template v-else-if="data.type === 'SectionList'">
-            <v-row style="width: 100%; margin-left: 0;">
-                <template v-for="content in (data as YTNodes.SectionList).contents">
-                    <template v-if="(content instanceof Helpers.YTNode)">
-                        <YTNode :data="content" :attribute="attribute" :page="page" />
+            <v-col cols="12">
+                <v-row>
+                    <template v-for="content in (data as YTNodes.SectionList).contents">
+                        <template v-if="(content instanceof Helpers.YTNode)">
+                            <YTNode :data="content" :attribute="attribute" :page="page" />
+                        </template>
                     </template>
-                </template>
-            </v-row>
+                </v-row>
+            </v-col>
         </template>
 
         <template v-else-if="data.type === 'ExpandedShelfContents'">
-            <v-row style="width: 100%; margin-left: 0;">
-                <template v-for="content in (data as YTNodes.ExpandedShelfContents).contents">
-                    <template v-if="(content instanceof Helpers.YTNode)">
-                        <YTNode :data="content" :attribute="attribute" :page="page" />
+            <v-col cols="12">
+                <v-row>
+                    <template v-for="content in (data as YTNodes.ExpandedShelfContents).contents">
+                        <template v-if="(content instanceof Helpers.YTNode)">
+                            <YTNode :data="content" :attribute="attribute" :page="page" />
+                        </template>
                     </template>
-                </template>
-            </v-row>
+                </v-row>
+            </v-col>
         </template>
 
         <template v-else-if="data.type === 'RichMetadataRow'">
-            <v-row style="margin-top: 0; margin-bottom: 0;">
-                <template v-for="content in (data as YTNodes.RichMetadataRow).contents">
-                    <template v-if="(content instanceof Helpers.YTNode)">
-                        <YTNode :data="content" :attribute="attribute" :page="page" />
+            <v-col cols="12">
+                <v-row>
+                    <template v-for="content in (data as YTNodes.RichMetadataRow).contents">
+                        <template v-if="(content instanceof Helpers.YTNode)">
+                            <YTNode :data="content" :attribute="attribute" :page="page" />
+                        </template>
                     </template>
-                </template>
-            </v-row>
+                </v-row>
+            </v-col>
         </template>
 
     </template>

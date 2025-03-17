@@ -238,10 +238,7 @@ await fetchData();
                             <div class="scrollable-component">
                                 <v-row style="width: 100%; margin-left: 0;">
                                     <template v-for="result in Playlistresults">
-                                        <v-col v-if="(result instanceof YTNodes.MusicResponsiveListItem)" cols="12">
-                                            <YTMusicCommonMusicResponsiveListItem :data="result"
-                                                :PLid="(route.query.list as string)" />
-                                        </v-col>
+                                        <YTMusicNode :data="result" :PLid="(route.query.list as string)"/>
                                     </template>
                                 </v-row>
                             </div>
@@ -251,9 +248,7 @@ await fetchData();
                         <template v-if="Nextresults">
                             <v-row style="width: 100%; margin-left: 0;">
                                 <template v-for="result in Nextresults.contents">
-                                    <v-col v-if="(result instanceof YTNodes.PlaylistPanelVideo)" cols="12">
-                                        <YTMusicCommonPlaylistPanelVideo :data="result" />
-                                    </v-col>
+                                    <YTMusicNode :data="result" />
                                 </template>
                             </v-row>
                         </template>
@@ -267,18 +262,11 @@ await fetchData();
                     </v-tabs-window-item>
                     <v-tabs-window-item value="option-4">
                         <template v-if="Relatedresults">
-                            <template v-for="result in Relatedresults">
-                                <template v-if="(result instanceof YTNodes.MusicCarouselShelf)">
-                                    <v-row style="width: 100%; margin-left: 0;">
-                                        <template v-for="content in result.contents">
-                                            <v-col v-if="(content instanceof YTNodes.MusicResponsiveListItem)"
-                                                cols="12">
-                                                <YTMusicCommonMusicResponsiveListItem :data="content" />
-                                            </v-col>
-                                        </template>
-                                    </v-row>
+                            <v-row style="width: 100%; margin-left: 0;">
+                                <template v-for="result in Relatedresults">
+                                    <YTMusicNode :data="result" />
                                 </template>
-                            </template>
+                            </v-row>
                         </template>
                     </v-tabs-window-item>
                 </v-tabs-window>

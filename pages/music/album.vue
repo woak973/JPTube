@@ -84,11 +84,7 @@ await fetchData();
             <v-col cols="12" md="10">
                 <v-row style="width: 100%; margin-left: 0;">
                     <template v-for="result in results" :key="result.id">
-                        <template v-if="(result instanceof YTNodes.MusicResponsiveListItem)">
-                            <v-col cols="12">
-                                <YTMusicCommonMusicResponsiveListItem :data="result" />
-                            </v-col>
-                        </template>
+                        <YTMusicNode :data="result" />
                     </template>
                 </v-row>
 

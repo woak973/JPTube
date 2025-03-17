@@ -111,11 +111,7 @@ await fetchData();
                 <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
                     <v-row style="width: 100%; margin-left: 0;">
                         <template v-for="result in results">
-                            <template v-if="(result instanceof YTNodes.MusicResponsiveListItem)">
-                                <v-col cols="12">
-                                    <YTMusicCommonMusicResponsiveListItem :data="result" />
-                                </v-col>
-                            </template>
+                            <YTMusicNode :data="result" />
                         </template>
                     </v-row>
                 </v-infinite-scroll>
