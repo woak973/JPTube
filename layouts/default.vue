@@ -105,6 +105,7 @@ const Refresh = (): void => {
       <v-divider></v-divider>
       <v-list-item title="Other Services" subtitle="Welcome"></v-list-item>
       <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music"></v-list-item>
+      <v-list-item prepend-icon="mdi-play-protected-content" link title="JPTube Kids" to="/kids"></v-list-item>
 
     </v-navigation-drawer>
 
