@@ -87,7 +87,7 @@ await fetchData();
             </v-chip-group>
 
             <template v-for="result in results">
-                <YTMusicNode :data="result" @fetchData="fetchData"/>
+                <YTMusicNode :data="result" @fetchData="fetchData" :page="'Search'"/>
             </template>
         </v-row>
     </v-container>

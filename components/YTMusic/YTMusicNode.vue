@@ -76,7 +76,7 @@
                         </template>
                     </template>
                 </v-row>
-                <v-btn v-if="(data as YTNodes.MusicShelf).bottom_text"
+                <v-btn v-if="(data as YTNodes.MusicShelf).bottom_text && page === 'Search'"
                     @click="emit('fetchData', (data as YTNodes.MusicShelf).title.text)" variant="tonal"
                     class="rounded-pill mx-2">{{
                         (data as YTNodes.MusicShelf).bottom_text?.text
