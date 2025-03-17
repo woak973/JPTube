@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Innertube, UniversalCache, Helpers, YTNodes, YTMusic, Types } from 'youtubei.js';
-import YTNode from '~/components/YT/YTNode.vue';
 
 const route = useRoute();
 const langStore = useLangStore();
