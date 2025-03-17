@@ -93,20 +93,7 @@ await fetchData();
         <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
             <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="result in results">
-                    <v-col v-if="(result instanceof YTNodes.MusicCarouselShelf)" cols="12">
-                        <strong>{{ result?.header?.title }}</strong>
-                        <v-slide-group>
-                            <div v-for="content in result.contents" class="ma-2"
-                                v-bind:style="{ width: (content instanceof YTNodes.MusicResponsiveListItem) ? '500px' : '200px' }">
-                                <template v-if="(content instanceof YTNodes.MusicResponsiveListItem)">
-                                    <YTMusicCommonMusicResponsiveListItem :data="content" />
-                                </template>
-                                <template v-else-if="(content instanceof YTNodes.MusicTwoRowItem)">
-                                    <YTMusicCommonMusicTwoRowItem :data="content" />
-                                </template>
-                            </div>
-                        </v-slide-group>
-                    </v-col>
+                    <YTMusicNode :data="result" />
                 </template>
             </v-row>
         </v-infinite-scroll>
