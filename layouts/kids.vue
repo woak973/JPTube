@@ -32,8 +32,19 @@ watch(searchQuery, (newQuery): void => {
 
 const search = async (): Promise<void> => {
   if (searchQuery.value) {
+    const yt = await createYTInstance();
+    try {
+      const resolvedURL = await yt.resolveURL(searchQuery.value);
+      if (resolvedURL.metadata.page_type !== 'WEB_PAGE_TYPE_UNKNOWN' && !searchQuery.value.startsWith('#')) {
+        navigateTo(resolvedURL.metadata?.url);
+        return;
+      }
+    } catch (error) {
+      console.error('Error resolving URL:', error);
+    }
+
     const encodedQuery = encodeURIComponent(searchQuery.value);
-    navigateTo(`/music/search/${encodedQuery}`);
+    navigateTo(`/kids/search/${encodedQuery}`);
   }
 };
 
@@ -44,9 +55,8 @@ const clearSearch = (): void => {
 const fetchSuggestions = async (query: string): Promise<void> => {
   try {
     const yt = await createYTInstance();
-    const music = await yt.music;
-    const response = await music.getSearchSuggestions(query);
-    suggestions.value = response[0].contents.map((suggestion: any) => suggestion.suggestion.text);
+    const response = await yt.getSearchSuggestions(query);
+    suggestions.value = response.map((suggestion: any) => suggestion);
   } catch (error) {
     console.error('Error fetching suggestions:', error);
   }
@@ -67,8 +77,8 @@ const Refresh = (): void => {
   <v-app id="inspire">
     <v-app-bar>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <router-link to="/music" style="text-decoration: none; color: inherit;">
-        <v-app-bar-title>JPTube Music</v-app-bar-title>
+      <router-link to="/kids" style="text-decoration: none; color: inherit;">
+        <v-app-bar-title>JPTube Kids</v-app-bar-title>
       </router-link>
       <v-spacer></v-spacer>
       <v-combobox v-model="searchQuery" :items="suggestions" label="Search" single-line hide-details clearable
@@ -80,15 +90,14 @@ const Refresh = (): void => {
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" temporary>
-      <v-list-item title="JPTube Music" subtitle="Welcome"></v-list-item>
+      <v-list-item title="JPTube Kids" subtitle="Welcome"></v-list-item>
       <v-divider></v-divider>
-      <v-list-item prepend-icon="mdi-home" link title="Home" to="/music"></v-list-item>
-      <v-list-item prepend-icon="mdi-compass" link title="Explore" to="/music/explore"></v-list-item>
+      <v-list-item prepend-icon="mdi-home" link title="Home" to="/kids"></v-list-item>
       <v-divider></v-divider>
       <v-list-item title="Other Services" subtitle="Welcome"></v-list-item>
       <v-list-item prepend-icon="mdi-play-box" link title="JPTube" to="/"></v-list-item>
-      <v-list-item prepend-icon="mdi-play-protected-content" link title="JPTube Kids" to="/kids"></v-list-item>
-      <v-list-item prepend-icon="mdi-forum" link title="JPTube Forum" to="/firebase/"></v-list-item>
+      <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music"></v-list-item>
+
 
     </v-navigation-drawer>
 
