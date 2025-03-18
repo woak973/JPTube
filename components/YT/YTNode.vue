@@ -438,11 +438,25 @@
 
         <template v-else-if="data.type === 'ItemSection'">
             <v-col cols="12">
-                <template v-for="content in (data as YTNodes.ItemSection).contents">
-                    <template v-if="(content instanceof Helpers.YTNode)">
-                        <YTNode :data="content" :attribute="attribute" :page="page" />
+                <v-row>
+                    <template v-for="content in (data as YTNodes.ItemSection).contents">
+                        <template v-if="(content instanceof Helpers.YTNode)">
+                            <YTNode :data="content" :attribute="attribute" :page="page" />
+                        </template>
                     </template>
-                </template>
+                </v-row>
+            </v-col>
+        </template>
+
+        <template v-else-if="data.type === 'itemSectionContinuation'">
+            <v-col cols="12">
+                <v-row>
+                    <template v-for="item in (data as ItemSectionContinuation).contents">
+                        <template v-if="(item instanceof Helpers.YTNode)">
+                            <YTNode :data="item" :attribute="attribute" :page="page" />
+                        </template>
+                    </template>
+                </v-row>
             </v-col>
         </template>
 
@@ -602,7 +616,7 @@
 </template>
 
 <script setup lang="ts">
-import { Helpers, YTNodes } from 'youtubei.js';
+import { Helpers, YTNodes, ItemSectionContinuation } from 'youtubei.js';
 
 const props = defineProps({
     data: Helpers.YTNode,

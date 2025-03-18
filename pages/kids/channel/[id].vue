@@ -5,7 +5,7 @@ const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 
-const results = ref<YTNodes.ItemSection | ItemSectionContinuation | undefined>();
+const results = ref<Array<YTNodes.ItemSection | ItemSectionContinuation | undefined>>();
 const HeaderResults = ref<YTNodes.C4TabbedHeader | undefined>();
 let sourceresults: YTKids.Channel;
 const alert = ref<boolean>(false);
@@ -23,6 +23,32 @@ definePageMeta({
     layout: "kids"
 });
 
+const LoadMore = async ({ done }: any) => {
+    try {
+        if (sourceresults && sourceresults.has_continuation) {
+            const continuationResults = await sourceresults.getContinuation();
+            if (continuationResults.contents) {
+                if (results.value) {
+                    results.value.push(continuationResults.contents);
+                }
+            }
+            sourceresults = continuationResults;
+            done('ok');
+        } else {
+            done('empty');
+
+        }
+    } catch (error) {
+        alert.value = true;
+        if (error instanceof Error) {
+            errorMessage.value = error.message;
+        } else {
+            errorMessage.value = 'An unknown error occurred';
+        }
+        done('error');
+    }
+
+};
 
 const fetchData = async (): Promise<void> => {
     try {
@@ -41,7 +67,7 @@ const fetchData = async (): Promise<void> => {
         sourceresults = searchResults;
 
 
-        results.value = await searchResults.contents;
+        results.value = await [searchResults.contents];
         HeaderResults.value = searchResults.header;
 
 
@@ -79,8 +105,12 @@ await fetchData();
 
         </template>
 
-        <v-row>
-            <YTKidsNode :data="results" />
-        </v-row>
+        <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
+            <v-row style="width: 100%; margin-left: 0;">
+                <template v-for="result in results">
+                    <YTKidsNode :data="result" />
+                </template>
+            </v-row>
+        </v-infinite-scroll>
     </v-container>
 </template>
