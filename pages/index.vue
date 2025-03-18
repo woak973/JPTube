@@ -8,6 +8,7 @@ const results = ref<Array<YTNodes.SectionList | YTNodes.MusicQueue | YTNodes.Ric
 let sourceresults: Mixins.Feed<APIResponseTypes.IBrowseResponse>;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
+const HeaderResult = ref<YTNodes.PageHeader>()
 const TitleResult = ref<Mixins.TabbedFeed<APIResponseTypes.IBrowseResponse>>();
 const StrongResult = ref<string>();
 
@@ -54,12 +55,23 @@ const fetchData = async () => {
         });
 
         const searchResults = await yt.getTrending();
+        const HeaderResults = await searchResults.page.header_memo;
         TitleResult.value = searchResults;
         StrongResult.value = await searchResults.title;
 
 
         results.value = await [searchResults.page_contents];
         sourceresults = searchResults;
+
+        HeaderResults?.forEach(async (value: Helpers.YTNode[], key: string) => {
+            if (key === 'PageHeader') {
+                value.forEach(async (value: Helpers.YTNode) => {
+                    if ((value instanceof YTNodes.PageHeader)) {
+                        HeaderResult.value = value;
+                    }
+                });
+            }
+        });
 
 
     } catch (error) {
@@ -88,6 +100,11 @@ await fetchData();
                 </v-card>
             </v-dialog>
         </div>
+        <template v-if="HeaderResult">
+            <template v-if="(HeaderResult instanceof YTNodes.PageHeader)">
+                <YTCommonPageHeader :data="HeaderResult" />
+            </template>
+        </template>
 
         <template v-if="StrongResult">
             <v-card>
