@@ -5,6 +5,7 @@ const langStore = useLangStore();
 const locationStore = useLocationStore();
 
 const results = ref<Array<YTNodes.RichGrid | ReloadContinuationItemsCommand | YTNodes.SectionList | YTNodes.MusicQueue>>([]);
+const HeaderResult = ref<YTNodes.PageHeader>();
 let sourceresults: Mixins.Feed<APIResponseTypes.IBrowseResponse>;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
@@ -53,10 +54,23 @@ const fetchData = async () => {
         });
 
         const searchResults = await yt.getCourses();
+        console.log(searchResults);
+        const HeaderResults = await searchResults.page.header_memo;
+
 
 
         results.value = await [searchResults.page_contents];
         sourceresults = searchResults;
+
+        HeaderResults?.forEach(async (value: Helpers.YTNode[], key: string) => {
+            if (key === 'PageHeader') {
+                value.forEach(async (value: Helpers.YTNode) => {
+                    if ((value instanceof YTNodes.PageHeader)) {
+                        HeaderResult.value = value;
+                    }
+                });
+            }
+        });
 
 
     } catch (error) {

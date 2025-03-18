@@ -21,7 +21,6 @@ const LoadMore = async ({ done }: any): Promise<void> => {
     try {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
-            console.dir(continuationResults, { depth: null });
             if (continuationResults?.sections && results.value) {
                 results.value.push(...continuationResults.sections);
             }
