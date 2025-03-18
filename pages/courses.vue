@@ -54,7 +54,6 @@ const fetchData = async () => {
         });
 
         const searchResults = await yt.getCourses();
-        console.log(searchResults);
         const HeaderResults = await searchResults.page.header_memo;
 
 
