@@ -47,10 +47,21 @@
     <template v-if="about">
         <v-dialog v-model="dialog" max-width="600px" v-if="(about instanceof YTNodes.AboutChannel)">
             <v-card>
-                <v-card-title>{{ about?.metadata?.description_label?.text }}</v-card-title>
-                <v-card-text><span style="white-space: pre-wrap; word-break: break-all;">{{ about?.metadata?.description
-                        }}</span></v-card-text>
-                <v-card-title>{{ about?.metadata?.custom_links_label?.text }}</v-card-title>
+                <v-card-title>
+                    <template v-if="(about?.metadata?.description_label instanceof Misc.Text)">
+                        <YTMiscText :data="about.metadata.description_label" />
+                    </template>
+                </v-card-title>
+                <v-card-text>
+                    <span style="white-space: pre-wrap; word-break: break-all;">
+                        {{ about?.metadata?.description }}
+                    </span>
+                </v-card-text>
+                <v-card-title>
+                    <template v-if="(about?.metadata?.custom_links_label instanceof Misc.Text)">
+                        <YTMiscText :data="about.metadata.custom_links_label" />
+                    </template>
+                </v-card-title>
                 <template v-for="link in about?.metadata?.links">
                     <v-row>
                         <v-col cols="12">
@@ -61,9 +72,17 @@
                                             alt="avatar" width="24">
                                     </template>
 
-                                    <v-card-title>{{ link?.title?.text }}</v-card-title>
+                                    <v-card-title>
+                                        <template v-if="(link?.title instanceof Misc.Text)">
+                                            <YTMiscText :data="link.title" />
+                                        </template>
+                                    </v-card-title>
 
-                                    <v-card-text>{{ link?.link?.text }}</v-card-text>
+                                    <v-card-text>
+                                        <template v-if="(link?.link instanceof Misc.Text)">
+                                            <YTMiscText :data="link.link" />
+                                        </template>
+                                    </v-card-text>
                                 </v-list-item>
                             </v-card>
                         </v-col>
@@ -77,7 +96,7 @@
                 <v-card-text><v-icon>mdi-play-box</v-icon>{{ about?.metadata?.video_count }}</v-card-text>
                 <v-card-text><v-icon>mdi-trending-up</v-icon>{{ about?.metadata?.view_count }}</v-card-text>
                 <v-card-text><v-icon>mdi-information-outline</v-icon>{{ about?.metadata?.joined_date?.text
-                    }}</v-card-text>
+                }}</v-card-text>
                 <v-card-text><v-icon>mdi-earth</v-icon>{{ about?.metadata?.country }}</v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
