@@ -310,6 +310,17 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'LiveChatPaidSticker'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeLiveChatPaidSticker :data="(data as YTNodes.LiveChatPaidSticker)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeLiveChatPaidSticker :data="(data as YTNodes.LiveChatPaidSticker)" />
+                </v-col>
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'LiveChatMembershipItem'">
             <template v-if="attribute === 'slide'">
                 <YTNodeLiveChatMembershipItem :data="(data as YTNodes.LiveChatMembershipItem)" />

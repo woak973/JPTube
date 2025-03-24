@@ -10,9 +10,13 @@
                         </v-list-item>
                     </v-col>
                     <v-col>
-                        <v-card-subtitle style="white-space: pre-wrap; word-break: break-all;">{{ data.author.name }}・{{
-                            data.published.text }}</v-card-subtitle>
-
+                        <v-card-subtitle style="white-space: pre-wrap; word-break: break-all;">{{ data.author.name }}
+                            <template v-if="data.author.badges">
+                                <template v-for="badge in data.author.badges">
+                                    <YTNode :data="badge" :attribute="'slide'" />
+                                </template>
+                            </template>
+                            ・{{ data.published.text }}</v-card-subtitle>
                         <v-row>
                             <v-col cols="8">
                                 <v-card-text>

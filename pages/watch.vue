@@ -242,6 +242,7 @@ const fetchVideoData = async () => {
                     } else if (action instanceof YTNodes.ReplayChatItemAction) {
                         action.actions.forEach((replayAction) => {
                             if (replayAction instanceof YTNodes.AddChatItemAction) {
+                                console.log(replayAction);
                                 const replayItems = replayAction.item;
                                 Chatresults.value.unshift(replayItems);
                             }
@@ -276,6 +277,7 @@ const fetchVideoData = async () => {
                 } else if (message instanceof YTNodes.ReplayChatItemAction) {
                     message.actions.forEach((replayAction) => {
                         if (replayAction instanceof YTNodes.AddChatItemAction) {
+                            console.log(replayAction);
                             const replayItems = replayAction.item;
                             Chatresults.value.unshift(replayItems);
                         }

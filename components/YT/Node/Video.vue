@@ -20,10 +20,16 @@
                 </template>
                 <v-col>
                     <div class="omit">{{ data.title }}</div>
-                    <v-card-subtitle class="subomit" v-if="data.author.name !== 'N/A'">{{ data.author.name
-                        }}</v-card-subtitle>
-                    <v-card-subtitle class="subomit">{{ data.short_view_count.text }}・{{ data.published.text
-                        }}</v-card-subtitle>
+                    <v-card-subtitle class="subomit" v-if="data.author.name !== 'N/A'">
+                        {{ data.author.name }}
+                        <template v-if="data.author.badges">
+                            <template v-for="badge in data.author.badges">
+                                <YTNode :data="badge" :attribute="'slide'" />
+                            </template>
+                        </template>
+                    </v-card-subtitle>
+                    <v-card-subtitle class="subomit">{{ data.short_view_count.text }}・{{ data.published.text }}
+                    </v-card-subtitle>
                 </v-col>
             </v-row>
         </v-list-item>
