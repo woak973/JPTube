@@ -287,7 +287,7 @@ await fetchData();
 
         </template>
 
-        <v-tabs v-model="tab" background-color="primary" dark @change="updateTab">
+        <v-tabs v-model="tab" background-color="primary" dark>
             <v-tab v-if="sourceTab && sourceTab.has_home" :to="`/channel/${route.params.id}`"
                 value="featured">Home</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_videos" :to="`/channel/${route.params.id}/videos`"

@@ -10,7 +10,12 @@
                 </v-col>
                 <v-col>
                     <v-card-text style="word-break: break-all;">
-                        {{ data.author.name }} -
+                        {{ data.author.name }}
+                        <template v-if="data.author.badges">
+                            <template v-for="badge in data.author.badges">
+                                <YTNode :data="badge" :attribute="'slide'" />
+                            </template>
+                        </template> -
                         <template v-if="(data.message instanceof Misc.Text)">
                             <YTMiscText :data="data.message" />
                         </template>

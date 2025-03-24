@@ -13,9 +13,14 @@
             </v-col>
             <v-col cols="8" class="description">
                 <v-card-title class="omit">{{ data.title }}</v-card-title>
-                <v-card-subtitle>{{ data.author.name }}</v-card-subtitle>
-                <v-card-subtitle>{{ data.short_view_count.text }}・{{ data.published.text
-                }}</v-card-subtitle>
+                <v-card-subtitle>{{ data.author.name }}
+                    <template v-if="data.author.badges">
+                        <template v-for="badge in data.author.badges">
+                            <YTNode :data="badge" :attribute="'slide'" />
+                        </template>
+                    </template>
+                </v-card-subtitle>
+                <v-card-subtitle>{{ data.short_view_count.text }}・{{ data.published.text }}</v-card-subtitle>
             </v-col>
         </v-row>
     </v-card>

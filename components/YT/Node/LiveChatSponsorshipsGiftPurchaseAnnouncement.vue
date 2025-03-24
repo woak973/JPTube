@@ -1,6 +1,8 @@
 <template>
     <template v-if="data" elevation="16">
-        <YTNodeLiveChatSponsorshipsHeader :data="data.header" />
+        <template v-if="data.header">
+            <YTNodeLiveChatSponsorshipsHeader :data="data.header" />
+        </template>
     </template>
     <div v-else>
         No data was provided

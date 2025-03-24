@@ -9,8 +9,8 @@ let sourceresults: Mixins.Feed<APIResponseTypes.IBrowseResponse>;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 const HeaderResult = ref<YTNodes.PageHeader>()
-const TitleResult = ref<Mixins.TabbedFeed<APIResponseTypes.IBrowseResponse>>();
-const StrongResult = ref<string>();
+const TabResult = ref<Array<Helpers.YTNode>>();
+const activeTabIndex = ref<number>(0);
 
 useHead({
     title: "Home - JPTube"
@@ -43,7 +43,7 @@ const LoadMore = async ({ done }: any) => {
 
 };
 
-const fetchData = async () => {
+const fetchData = async (N?: number) => {
     try {
         const lang = langStore.lang || 'ja';
         const location = locationStore.location || 'JP';
@@ -55,23 +55,42 @@ const fetchData = async () => {
         });
 
         const searchResults = await yt.getTrending();
-        const HeaderResults = await searchResults.page.header_memo;
-        TitleResult.value = searchResults;
-        StrongResult.value = await searchResults.title;
+        if (!N) {
+            const HeaderResults = await searchResults.page.header_memo;
+            const TabResults = await searchResults.page.contents_memo
 
+            results.value = await [searchResults.page_contents];
+            sourceresults = searchResults;
 
-        results.value = await [searchResults.page_contents];
-        sourceresults = searchResults;
+            HeaderResults?.forEach(async (value: Helpers.YTNode[], key: string) => {
+                if (key === 'PageHeader') {
+                    value.forEach(async (value: Helpers.YTNode) => {
+                        if ((value instanceof YTNodes.PageHeader)) {
+                            HeaderResult.value = value;
+                        }
+                    });
+                }
+            });
 
-        HeaderResults?.forEach(async (value: Helpers.YTNode[], key: string) => {
-            if (key === 'PageHeader') {
-                value.forEach(async (value: Helpers.YTNode) => {
-                    if ((value instanceof YTNodes.PageHeader)) {
-                        HeaderResult.value = value;
+            TabResults?.forEach(async (value: Helpers.YTNode[], key: string) => {
+                if (key === 'Tab') {
+                    TabResult.value = value;
+                }
+            });
+        } else {
+            if (searchResults.page.contents_memo?.get("Tab")) {
+                const GetTab = await searchResults.page.contents_memo?.get("Tab")?.[N];
+                if (GetTab instanceof YTNodes.Tab) {
+                    const CalledTab = await GetTab.endpoint.call(yt.actions, { parse: true });
+                    const SectionList = await CalledTab?.contents_memo?.get("SectionList");
+                    if (SectionList && SectionList.every(item => item instanceof YTNodes.SectionList)) {
+                        results.value = await SectionList;
                     }
-                });
+                }
             }
-        });
+        }
+
+
 
 
     } catch (error) {
@@ -106,10 +125,14 @@ await fetchData();
             </template>
         </template>
 
-        <template v-if="StrongResult">
-            <v-card>
-                <v-card-title>{{ StrongResult }}</v-card-title>
-            </v-card>
+        <template v-if="TabResult">
+            <v-tabs v-model="activeTabIndex" @update:model-value="fetchData(activeTabIndex)">
+                <template v-for="Tab in TabResult">
+                    <template v-if="(Tab instanceof YTNodes.Tab)">
+                        <v-tab>{{ Tab.title }}</v-tab>
+                    </template>
+                </template>
+            </v-tabs>
         </template>
 
         <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results">
