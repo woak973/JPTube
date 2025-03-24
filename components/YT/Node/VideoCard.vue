@@ -16,7 +16,7 @@
                 </template>
             </template>
         </v-card-subtitle>
-        <v-card-subtitle>{{ data.short_view_count.text }}・{{ data.published.text }}</v-card-subtitle>
+        <v-card-subtitle>{{ data.short_view_count?.text }}・{{ data.published?.text }}</v-card-subtitle>
     </v-card>
     <div v-else>
         No data was provided
