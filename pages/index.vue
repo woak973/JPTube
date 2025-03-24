@@ -107,9 +107,9 @@ await fetchData();
         </template>
 
         <template v-if="StrongResult">
-            <v-card>
-                <v-card-title>{{ StrongResult }}</v-card-title>
-            </v-card>
+            <v-tabs>
+                <v-tab>{{ StrongResult }}</v-tab>
+            </v-tabs>
         </template>
 
         <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results">

@@ -33,9 +33,9 @@ const fetchData = async (Z?: number): Promise<void> => {
             });
         }
 
-        const ytmusic = await yt.kids;
+        const ytkids = await yt.kids;
 
-        const searchResults = await ytmusic.getHomeFeed();
+        const searchResults = await ytkids.getHomeFeed();
         sourceresults = searchResults;
 
         if (!Z) {
