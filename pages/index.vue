@@ -132,7 +132,6 @@ await fetchData();
                         <v-tab>{{ Tab.title }}</v-tab>
                     </template>
                 </template>
-                <strong>{{ activeTabIndex }}</strong>
             </v-tabs>
         </template>
 
