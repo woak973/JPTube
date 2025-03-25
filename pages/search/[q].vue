@@ -11,11 +11,11 @@ let sourceresults: YT.Search;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 const filterDialog = ref<boolean>(false);
-const uploadDateOptions: string[] = ['all', 'hour', 'today', 'week', 'month', 'year'];
-const durationOptions: string[] = ['all', 'short', 'medium', 'long'];
-const sortOptions: string[] = ['relevance', 'rating', 'upload_date', 'view_count'];
-const typeOptions: string[] = ['all', 'video', 'channel', 'playlist', 'movie'];
-const featureOptions: string[] = ['hd', 'subtitles', 'creative_commons', '3d', 'live', 'purchased', '4k', '360', 'location', 'hdr', 'vr180'];
+const uploadDateOptions: Array<Types.UploadDate> = ['all', 'hour', 'today', 'week', 'month', 'year'];
+const durationOptions: Array<Types.Duration> = ['all', 'short', 'medium', 'long'];
+const sortOptions: Array<Types.SortBy> = ['relevance', 'rating', 'upload_date', 'view_count'];
+const typeOptions: Array<Types.SearchType> = ['all', 'video', 'channel', 'playlist', 'movie'];
+const featureOptions: Array<Types.Feature> = ['hd', 'subtitles', 'creative_commons', '3d', 'live', 'purchased', '4k', '360', 'location', 'hdr', 'vr180'];
 const applyFilters = async () => {
     const query = {
         ...route.query,
@@ -140,13 +140,15 @@ await fetchData();
                     <v-form>
                         <v-card-text class="headline">Upload date</v-card-text>
                         <v-chip-group v-model="selectedFilter.upload_date" column>
-                            <v-chip v-for="option in uploadDateOptions" :key="option" :value="option">{{ option
-                                }}</v-chip>
+                            <v-chip v-for="option in uploadDateOptions" :key="option" :value="option">
+                                {{ option }}
+                            </v-chip>
                         </v-chip-group>
                         <v-card-text class="headline">Duration</v-card-text>
                         <v-chip-group v-model="selectedFilter.duration" column>
-                            <v-chip v-for="option in durationOptions" :key="option" :value="option">{{ option
-                                }}</v-chip>
+                            <v-chip v-for="option in durationOptions" :key="option" :value="option">
+                                {{ option }}
+                            </v-chip>
                         </v-chip-group>
                         <v-card-text class="headline">Sort by</v-card-text>
                         <v-chip-group v-model="selectedFilter.sort_by" column>
