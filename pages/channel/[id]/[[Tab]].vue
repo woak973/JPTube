@@ -203,6 +203,149 @@ const fetchData = async () => {
                 }
                 break;
 
+            case 'courses':
+                if (searchResults.has_courses) {
+                    AddResults = await searchResults.getCourses();
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'store':
+                if (searchResults.hasTabWithURL('store')) {
+                    const tab = await searchResults.getTabByURL('store');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'home':
+                if (searchResults.hasTabWithURL('home')) {
+                    const tab = await searchResults.getTabByURL('home');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'letsplay':
+                if (searchResults.hasTabWithURL('letsplay')) {
+                    const tab = await searchResults.getTabByURL('letsplay');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'recent':
+                if (searchResults.hasTabWithURL('recent')) {
+                    const tab = await searchResults.getTabByURL('recent');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'official':
+                if (searchResults.hasTabWithURL('official')) {
+                    const tab = await searchResults.getTabByURL('official');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'live':
+                if (searchResults.hasTabWithURL('live')) {
+                    const tab = await searchResults.getTabByURL('live');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'sports':
+                if (searchResults.hasTabWithURL('sports')) {
+                    const tab = await searchResults.getTabByURL('sports');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'entertainment':
+                if (searchResults.hasTabWithURL('entertainment')) {
+                    const tab = await searchResults.getTabByURL('entertainment');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'business':
+                if (searchResults.hasTabWithURL('business')) {
+                    const tab = await searchResults.getTabByURL('business');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'technology':
+                if (searchResults.hasTabWithURL('technology')) {
+                    const tab = await searchResults.getTabByURL('technology');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'world':
+                if (searchResults.hasTabWithURL('world')) {
+                    const tab = await searchResults.getTabByURL('world');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'national':
+                if (searchResults.hasTabWithURL('national')) {
+                    const tab = await searchResults.getTabByURL('national');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'science':
+                if (searchResults.hasTabWithURL('science')) {
+                    const tab = await searchResults.getTabByURL('science');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'health':
+                if (searchResults.hasTabWithURL('health')) {
+                    const tab = await searchResults.getTabByURL('health');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
+            case 'about':
+                if (searchResults.hasTabWithURL('about')) {
+                    const tab = await searchResults.getTabByURL('about');
+                    AddResults = new YT.Channel(yt.actions, tab.page, true);
+                } else {
+                    has_contents.value = false;
+                }
+                break;
+
             default:
                 if (searchResults.has_home) {
                     AddResults = await searchResults.getHome();
@@ -290,18 +433,52 @@ await fetchData();
         <v-tabs v-model="tab" background-color="primary" dark>
             <v-tab v-if="sourceTab && sourceTab.has_home" :to="`/channel/${route.params.id}`"
                 value="featured">Home</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('home')" :to="`/channel/${route.params.id}`"
+                value="home">Home</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('news_destination')" :to="`/channel/${route.params.id}`"
+                value="home">Top stories</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_videos" :to="`/channel/${route.params.id}/videos`"
                 value="videos">Videos</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('live')" :to="`/channel/${route.params.id}/live`"
+                value="live">Live</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_shorts" :to="`/channel/${route.params.id}/shorts`"
                 value="shorts">Shorts</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_live_streams" :to="`/channel/${route.params.id}/streams`"
                 value="streams">Live</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_podcasts" :to="`/channel/${route.params.id}/podcasts`"
                 value="podcasts">Podcasts</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.has_courses" :to="`/channel/${route.params.id}/courses`"
+                value="courses">Courses</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_playlists" :to="`/channel/${route.params.id}/playlists`"
                 value="playlists">Playlists</v-tab>
             <v-tab v-if="sourceTab && sourceTab.has_community" :to="`/channel/${route.params.id}/community`"
                 value="community">Community</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('store')" :to="`/channel/${route.params.id}/store`"
+                value="store">Store</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('recent')" :to="`/channel/${route.params.id}/recent`"
+                value="recent">Recent</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('letsplay')" :to="`/channel/${route.params.id}/letsplay`"
+                value="letsplay">Let's play</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('official')" :to="`/channel/${route.params.id}/official`"
+                value="official">Official</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('sports')" :to="`/channel/${route.params.id}/sports`"
+                value="sports">Sports</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('about')" :to="`/channel/${route.params.id}/about`"
+                value="about">About</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('entertainment')"
+                :to="`/channel/${route.params.id}/entertainment`" value="entertainment">Entertainment</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('business')" :to="`/channel/${route.params.id}/business`"
+                value="business">Business</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('technology')"
+                :to="`/channel/${route.params.id}/technology`" value="technology">Technology</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('world')" :to="`/channel/${route.params.id}/world`"
+                value="world">World</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('national')" :to="`/channel/${route.params.id}/national`"
+                value="national">National</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('science')" :to="`/channel/${route.params.id}/science`"
+                value="science">Science</v-tab>
+            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('health')" :to="`/channel/${route.params.id}/health`"
+                value="health">Health</v-tab>
             <v-btn v-if="sourceTab && sourceTab.has_search" icon @click="searchDialog = true">
                 <v-icon>mdi-magnify</v-icon>
             </v-btn>
