@@ -20,7 +20,7 @@
     "video.js": "^8.21.0",
     "vue": "latest",
     "vue-router": "latest",
-    "youtubei.js": "^13.2.0"
+    "youtubei.js": "^13.3.0"
   },
   "devDependencies": {
     "@pinia/nuxt": "^0.8.0",
