@@ -28,7 +28,7 @@
                             </template>
                         </template>
                     </v-card-subtitle>
-                    <v-card-subtitle class="subomit">{{ data.short_view_count.text }}・{{ data.published.text }}
+                    <v-card-subtitle class="subomit">{{ data.short_view_count?.text }}・{{ data.published?.text }}
                     </v-card-subtitle>
                 </v-col>
             </v-row>

@@ -62,6 +62,28 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'Playlist'">
+            <template v-if="attribute === 'slide'">
+                <YTNodePlaylist :data="(data as YTNodes.Playlist)" />
+            </template>
+            <template v-else>
+                <v-col cols="12" md="3" lg="2" sm="6">
+                    <YTNodePlaylist :data="(data as YTNodes.Playlist)" />
+                </v-col>
+            </template>
+        </template>
+
+        <template v-else-if="data.type === 'VerticalProductCard'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeVerticalProductCard :data="data" />
+            </template>
+            <template v-else>
+                <v-col cols="12" md="3" lg="2" sm="6">
+                    <YTNodeVerticalProductCard :data="data" />
+                </v-col>
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'PlaylistVideo'">
             <template v-if="attribute === 'slide'">
                 <YTNodePlaylistVideo :data="(data as YTNodes.PlaylistVideo)" />
@@ -409,6 +431,17 @@
             <template v-else>
                 <v-col cols="12">
                     <YTNodeRecognitionShelf :data="(data as YTNodes.RecognitionShelf)" />
+                </v-col>
+            </template>
+        </template>
+
+        <template v-else-if="data.type === 'ChannelAboutFullMetadata'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeChannelAboutFullMetadata :data="(data as YTNodes.ChannelAboutFullMetadata)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeChannelAboutFullMetadata :data="(data as YTNodes.ChannelAboutFullMetadata)" />
                 </v-col>
             </template>
         </template>

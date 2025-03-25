@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="data.renderer_context.command_context.on_tap?.metadata?.url" link>
+    <v-card v-if="data" elevation="16" :to="data.renderer_context.command_context?.on_tap?.metadata?.url" link>
         <v-row>
             <v-col cols="4" class="d-flex align-center justify-center image">
                 <v-img :src="getProxifiedUrl(getImageUrl(data.content_image))" aspect-ratio="16/9" rounded>

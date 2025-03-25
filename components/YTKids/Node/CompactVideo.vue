@@ -20,7 +20,7 @@
                         </template>
                     </template>
                 </v-card-subtitle>
-                <v-card-subtitle>{{ data.short_view_count.text }}・{{ data.published.text }}</v-card-subtitle>
+                <v-card-subtitle>{{ data.short_view_count?.text }}・{{ data.published?.text }}</v-card-subtitle>
             </v-col>
         </v-row>
     </v-card>
@@ -37,7 +37,7 @@ const props = defineProps({
     data: YTNodes.CompactVideo
 });
 
-const generateUrl = (endpoint: YTNodes.NavigationEndpoint) => {
+const generateUrl = (endpoint: YTNodes.NavigationEndpoint | undefined) => {
     if (endpoint?.payload?.videoId) {
         return `/kids/watch?v=${endpoint.payload.videoId}`;
     }

@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="12" sm="8">
         <v-card-title>{{ data.title }}</v-card-title>
-        <v-card-subtitle>{{ data.short_view_count.text }}・{{ data.published.text }}</v-card-subtitle>
+        <v-card-subtitle>{{ data.short_view_count?.text }}・{{ data.published?.text }}</v-card-subtitle>
         <v-card-actions>
           <v-list-item :to="data.author.endpoint?.metadata?.url" link>
             <template v-slot:prepend>

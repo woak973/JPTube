@@ -14,7 +14,7 @@
             <v-col cols="8" class="description">
                 <v-card-title class="small-text omit">{{ data.title }}</v-card-title>
                 <v-card-subtitle class="tiny-text">{{ data.author.name }}</v-card-subtitle>
-                <v-card-subtitle class="tiny-text">{{ data.short_view_count.text }}・{{ data.published.text
+                <v-card-subtitle class="tiny-text">{{ data.short_view_count?.text }}・{{ data.published?.text
                     }}</v-card-subtitle>
             </v-col>
         </v-row>
