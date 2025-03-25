@@ -9,6 +9,7 @@
         </v-img>
         <v-card-text class="omit">{{ data.title }}</v-card-text>
         <v-card-subtitle>{{ data.price }}{{ data.additional_fees_text }}</v-card-subtitle>
+        <v-card-subtitle><s>{{ data.deals_data.sales?.original_price }}</s></v-card-subtitle>
         <v-card-subtitle>{{ data.merchant_name }}</v-card-subtitle>
     </v-card>
     <div v-else>
