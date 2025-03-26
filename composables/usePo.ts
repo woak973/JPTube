@@ -3,7 +3,7 @@ export async function getPo(identifier: string): Promise<string | undefined> {
     const requestKey = 'O43z0dpjhgX20SCx4KAo';
   
     const bgConfig = {
-      fetch: (input: string | URL | globalThis.Request, init?: RequestInit) => fetch(input, init),
+      fetch: (input: string | URL | globalThis.Request, init?: RequestInit) => fetchFn(input, init),
       globalObj: window,
       requestKey,
       identifier
