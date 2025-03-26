@@ -75,11 +75,11 @@
 
         <template v-else-if="data.type === 'VerticalProductCard'">
             <template v-if="attribute === 'slide'">
-                <YTNodeVerticalProductCard :data="(data as any)" />
+                <YTNodeVerticalProductCard :data="(data as unknown as VerticalProductCard)" />
             </template>
             <template v-else>
                 <v-col cols="12" md="3" lg="2" sm="6">
-                    <YTNodeVerticalProductCard :data="(data as any)" />
+                    <YTNodeVerticalProductCard :data="(data as unknown as VerticalProductCard)" />
                 </v-col>
             </template>
         </template>
@@ -706,6 +706,7 @@
 
 <script setup lang="ts">
 import { Helpers, YTNodes, ItemSectionContinuation } from 'youtubei.js';
+import type VerticalProductCard from './Node/VerticalProductCard';
 
 const props = defineProps({
     data: Helpers.YTNode,
