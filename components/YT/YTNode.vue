@@ -706,7 +706,7 @@
 
 <script setup lang="ts">
 import { Helpers, YTNodes, ItemSectionContinuation } from 'youtubei.js';
-import type VerticalProductCard from './Node/VerticalProductCard';
+import type { VerticalProductCard } from './Node/IVerticalProductCard';
 
 const props = defineProps({
     data: Helpers.YTNode,

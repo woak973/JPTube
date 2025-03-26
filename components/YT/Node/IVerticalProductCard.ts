@@ -1,6 +1,6 @@
 import { YTNodes, Misc } from 'youtubei.js';
 
-export default interface VerticalProductCard {
+export interface VerticalProductCard {
   title: string;
   thumbnail: Misc.Thumbnail[];
   endpoint: YTNodes.NavigationEndpoint;

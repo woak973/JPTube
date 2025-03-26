@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import type VerticalProductCard from './VerticalProductCard';
+import type { VerticalProductCard } from './IVerticalProductCard';
 
 const props = defineProps<{
     data: VerticalProductCard;
