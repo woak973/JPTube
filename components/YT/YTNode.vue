@@ -75,11 +75,11 @@
 
         <template v-else-if="data.type === 'VerticalProductCard'">
             <template v-if="attribute === 'slide'">
-                <YTNodeVerticalProductCard :data="data" />
+                <YTNodeVerticalProductCard :data="(data as any)" />
             </template>
             <template v-else>
                 <v-col cols="12" md="3" lg="2" sm="6">
-                    <YTNodeVerticalProductCard :data="data" />
+                    <YTNodeVerticalProductCard :data="(data as any)" />
                 </v-col>
             </template>
         </template>
@@ -295,6 +295,17 @@
             <template v-else>
                 <v-col cols="12">
                     <YTNodeShowingResultsFor :data="(data as YTNodes.ShowingResultsFor)" />
+                </v-col>
+            </template>
+        </template>
+
+        <template v-else-if="data.type === 'DidYouMean'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeDidYouMean :data="(data as YTNodes.DidYouMean)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeDidYouMean :data="(data as YTNodes.DidYouMean)" />
                 </v-col>
             </template>
         </template>
