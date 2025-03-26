@@ -100,7 +100,7 @@
                 <v-card-text><v-icon>mdi-earth</v-icon>{{ about?.metadata?.country }}</v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" @click="dialog = false">閉じる</v-btn>
+                    <v-btn color="primary" @click="dialog = false">Close</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
