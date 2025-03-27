@@ -14,6 +14,17 @@
                         </template>
                     </v-img>
                 </template>
+                <template v-if="data.content?.hero_image">
+                    <v-img v-if="data.content.hero_image.image[0]?.url"
+                        :src="getProxifiedUrl(data.content.hero_image.image[0]?.url)" max-width="50%"
+                        style="border-radius: 50%;">
+                        <template v-slot:placeholder>
+                            <div class="d-flex align-center justify-center fill-height">
+                                <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                            </div>
+                        </template>
+                    </v-img>
+                </template>
                 <template v-else-if="metadata">
                     <v-img v-if="metadata.avatar && metadata.avatar[0]?.url"
                         :src="getProxifiedUrl(metadata.avatar[0]?.url)" max-width="50%" style="border-radius: 50%;">
@@ -30,8 +41,13 @@
                 <v-card-subtitle>
                     <template v-for="(row, index) in data.content?.metadata?.metadata_rows" :key="index">
                         <span v-for="(part, partIndex) in row?.metadata_parts" :key="partIndex">
-                            {{ part?.text?.text }}<span
-                                v-if="partIndex < (row.metadata_parts?.length || 0) - 1">・</span>
+                            <template v-if="part.avatar_stack">
+                                <template v-if="(part.avatar_stack instanceof YTNodes.AvatarStackView)">
+                                    <YTNodeAvatarStackView :data="part.avatar_stack" />
+                                </template>
+                            </template>
+                            {{ part?.text?.text }}
+                            <span v-if="partIndex < (row.metadata_parts?.length || 0) - 1">・</span>
                         </span>
                         <span v-if="index < (data.content?.metadata?.metadata_rows.length || 0) - 1">・</span>
                     </template>
@@ -115,43 +131,7 @@ const props = defineProps({
         type: [YTNodes.ChannelAboutFullMetadata, YTNodes.AboutChannel],
         required: false
     }, metadata: {
-        type: Object as PropType<{
-            metadata: object;
-            android_appindexing_link?: string;
-            android_deep_link?: string;
-            android_package?: string;
-            app_name?: string;
-            available_countries?: string[];
-            avatar?: Misc.Thumbnail[];
-            description?: string;
-            external_id?: string;
-            ios_app_arguments?: string;
-            ios_app_store_id?: string;
-            ios_appindexing_link?: string;
-            is_family_safe?: boolean;
-            is_unlisted?: boolean;
-            keywords?: string[];
-            music_artist_name?: string;
-            noindex?: string;
-            og_type?: string;
-            rss_url?: string;
-            schema_dot_org_type?: string;
-            site_name?: string;
-            tags?: string[];
-            thumbnail?: Misc.Thumbnail[];
-            title?: string;
-            twitter_card_type?: string;
-            twitter_site_handle?: string;
-            type?: string;
-            url?: string;
-            url_applinks_android?: string;
-            url_applinks_ios?: string;
-            url_applinks_web?: string;
-            url_canonical?: string;
-            url_twitter_android?: string;
-            url_twitter_ios?: string;
-            vanity_channel_url?: string;
-        }>,
+        type: Object as PropType<YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>>,
         required: false
     }
 });
