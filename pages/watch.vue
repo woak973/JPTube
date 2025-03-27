@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, YTNodes, Helpers, Types } from 'youtubei.js';
+import { Innertube, UniversalCache, YT, YTNodes, Helpers, Types, Misc } from 'youtubei.js';
 
 const route = useRoute();
 const langStore = useLangStore();
@@ -12,8 +12,7 @@ const HeaderResults = ref<YT.VideoInfo>();
 const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>();
 const Chatresults = ref<Array<Helpers.YTNode>>([]);
 const ChatBannerResults = ref<Array<Helpers.YTNode>>([]);
-const PLResults = ref<Array<YTNodes.PlaylistVideo>>([]);
-const PLInfo = ref<YT.Playlist>();
+const PLResults = ref<YTNodes.TwoColumnWatchNextResults['playlist']>();
 
 
 const videoId = ref(route.query.v as string);
@@ -149,62 +148,23 @@ const fetchVideoData = async () => {
             location: location
         });
 
-        let searchResults: YT.VideoInfo;
+        const nav = new YTNodes.NavigationEndpoint({ watchEndpoint: { videoId: route.query.v as string, playlistId: route.query.list as string, playlistIndex: route.query.index as string } });
 
         if (route.query.list) {
-            let PLvideoId: string = '';
-            const PL = await yt.getPlaylist(route.query.list as string);
-            if (PL.page_contents instanceof YTNodes.SectionList) {
-                PLInfo.value = PL;
-                let PLcontents = PL;
-                let flag = false;
-                PLResults.value = [];
-
-                while (!flag) {
-                    PLcontents.items.forEach((video) => {
-                        if ((video instanceof YTNodes.PlaylistVideo)) {
-                            if (route.query.index === video.index.text) {
-                                PLvideoId = video.id;
-                                flag = true;
-                            } else if (route.query.v === video.id) {
-                                PLvideoId = video.id;
-                                flag = true;
-                            }
-                            PLResults.value.push(video);
-                        }
-                    });
-
-                    if (!flag && await PLcontents.has_continuation) {
-                        const ContPL = await PLcontents.getContinuation();
-                        PLcontents = await ContPL;
-                    } else {
-                        break;
-                    }
-                }
-
-                if (PLvideoId === '') {
-                    PLvideoId = (PL.items[0] as YTNodes.PlaylistVideo).id;
-                }
-
-
-            } else {
-                throw new Error('No Contents Found');
-            }
             PLBtn.value = true;
             PLComponent.value = true;
-
-            videoId.value = PLvideoId;
-            searchResults = await yt.getInfo(PLvideoId);
         } else {
             PLBtn.value = false;
             PLComponent.value = false;
-            searchResults = await yt.getInfo(route.query.v as string);
         }
+
+        const searchResults = await yt.getInfo(nav);
 
 
 
         Relatedresults.value = await searchResults.watch_next_feed;
         HeaderResults.value = searchResults;
+        PLResults.value = searchResults.playlist;
         sourceresults = searchResults;
 
         try {
@@ -539,15 +499,13 @@ await fetchVideoData();
 
                 <v-expand-transition>
                     <div v-if="PLComponent" class="scrollable-component">
-                        <v-card flat link :to="`/playlist?list=${PLInfo?.endpoint?.payload?.playlistId}`">
-                            <v-card-text>{{ PLInfo?.info?.title }}・{{ PLInfo?.info?.total_items }}</v-card-text>
-                        </v-card>
+                        <template v-if="PLResults">
+                            <YTCommonTwoColumnWatchNextResultsPlaylist :data="PLResults" />
+                        </template>
                         <v-row>
-                            <template v-for="result in PLResults" :key="result.id">
-                                <template v-if="(result instanceof YTNodes.PlaylistVideo)">
-                                    <v-col cols="12">
-                                        <YTCommonPlaylistVideoWatch :data="result" />
-                                    </v-col>
+                            <template v-for="result in PLResults?.contents">
+                                <template v-if="(result instanceof Helpers.YTNode)">
+                                    <YTNode :data="result" />
                                 </template>
                             </template>
                         </v-row>

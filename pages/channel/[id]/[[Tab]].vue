@@ -12,7 +12,7 @@ const locationStore = useLocationStore();
 const results = ref<Helpers.ObservedArray<Helpers.YTNode> | null>();
 const filter = ref<Array<string>>();
 const HeaderResults = ref<YTNodes.C4TabbedHeader | YTNodes.CarouselHeader | YTNodes.InteractiveTabbedHeader | YTNodes.PageHeader | undefined>();
-const MetaResults = ref();
+const MetaResults = ref<YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>>();
 const about = ref<YTNodes.ChannelAboutFullMetadata | YTNodes.AboutChannel>();
 let sourceresults: YT.Channel | YT.ChannelListContinuation;
 let sourceTab: YT.Channel;
@@ -139,7 +139,7 @@ const fetchData = async () => {
         const searchResults: YT.Channel = await yt.getChannel(searchID.payload.browseId);
 
         HeaderResults.value = searchResults.header;
-        MetaResults.value = searchResults.metadata;
+        MetaResults.value = searchResults.metadata as YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>;
         sourceTab = searchResults;
         if (searchResults.has_about) {
             about.value = await searchResults.getAbout();

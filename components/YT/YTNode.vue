@@ -95,6 +95,17 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'PlaylistPanelVideo'">
+            <template v-if="attribute === 'slide'">
+                <YTNodePlaylistPanelVideo :data="(data as YTNodes.PlaylistPanelVideo)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodePlaylistPanelVideo :data="(data as YTNodes.PlaylistPanelVideo)" />
+                </v-col>
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'CompactVideo'">
             <template v-if="attribute === 'slide'">
                 <YTNodeCompactVideo :data="(data as YTNodes.CompactVideo)" />

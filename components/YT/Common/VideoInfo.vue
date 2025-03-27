@@ -3,7 +3,7 @@
         <v-card>
             <template v-if="data.primary_info">
                 <v-card-title class="titletext" style="padding-bottom: 0">{{ data.primary_info.title.text
-                }}</v-card-title>
+                    }}</v-card-title>
             </template>
             <v-card-actions>
                 <v-row justify="space-between">
@@ -17,9 +17,14 @@
                                 </template>
 
                                 <v-list-item-title>{{ data.secondary_info.owner?.author.name
-                                    }}</v-list-item-title>
+                                }} <template v-if="data.secondary_info.owner?.author.badges">
+                                        <template v-for="badge in data.secondary_info.owner?.author.badges">
+                                            <YTNode :data="badge" :attribute="'slide'" />
+                                        </template>
+                                    </template>
+                                </v-list-item-title>
                                 <v-list-item-subtitle>{{ data.secondary_info.owner?.subscriber_count.text
-                                    }}</v-list-item-subtitle>
+                                }}</v-list-item-subtitle>
 
                             </v-list-item>
                         </template>
@@ -57,13 +62,13 @@
             </v-card-actions>
             <template v-if="data.primary_info">
                 <v-card-subtitle v-if="!showFullDescription">{{ data.primary_info.relative_date?.text
-                }}・{{
+                    }}・{{
                         data.primary_info.view_count?.short_view_count?.text ||
                         data.primary_info.view_count?.view_count?.text
                     }}</v-card-subtitle>
                 <v-card-subtitle v-else>{{ data.primary_info.published?.text }}・{{
                     data.primary_info.view_count?.view_count?.text
-                }}</v-card-subtitle>
+                    }}</v-card-subtitle>
             </template>
             <template v-if="data.secondary_info">
                 <v-card-text>
