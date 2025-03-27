@@ -502,7 +502,7 @@ await fetchVideoData();
                         <template v-if="PLResults">
                             <YTCommonTwoColumnWatchNextResultsPlaylist :data="PLResults" />
                         </template>
-                        <v-row>
+                        <v-row style="margin-top: 0;">
                             <template v-for="result in PLResults?.contents">
                                 <template v-if="(result instanceof Helpers.YTNode)">
                                     <YTNode :data="result" />
