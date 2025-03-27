@@ -14,6 +14,17 @@
                         </template>
                     </v-img>
                 </template>
+                <template v-if="data.content?.hero_image">
+                    <v-img v-if="data.content.hero_image.image[0]?.url"
+                        :src="getProxifiedUrl(data.content.hero_image.image[0]?.url)" max-width="50%"
+                        style="border-radius: 50%;">
+                        <template v-slot:placeholder>
+                            <div class="d-flex align-center justify-center fill-height">
+                                <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                            </div>
+                        </template>
+                    </v-img>
+                </template>
                 <template v-else-if="metadata">
                     <v-img v-if="metadata.avatar && metadata.avatar[0]?.url"
                         :src="getProxifiedUrl(metadata.avatar[0]?.url)" max-width="50%" style="border-radius: 50%;">
@@ -30,8 +41,13 @@
                 <v-card-subtitle>
                     <template v-for="(row, index) in data.content?.metadata?.metadata_rows" :key="index">
                         <span v-for="(part, partIndex) in row?.metadata_parts" :key="partIndex">
-                            {{ part?.text?.text }}<span
-                                v-if="partIndex < (row.metadata_parts?.length || 0) - 1">・</span>
+                            <template v-if="part.avatar_stack">
+                                <template v-if="(part.avatar_stack instanceof YTNodes.AvatarStackView)">
+                                    <YTNodeAvatarStackView :data="part.avatar_stack" />
+                                </template>
+                            </template>
+                            {{ part?.text?.text }}
+                            <span v-if="partIndex < (row.metadata_parts?.length || 0) - 1">・</span>
                         </span>
                         <span v-if="index < (data.content?.metadata?.metadata_rows.length || 0) - 1">・</span>
                     </template>
@@ -96,7 +112,7 @@
                 <v-card-text><v-icon>mdi-play-box</v-icon>{{ about?.metadata?.video_count }}</v-card-text>
                 <v-card-text><v-icon>mdi-trending-up</v-icon>{{ about?.metadata?.view_count }}</v-card-text>
                 <v-card-text><v-icon>mdi-information-outline</v-icon>{{ about?.metadata?.joined_date?.text
-                    }}</v-card-text>
+                }}</v-card-text>
                 <v-card-text><v-icon>mdi-earth</v-icon>{{ about?.metadata?.country }}</v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>

@@ -200,6 +200,17 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'ProductListHeader'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeProductListHeader :data="(data as YTNodes.ProductListHeader)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeProductListHeader :data="(data as YTNodes.ProductListHeader)" />
+                </v-col>
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'BackstagePost'">
             <template v-if="attribute === 'slide'">
                 <YTNodeBackstagePost :data="(data as YTNodes.BackstagePost)" />
