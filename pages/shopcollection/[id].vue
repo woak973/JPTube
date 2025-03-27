@@ -14,9 +14,25 @@ let sourceresults: YT.Channel | YT.ChannelListContinuation;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
-useHead({
-    title: `${route.params.q as string} - JPTube` || "HashTag - JPTube"
-})
+watch(HeaderResults, (newVal) => {
+    if (newVal) {
+        if (newVal instanceof YTNodes.PageHeader) {
+            useHead({
+                title: `${newVal.page_title} - JPTube` || "Watch"
+            });
+        } else if (newVal instanceof YTNodes.CarouselHeader) {
+            useHead({
+                title: `${(newVal.contents[1] as YTNodes.TopicChannelDetails).title.text} - JPTube` || "Watch"
+            });
+        } else if (newVal instanceof YTNodes.InteractiveTabbedHeader) {
+            useHead({
+                title: `${newVal.title.text
+                    } - JPTube` || "Watch"
+            });
+        }
+    }
+}
+);
 
 
 
