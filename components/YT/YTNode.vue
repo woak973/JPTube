@@ -84,6 +84,17 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'EmptyProductDetails'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeEmptyProductDetails :data="(data as unknown as EmptyProductDetails)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeEmptyProductDetails :data="(data as unknown as EmptyProductDetails)" />
+                </v-col>
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'PlaylistVideo'">
             <template v-if="attribute === 'slide'">
                 <YTNodePlaylistVideo :data="(data as YTNodes.PlaylistVideo)" />
@@ -728,7 +739,7 @@
 
 <script setup lang="ts">
 import { Helpers, YTNodes, ItemSectionContinuation } from 'youtubei.js';
-import type { VerticalProductCard } from './Node/IVerticalProductCard';
+import type { VerticalProductCard, EmptyProductDetails } from './Node/CustomNode';
 
 const props = defineProps({
     data: Helpers.YTNode,

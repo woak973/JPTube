@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import type { VerticalProductCard } from './IVerticalProductCard';
+import type { VerticalProductCard } from './CustomNode';
 
 const props = defineProps<{
     data: VerticalProductCard;
