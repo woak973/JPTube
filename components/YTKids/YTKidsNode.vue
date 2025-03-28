@@ -103,7 +103,11 @@
 
         <template v-else-if="data.type === 'ReelShelf'">
             <v-col cols="12">
-                <strong>{{ (data as YTNodes.ReelShelf).title.text }}</strong>
+                <v-card>
+                    <v-card-title>
+                        {{ (data as YTNodes.ReelShelf).title.text }}
+                    </v-card-title>
+                </v-card>
                 <v-slide-group>
                     <div v-for="item in (data as YTNodes.ReelShelf).items" class="ma-2"
                         :style="{ width: page === 'Watch' ? '150px' : '200px' }">
@@ -117,7 +121,11 @@
 
         <template v-else-if="data.type === 'RichShelf'">
             <v-col cols="12">
-                <strong>{{ (data as YTNodes.RichShelf).title.text }}</strong>
+                <v-card>
+                    <v-card-title>
+                        {{ (data as YTNodes.RichShelf).title.text }}
+                    </v-card-title>
+                </v-card>
                 <v-slide-group>
                     <div v-for="content in (data as YTNodes.RichShelf).contents" class="ma-2"
                         :style="{ width: (content.type === 'Post' || (content instanceof YTNodes.RichItem && content.content.type === 'Post')) ? '500px' : '200px' }">
@@ -131,8 +139,12 @@
 
         <template v-else-if="data.type === 'ChannelFeaturedContent'">
             <v-col cols="12">
-                <strong>{{ (data as YTNodes.ChannelFeaturedContent).title.text }}</strong>
-                <v-row>
+                <v-card>
+                    <v-card-title>
+                        {{ (data as YTNodes.ChannelFeaturedContent).title.text }}
+                    </v-card-title>
+                </v-card>
+                <v-row style="margin-top: 0;">
                     <template v-for="item in (data as YTNodes.ChannelFeaturedContent).items" class="ma-2"
                         style="width: 200px;">
                         <template v-if="(item instanceof Helpers.YTNode)">

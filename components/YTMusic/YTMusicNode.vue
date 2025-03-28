@@ -3,12 +3,20 @@
         <!-- Unity Components -->
         <template v-if="data.type === 'MusicCardShelf'">
             <template v-if="attribute === 'slide'">
-                <strong>{{ (data as YTNodes.MusicCardShelf).header?.title.text }}</strong>
+                <v-card style="margin-bottom: 12px;">
+                    <v-card-title>
+                        {{ (data as YTNodes.MusicCardShelf).header?.title.text }}
+                    </v-card-title>
+                </v-card>
                 <YTMusicNodeMusicCardShelf :data="(data as YTNodes.MusicCardShelf)" :page="page" />
             </template>
             <template v-else>
                 <v-col cols="12">
-                    <strong>{{ (data as YTNodes.MusicCardShelf).header?.title.text }}</strong>
+                    <v-card style="margin-bottom: 12px;">
+                        <v-card-title>
+                            {{ (data as YTNodes.MusicCardShelf).header?.title.text }}
+                        </v-card-title>
+                    </v-card>
                     <YTMusicNodeMusicCardShelf :data="(data as YTNodes.MusicCardShelf)" :page="page" />
                 </v-col>
             </template>
@@ -54,7 +62,11 @@
         <!-- Loop Components -->
         <template v-else-if="data.type === 'MusicCarouselShelf'">
             <v-col cols="12">
-                <strong>{{ (data as YTNodes.MusicCarouselShelf)?.header?.title }}</strong>
+                <v-card>
+                    <v-card-title>
+                        {{ (data as YTNodes.MusicCarouselShelf)?.header?.title }}
+                    </v-card-title>
+                </v-card>
                 <v-slide-group>
                     <div v-for="content in (data as YTNodes.MusicCarouselShelf).contents" class="ma-2"
                         v-bind:style="{ width: (content instanceof YTNodes.MusicResponsiveListItem) ? '500px' : '200px' }">
@@ -68,8 +80,12 @@
 
         <template v-else-if="data.type === 'MusicShelf'">
             <v-col cols="12">
-                <strong>{{ (data as YTNodes.MusicShelf).title.text }}</strong>
-                <v-row style="margin-bottom: 0;">
+                <v-card>
+                    <v-card-title>
+                        {{ (data as YTNodes.MusicShelf).title.text }}
+                    </v-card-title>
+                </v-card>
+                <v-row style="margin-bottom: 0; margin-top: 0;">
                     <template v-for="content in (data as YTNodes.MusicShelf).contents">
                         <template v-if="(content instanceof Helpers.YTNode)">
                             <YTMusicNode :data="content" :attribute="attribute" :page="page" :isMS="true" />
