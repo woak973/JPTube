@@ -14,7 +14,7 @@
                         </template>
                     </v-img>
                 </template>
-                <template v-if="data.content?.hero_image">
+                <template v-else-if="data.content?.hero_image">
                     <v-img v-if="data.content.hero_image.image[0]?.url"
                         :src="getProxifiedUrl(data.content.hero_image.image[0]?.url)" max-width="50%"
                         style="border-radius: 50%;">
@@ -24,6 +24,30 @@
                             </div>
                         </template>
                     </v-img>
+                </template>
+                <template v-else-if="data.content?.image">
+                    <template v-if="(data.content.image instanceof YTNodes.ContentPreviewImageView)">
+                        <v-img v-if="data.content.image.image[0]?.url"
+                            :src="getProxifiedUrl(data.content.image.image[0]?.url)" max-width="50%"
+                            style="border-radius: 50%;">
+                            <template v-slot:placeholder>
+                                <div class="d-flex align-center justify-center fill-height">
+                                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                                </div>
+                            </template>
+                        </v-img>
+                    </template>
+                    <template v-else-if="(data.content.image instanceof YTNodes.DecoratedAvatarView)">
+                        <v-img v-if="data.content.image.avatar?.image[0]?.url"
+                            :src="getProxifiedUrl(data.content.image.avatar.image[0]?.url)" max-width="50%"
+                            style="border-radius: 50%;">
+                            <template v-slot:placeholder>
+                                <div class="d-flex align-center justify-center fill-height">
+                                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                                </div>
+                            </template>
+                        </v-img>
+                    </template>
                 </template>
                 <template v-else-if="metadata">
                     <v-img v-if="metadata.avatar && metadata.avatar[0]?.url"
@@ -112,7 +136,7 @@
                 <v-card-text><v-icon>mdi-play-box</v-icon>{{ about?.metadata?.video_count }}</v-card-text>
                 <v-card-text><v-icon>mdi-trending-up</v-icon>{{ about?.metadata?.view_count }}</v-card-text>
                 <v-card-text><v-icon>mdi-information-outline</v-icon>{{ about?.metadata?.joined_date?.text
-                }}</v-card-text>
+                    }}</v-card-text>
                 <v-card-text><v-icon>mdi-earth</v-icon>{{ about?.metadata?.country }}</v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>

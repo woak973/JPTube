@@ -5,7 +5,7 @@ const langStore = useLangStore();
 const locationStore = useLocationStore();
 
 const results = ref<Array<YTNodes.RichGrid | ReloadContinuationItemsCommand | YTNodes.SectionList | YTNodes.MusicQueue>>([]);
-const HeaderResult = ref<YTNodes.PageHeader>();
+const HeaderResult = ref<Array<Helpers.YTNode>>();
 let sourceresults: Mixins.Feed<APIResponseTypes.IBrowseResponse>;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
@@ -60,16 +60,8 @@ const fetchData = async () => {
 
         results.value = await [searchResults.page_contents];
         sourceresults = searchResults;
+        HeaderResult.value = await searchResults.page.header_memo?.get("PageHeader");
 
-        HeaderResults?.forEach(async (value: Helpers.YTNode[], key: string) => {
-            if (key === 'PageHeader') {
-                value.forEach(async (value: Helpers.YTNode) => {
-                    if ((value instanceof YTNodes.PageHeader)) {
-                        HeaderResult.value = value;
-                    }
-                });
-            }
-        });
 
 
     } catch (error) {
@@ -98,6 +90,15 @@ await fetchData();
                 </v-card>
             </v-dialog>
         </div>
+
+        <template v-if="HeaderResult">
+            <template v-for="Header in HeaderResult">
+                <template v-if="(Header instanceof YTNodes.PageHeader)">
+                    <YTCommonPageHeader :data="Header" />
+                </template>
+            </template>
+        </template>
+
         <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results">
             <template v-for="result in results">
                 <template v-if="(result instanceof Helpers.YTNode)">

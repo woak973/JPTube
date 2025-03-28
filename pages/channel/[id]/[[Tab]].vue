@@ -14,13 +14,14 @@ const filter = ref<Array<string>>();
 const HeaderResults = ref<YTNodes.C4TabbedHeader | YTNodes.CarouselHeader | YTNodes.InteractiveTabbedHeader | YTNodes.PageHeader | undefined>();
 const MetaResults = ref<YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>>();
 const about = ref<YTNodes.ChannelAboutFullMetadata | YTNodes.AboutChannel>();
+const TabResults = ref<Array<Helpers.YTNode>>();
 let sourceresults: YT.Channel | YT.ChannelListContinuation;
 let sourceTab: YT.Channel;
 let sourcefilter: YT.Channel | undefined;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 const has_contents = ref<boolean>(true);
-const tab = ref<string>(route.params.Tab as string || 'featured');
+const selectedTab = ref<string>(route.params.Tab as string || 'featured');
 const selectedFilters = ref<string>();
 const searchDialog = ref<boolean>(false);
 const searchQuery = ref<string>('');
@@ -58,7 +59,11 @@ watch(selectedFilters, (newValue) => {
 });
 
 watch(() => route.params.Tab as string, (newTab) => {
-    tab.value = newTab;
+    selectedTab.value = newTab;
+});
+
+watch(() => route.query.bp as string, async (bp) => {
+    await fetchData(bp);
 });
 
 watch(has_contents, (newValue) => {
@@ -91,6 +96,11 @@ watch(HeaderResults, (newVal) => {
 }
 );
 
+const getLastParam = (url: string): string => {
+    const parts = url.split('/');
+    return parts[parts.length - 1] || '';
+};
+
 const LoadMore = async ({ done }: any) => {
     try {
         if (sourceresults && sourceresults.has_continuation) {
@@ -118,8 +128,25 @@ const LoadMore = async ({ done }: any) => {
 
 };
 
-const fetchData = async () => {
+const getSearchResults = async (yt: Innertube, bp?: string): Promise<YT.Channel> => {
+    if (bp) {
+        const nav = new YTNodes.NavigationEndpoint({ browseEndpoint: { browseId: "FEstorefront", params: bp } });
+        const CallResults = await nav.call(yt.actions, { parse: true });
+        return new YT.Channel(yt.actions, CallResults, true);
+    } else {
+        let getID: string = route.params.id as string;
+        getID = getID.startsWith('@') ? `https://m.youtube.com/${getID}` : `https://m.youtube.com/channel/${getID}`;
+        let searchID = await yt.resolveURL(getID);
+        if (!searchID.payload.browseId) {
+            searchID = await yt.resolveURL(searchID.payload.url);
+        }
+        return await yt.getChannel(searchID.payload.browseId);
+    }
+};
+
+const fetchData = async (bp?: string) => {
     try {
+
         const lang = langStore.lang || 'ja';
         const location = locationStore.location || 'JP';
         const yt = await Innertube.create({
@@ -128,18 +155,11 @@ const fetchData = async () => {
             lang: lang,
             location: location
         });
-
-        let getID: string = route.params.id as string;
-        getID = getID.startsWith('@') ? `https://m.youtube.com/${getID}` : `https://m.youtube.com/channel/${getID}`;
-        let searchID = await yt.resolveURL(getID);
-        if (!searchID.payload.browseId) {
-            searchID = await yt.resolveURL(searchID.payload.url);
-        }
-
-        const searchResults: YT.Channel = await yt.getChannel(searchID.payload.browseId);
+        const searchResults = await getSearchResults(yt, bp);
 
         HeaderResults.value = searchResults.header;
         MetaResults.value = searchResults.metadata as YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>;
+        TabResults.value = await searchResults.page.contents_memo?.get('Tab');
         sourceTab = searchResults;
         if (searchResults.has_about) {
             about.value = await searchResults.getAbout();
@@ -362,8 +382,8 @@ const fetchData = async () => {
             }
             sourceresults = AddResults;
         } else if (!has_contents.value) {
-            const AddResultsPage: YTNodes.SectionList | YTNodes.MusicQueue | YTNodes.RichGrid | ReloadContinuationItemsCommand = await searchResults.page_contents;
-            if ('contents' in AddResultsPage) {
+            const AddResultsPage = await searchResults.current_tab?.content;
+            if (AddResultsPage && 'contents' in AddResultsPage) {
                 results.value = AddResultsPage.contents;
             } else {
                 results.value = null;
@@ -430,59 +450,16 @@ await fetchData();
 
         </template>
 
-        <v-tabs v-model="tab" background-color="primary" dark>
-            <v-tab v-if="sourceTab && sourceTab.has_home" :to="`/channel/${route.params.id}`"
-                value="featured">Home</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('home')" :to="`/channel/${route.params.id}`"
-                value="home">Home</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('news_destination')" :to="`/channel/${route.params.id}`"
-                value="home">Top stories</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_videos" :to="`/channel/${route.params.id}/videos`"
-                value="videos">Videos</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('live')" :to="`/channel/${route.params.id}/live`"
-                value="live">Live</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_shorts" :to="`/channel/${route.params.id}/shorts`"
-                value="shorts">Shorts</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_live_streams" :to="`/channel/${route.params.id}/streams`"
-                value="streams">Live</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_podcasts" :to="`/channel/${route.params.id}/podcasts`"
-                value="podcasts">Podcasts</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_courses" :to="`/channel/${route.params.id}/courses`"
-                value="courses">Courses</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_playlists" :to="`/channel/${route.params.id}/playlists`"
-                value="playlists">Playlists</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.has_community" :to="`/channel/${route.params.id}/community`"
-                value="community">Community</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('store')" :to="`/channel/${route.params.id}/store`"
-                value="store">Store</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('recent')" :to="`/channel/${route.params.id}/recent`"
-                value="recent">Recent</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('letsplay')" :to="`/channel/${route.params.id}/letsplay`"
-                value="letsplay">Let's play</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('official')" :to="`/channel/${route.params.id}/official`"
-                value="official">Official</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('sports')" :to="`/channel/${route.params.id}/sports`"
-                value="sports">Sports</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('about')" :to="`/channel/${route.params.id}/about`"
-                value="about">About</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('entertainment')"
-                :to="`/channel/${route.params.id}/entertainment`" value="entertainment">Entertainment</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('business')" :to="`/channel/${route.params.id}/business`"
-                value="business">Business</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('technology')"
-                :to="`/channel/${route.params.id}/technology`" value="technology">Technology</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('world')" :to="`/channel/${route.params.id}/world`"
-                value="world">World</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('national')" :to="`/channel/${route.params.id}/national`"
-                value="national">National</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('science')" :to="`/channel/${route.params.id}/science`"
-                value="science">Science</v-tab>
-            <v-tab v-if="sourceTab && sourceTab.hasTabWithURL('health')" :to="`/channel/${route.params.id}/health`"
-                value="health">Health</v-tab>
-            <v-btn v-if="sourceTab && sourceTab.has_search" icon @click="searchDialog = true">
-                <v-icon>mdi-magnify</v-icon>
-            </v-btn>
+        <v-tabs v-model="selectedTab" background-color="primary" dark>
+            <template v-for="Tab in TabResults">
+                <template v-if="(Tab instanceof YTNodes.Tab) && Tab.title !== 'N/A'">
+                    <v-tab :to="Tab.endpoint.metadata.url" :value="getLastParam(Tab.endpoint.metadata.url ?? '')">{{
+                        Tab.title
+                        }}</v-tab>
+                </template>
+            </template>
         </v-tabs>
+
         <template v-if="filter">
             <v-chip-group column v-model="selectedFilters">
                 <v-chip v-for="(item, index) in filter" :key="index" :value="item">
