@@ -27,3 +27,7 @@ export interface VerticalProductCard {
   };
   price_replacement_text?: string;
 }
+
+export interface EmptyProductDetails{
+  title: Misc.Text;
+}
