@@ -8,7 +8,7 @@ const results = ref<Array<YTNodes.SectionList | YTNodes.MusicQueue | YTNodes.Ric
 let sourceresults: Mixins.Feed<APIResponseTypes.IBrowseResponse>;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
-const HeaderResult = ref<YTNodes.PageHeader>()
+const HeaderResult = ref<Array<Helpers.YTNode>>()
 const TabResult = ref<Array<Helpers.YTNode>>();
 const activeTabIndex = ref<number>(0);
 
@@ -61,22 +61,9 @@ const fetchData = async (N?: number) => {
 
             results.value = await [searchResults.page_contents];
             sourceresults = searchResults;
+            HeaderResult.value = await searchResults.page.header_memo?.get("PageHeader");
+            TabResult.value = await searchResults.page.contents_memo?.get("Tab");
 
-            HeaderResults?.forEach(async (value: Helpers.YTNode[], key: string) => {
-                if (key === 'PageHeader') {
-                    value.forEach(async (value: Helpers.YTNode) => {
-                        if ((value instanceof YTNodes.PageHeader)) {
-                            HeaderResult.value = value;
-                        }
-                    });
-                }
-            });
-
-            TabResults?.forEach(async (value: Helpers.YTNode[], key: string) => {
-                if (key === 'Tab') {
-                    TabResult.value = value;
-                }
-            });
         } else {
             if (searchResults.page.contents_memo?.get("Tab")) {
                 const GetTab = await searchResults.page.contents_memo?.get("Tab")?.[N];
@@ -120,8 +107,10 @@ await fetchData();
             </v-dialog>
         </div>
         <template v-if="HeaderResult">
-            <template v-if="(HeaderResult instanceof YTNodes.PageHeader)">
-                <YTCommonPageHeader :data="HeaderResult" />
+            <template v-for="Header in HeaderResult">
+                <template v-if="(Header instanceof YTNodes.PageHeader)">
+                    <YTCommonPageHeader :data="Header" />
+                </template>
             </template>
         </template>
 
