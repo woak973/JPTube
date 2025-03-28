@@ -479,6 +479,17 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'Poll'">
+            <template v-if="attribute === 'slide'">
+                <YTNodePoll :data="(data as YTNodes.Poll)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodePoll :data="(data as YTNodes.Poll)" />
+                </v-col>
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'RecognitionShelf'">
             <template v-if="attribute === 'slide'">
                 <YTNodeRecognitionShelf :data="(data as YTNodes.RecognitionShelf)" />
