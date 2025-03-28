@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, Mixins, Helpers, YTNodes } from 'youtubei.js';
+import { Innertube, UniversalCache, YT, Utils, Helpers, YTNodes } from 'youtubei.js';
+import { BinaryWriter } from "@bufbuild/protobuf/wire"
 
 
 const route = useRoute();
@@ -73,7 +74,18 @@ const fetchData = async () => {
             lang: lang,
             location: location
         });
-        const nav = await yt.resolveURL(`https://www.youtube.com/shopcollection/${route.params.id as string}`);
+
+        const writer = new BinaryWriter();
+        writer.uint32(1090).fork();
+        writer.uint32(10).string(route.params.id as string);
+        writer.join();
+        const Uint8 = writer.finish();
+        let params = encodeURIComponent(Utils.u8ToBase64(Uint8));
+        if (route.query.scp) {
+            params += route.query.scp;
+        }
+
+        const nav = new YTNodes.NavigationEndpoint({ browseEndpoint: { browseId: "FEshopping_collection", params: params } })
         const ParsedResults = await nav.call(yt.actions, { parse: true });
         const SearchResults = new YT.Channel(yt.actions, ParsedResults);
         sourceresults = SearchResults;
