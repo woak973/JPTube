@@ -95,6 +95,17 @@
             </template>
         </template>
 
+        <template v-else-if="data.type === 'BackgroundPromo'">
+            <template v-if="attribute === 'slide'">
+                <YTNodeBackgroundPromo :data="(data as YTNodes.BackgroundPromo)" />
+            </template>
+            <template v-else>
+                <v-col cols="12">
+                    <YTNodeBackgroundPromo :data="(data as YTNodes.BackgroundPromo)" />
+                </v-col>
+            </template>
+        </template>
+
         <template v-else-if="data.type === 'PlaylistVideo'">
             <template v-if="attribute === 'slide'">
                 <YTNodePlaylistVideo :data="(data as YTNodes.PlaylistVideo)" />
