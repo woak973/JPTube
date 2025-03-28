@@ -52,8 +52,8 @@ onMounted(async () => {
         try {
             let uri;
             try {
-                const dash = await info.toDash();
-                uri = `data:application/dash+xml;charset=utf-8;base64,${btoa(dash)}`;
+                const dash = await info.toDash(undefined, undefined, { captions_format: 'vtt' });
+                uri = `data:application/dash+xml;charset=utf-8;base64,${btoa(unescape(encodeURIComponent(dash)))}`;
             } catch (e) {
                 if (info.streaming_data && info.streaming_data.hls_manifest_url) {
                     uri = info.streaming_data.hls_manifest_url;
@@ -97,7 +97,7 @@ onMounted(async () => {
                     },
                     fadeDelay: 0,
                     preferDocumentPictureInPicture: false,
-                    overflowMenuButtons: ['quality', 'language', 'picture_in_picture', 'playback_rate', 'loop', 'statistics', 'save_video_frame']
+                    overflowMenuButtons: ['quality', 'language', 'captions', 'picture_in_picture', 'playback_rate', 'loop', 'statistics', 'save_video_frame']
                 };
 
                 ui.configure(config);
