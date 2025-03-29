@@ -10,24 +10,13 @@
             </v-toolbar>
             <v-card-text>
                 <v-card-title><v-icon left>mdi-web</v-icon>Language</v-card-title>
-                <v-radio-group v-model="selectedLang" column>
-                    <v-radio label="Japanese" value="ja"></v-radio>
-                    <v-radio label="English" value="en"></v-radio>
-                </v-radio-group>
+                <v-select v-model="selectedLang" :items="languages" label="Select Language"></v-select>
 
                 <v-card-title><v-icon left>mdi-earth</v-icon>Region</v-card-title>
-                <v-radio-group v-model="selectedLocation" column>
-                    <v-radio label="Japan" value="JP"></v-radio>
-                    <v-radio label="US" value="US"></v-radio>
-                </v-radio-group>
+                <v-select v-model="selectedLocation" :items="regions" label="Select Region"></v-select>
 
                 <v-card-title><v-icon left>mdi-play-box-multiple</v-icon>Player</v-card-title>
-                <v-radio-group v-model="selectedPlayer" column>
-                    <v-radio label="embed" value="embed"></v-radio>
-                    <v-radio label="shaka-player" value="shaka-player"></v-radio>
-                    <v-radio label="VideoJS(Blob)" value="VideoJS"></v-radio>
-
-                </v-radio-group>
+                <v-select v-model="selectedPlayer" :items="players" label="Select Player"></v-select>
                 <v-text-field v-model="selectedBackend" label="Backend"></v-text-field>
                 <v-text-field v-model="selectedPlayerBackend" label="PlayerBackend"></v-text-field>
 
@@ -45,11 +34,27 @@
 
 const dialog = ref(false);
 
-const selectedLang = ref('ja');
-const selectedLocation = ref('JP');
-const selectedPlayer = ref('embed');
+const selectedLang = ref('en');
+const selectedLocation = ref('US');
+const selectedPlayer = ref('shaka-player');
 const selectedBackend = ref('');
 const selectedPlayerBackend = ref('');
+
+const languages = [
+    { title: 'Japanese', value: 'ja' },
+    { title: 'English', value: 'en' }
+];
+
+const regions = [
+    { title: 'Japan', value: 'JP' },
+    { title: 'US', value: 'US' }
+];
+
+const players = [
+    { title: 'embed', value: 'embed' },
+    { title: 'shaka-player', value: 'shaka-player' },
+    { title: 'VideoJS(Blob)', value: 'VideoJS' }
+];
 
 const langStore = useLangStore();
 const locationStore = useLocationStore();
@@ -90,6 +95,11 @@ const reset = () => {
     playerStore.resetPlayer();
     backendStore.resetBackend();
     playerBackendStore.resetPlayerBackend();
+    selectedLang.value = langStore.lang;
+    selectedLocation.value = locationStore.location;
+    selectedPlayer.value = playerStore.player;
+    selectedBackend.value = backendStore.backend as string;
+    selectedPlayerBackend.value = playerBackendStore.playerbackend as string;
 };
 
 defineExpose({ open });

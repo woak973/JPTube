@@ -1,13 +1,13 @@
 export const useLocationStore = defineStore('location', {
   state: () => ({
-    location: 'JP',
+    location: 'US',
   }),
   actions: {
     setLocation(this: { location: string }, newLocation: string) {
       this.location = newLocation;
     },
     resetLocation(this: { location: string }) {
-      this.location = 'JP';
+      this.location = 'US';
     },
   },
   persist: true,
