@@ -1,13 +1,13 @@
 export const useLangStore = defineStore('lang', {
   state: () => ({
-    lang: 'ja',
+    lang: 'en',
   }),
   actions: {
     setLang(this: { lang: string }, newLang: string) {
       this.lang = newLang;
     },
     resetLang(this: { lang: string }) {
-      this.lang = 'ja';
+      this.lang = 'en';
     },
   },
   persist: true,
