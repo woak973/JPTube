@@ -17,9 +17,22 @@
 
                 <v-card-title><v-icon left>mdi-play-box-multiple</v-icon>Player</v-card-title>
                 <v-select v-model="selectedPlayer" :items="players" label="Select Player"></v-select>
+                <template v-if="selectedPlayer === 'shaka-player'">
+                    <v-switch v-model="selectedAutoPlay" color="primary" label="Enable Auto Play"></v-switch>
+                </template>
+                <v-card-title><v-icon left>mdi-server-network</v-icon>Backends</v-card-title>
                 <v-text-field v-model="selectedBackend" label="Backend"></v-text-field>
                 <v-text-field v-model="selectedPlayerBackend" label="PlayerBackend"></v-text-field>
 
+                <v-card-title><v-icon left>mdi-file-export</v-icon>Export/Import Settings</v-card-title>
+                <v-row>
+                    <v-col cols="auto">
+                        <v-btn color="primary" @click="exportSettings">Export Settings</v-btn>
+                    </v-col>
+                    <v-col>
+                        <v-file-input label="Import Settings" @change="importSettings" accept=".json"></v-file-input>
+                    </v-col>
+                </v-row>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
@@ -39,15 +52,49 @@ const selectedLocation = ref('US');
 const selectedPlayer = ref('shaka-player');
 const selectedBackend = ref('');
 const selectedPlayerBackend = ref('');
+const selectedAutoPlay = ref(false);
 
 const languages = [
-    { title: 'Japanese', value: 'ja' },
-    { title: 'English', value: 'en' }
+    { title: 'Afrikaans', value: 'af' },
+    { title: 'Dansk', value: 'da' },
+    { title: 'Deutsch', value: 'de' },
+    { title: 'English (India)', value: 'en-IN' },
+    { title: 'English (UK)', value: 'en-GB' },
+    { title: 'English (US)', value: 'en' },
+    { title: 'Español (España)', value: 'es' },
+    { title: 'Español (Latinoamérica)', value: 'es-419' },
+    { title: 'Español (US)', value: 'es-US' },
+    { title: 'Français', value: 'fr' },
+    { title: 'Français (Canada)', value: 'fr-CA' },
+    { title: 'Italiano', value: 'it' },
+    { title: 'Nederlands', value: 'nl' },
+    { title: 'Português', value: 'pt-PT' },
+    { title: 'Português (Brasil)', value: 'pt' },
+    { title: '中文 (简体)', value: 'zh-CN' },
+    { title: '中文 (繁體)', value: 'zh-TW' },
+    { title: '中文 (香港)', value: 'zh-HK' },
+    { title: '日本語', value: 'ja' },
+    { title: '한국어', value: 'ko' }
+
 ];
 
 const regions = [
+    { title: 'Australia', value: 'AU' },
+    { title: 'Brazil', value: 'BR' },
+    { title: 'Canada', value: 'CA' },
+    { title: 'France', value: 'FR' },
+    { title: 'Germany', value: 'DE' },
+    { title: 'India', value: 'IN' },
+    { title: 'Indonesia', value: 'ID' },
+    { title: 'Italy', value: 'IT' },
+    { title: 'Netherlands', value: 'NL' },
+    { title: 'Portugal', value: 'PT' },
+    { title: 'Russia', value: 'RU' },
+    { title: 'South Korea', value: 'KR' },
+    { title: 'Spain', value: 'ES' },
     { title: 'Japan', value: 'JP' },
-    { title: 'US', value: 'US' }
+    { title: 'United Kingdom', value: 'GB' },
+    { title: 'United States', value: 'US' }
 ];
 
 const players = [
@@ -61,16 +108,13 @@ const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
 const backendStore = useBackendStore() as { backend: string; setBackend: (newBackend: string) => void; resetBackend: () => void };
 const playerBackendStore = usePlayerBackendStore() as { playerbackend: string; setPlayerBackend: (newPlayerBackend: string) => void; resetPlayerBackend: () => void };
+const autoplayStore = useAutoPlayStore();
 
 const router = useRouter();
 const emit = defineEmits(['Refresh']);
 
 const open = () => {
-    selectedLang.value = langStore.lang;
-    selectedLocation.value = locationStore.location;
-    selectedPlayer.value = playerStore.player;
-    selectedBackend.value = backendStore.backend as string;
-    selectedPlayerBackend.value = playerBackendStore.playerbackend as string;
+    initialize();
     dialog.value = true;
 };
 
@@ -84,6 +128,7 @@ const save = () => {
     playerStore.setPlayer(selectedPlayer.value);
     backendStore.setBackend(selectedBackend.value);
     playerBackendStore.setPlayerBackend(selectedPlayerBackend.value);
+    autoplayStore.setAutoPlay(selectedAutoPlay.value);
     emit('Refresh');
     close();
 
@@ -95,11 +140,59 @@ const reset = () => {
     playerStore.resetPlayer();
     backendStore.resetBackend();
     playerBackendStore.resetPlayerBackend();
+    autoplayStore.resetAutoPlay();
+    emit('Refresh');
+    close();
+};
+
+const initialize = () => {
     selectedLang.value = langStore.lang;
     selectedLocation.value = locationStore.location;
     selectedPlayer.value = playerStore.player;
-    selectedBackend.value = backendStore.backend as string;
-    selectedPlayerBackend.value = playerBackendStore.playerbackend as string;
+    selectedBackend.value = backendStore.backend;
+    selectedPlayerBackend.value = playerBackendStore.playerbackend;
+    selectedAutoPlay.value = autoplayStore.autoplay;
+};
+
+const exportSettings = () => {
+    const settings = {
+        lang: langStore.lang,
+        location: locationStore.location,
+        player: playerStore.player,
+        backend: backendStore.backend,
+        playerBackend: playerBackendStore.playerbackend,
+        autoPlay: autoplayStore.autoplay
+    };
+    const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'settings.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+};
+
+const importSettings = (event: Event) => {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const settings = JSON.parse(e.target?.result as string);
+            if (settings.lang !== undefined) selectedLang.value = settings.lang;
+            if (settings.location !== undefined) selectedLocation.value = settings.location;
+            if (settings.player !== undefined) selectedPlayer.value = settings.player;
+            if (settings.backend !== undefined) selectedBackend.value = settings.backend;
+            if (settings.playerBackend !== undefined) selectedPlayerBackend.value = settings.playerBackend;
+            if (settings.autoPlay !== undefined) selectedAutoPlay.value = settings.autoPlay;
+        } catch (error) {
+            console.error('Invalid settings file:', error);
+        }
+    };
+    reader.readAsText(file);
 };
 
 defineExpose({ open });

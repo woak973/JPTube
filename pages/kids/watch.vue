@@ -5,6 +5,7 @@ const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
+const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
 
 
@@ -45,6 +46,25 @@ watch(() => route.query.v, async (newVideoId): Promise<void> => {
 const handleError = (message: string): void => {
     alert.value = true;
     errorMessage.value = message;
+};
+
+const AutoPlay = () => {
+    if (autoplayStore.autoplay) {
+        if (Relatedresults.value && Relatedresults.value.length > 0) {
+            const firstVideo = Relatedresults.value[0];
+            if (firstVideo instanceof YTNodes.CompactVideo) {
+                const videoId = firstVideo.video_id;
+                if (videoId) {
+                    const router = useRouter();
+                    router.push({ query: { ...route.query, v: videoId } });
+                }
+            } else {
+                console.error('AutoPlay has been cancelled.');
+            }
+        } else {
+            console.error('RelatedVideos is empty or undefined.');
+        }
+    }
 };
 
 const downloadVideo = async (): Promise<void> => {
@@ -150,7 +170,7 @@ await fetchData();
                 </div>
 
                 <YTCommonPlayer v-else-if="playerStore.player === 'shaka-player'" ref="child" :videoId="videoId"
-                    :key="videoId" @errors="handleError" />
+                    :key="videoId" @errors="handleError" @complete="AutoPlay"/>
 
                 <YTCommonVideoJS v-else-if="playerStore.player === 'VideoJS'" ref="child" :videoId="videoId"
                     :key="videoId + 'JS'" @errors="handleError" />
