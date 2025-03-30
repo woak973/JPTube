@@ -5,6 +5,7 @@ const route = useRoute();
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
+const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
 
 
@@ -51,6 +52,25 @@ watch(() => route.query.v, async (newVideoId): Promise<void> => {
 const handleError = (message: string): void => {
     alert.value = true;
     errorMessage.value = message;
+};
+
+const AutoPlay = () => {
+    if (autoplayStore.autoplay) {
+        if (Nextresults.value && Nextresults.value.contents.length > 1) {
+            const nextVideo = Nextresults.value.contents[1];
+            if (nextVideo instanceof YTNodes.PlaylistPanelVideo) {
+                const videoId = nextVideo.video_id;
+                if (videoId) {
+                    const router = useRouter();
+                    router.push({ query: { ...route.query, v: videoId } });
+                }
+            } else {
+                console.error('AutoPlay has been cancelled.');
+            }
+        } else {
+            console.error('RelatedVideos is empty or undefined.');
+        }
+    }
 };
 
 const downloadVideo = async (): Promise<void> => {
@@ -215,7 +235,7 @@ await fetchData();
                 </div>
 
                 <YTCommonPlayer v-else-if="playerStore.player === 'shaka-player'" ref="child" :videoId="videoId"
-                    :key="videoId" @errors="handleError" />
+                    :key="videoId" @errors="handleError" @complete="AutoPlay" />
 
                 <YTCommonVideoJS v-else-if="playerStore.player === 'VideoJS'" ref="child" :videoId="videoId"
                     :key="videoId + 'JS'" @errors="handleError" />
@@ -237,7 +257,8 @@ await fetchData();
                             <div class="scrollable-component">
                                 <v-row style="width: 100%; margin-left: 0;">
                                     <template v-for="result in Playlistresults">
-                                        <YTMusicNode :data="(result as unknown as Helpers.YTNode)" :PLid="(route.query.list as string)"/>
+                                        <YTMusicNode :data="(result as unknown as Helpers.YTNode)"
+                                            :PLid="(route.query.list as string)" />
                                     </template>
                                 </v-row>
                             </div>

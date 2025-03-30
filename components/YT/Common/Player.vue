@@ -12,7 +12,7 @@ const props = defineProps({
         default: '16:9'
     }
 });
-const emit = defineEmits(['errors']);
+const emit = defineEmits(['errors', 'complete']);
 const playerbackendStore = usePlayerBackendStore();
 
 let player: any;
@@ -117,7 +117,7 @@ onMounted(async () => {
                         bufferingGoal: (info.page[0].player_config?.media_common_config.dynamic_readahead_config.max_read_ahead_media_time_ms || 0) / 1000,
                         rebufferingGoal: (info.page[0].player_config?.media_common_config.dynamic_readahead_config.read_ahead_growth_rate_ms || 0) / 1000,
                         bufferBehind: 300,
-                        autoLowLatencyMode: true
+                        lowLatencyMode: true
                     },
                     abr: {
                         enabled: true,
@@ -127,11 +127,21 @@ onMounted(async () => {
                     }
                 });
 
+                player.addEventListener('error', (event: any) => {
+                    const error = event.detail;
+                    console.error('Error code', error.code, 'object', error);
+                    emit('errors', error);
+                });
+
+                player.addEventListener('complete', () => {
+                    emit('complete');
+                });
+
                 const networkingEngine = player.getNetworkingEngine();
 
                 if (!networkingEngine) return;
 
-                networkingEngine.registerRequestFilter(async (type, request) => {
+                networkingEngine.registerRequestFilter(async (type: any, request: any) => {
                     const uri = request.uris[0];
                     const url = new URL(uri);
                     const headers = request.headers;
@@ -164,7 +174,7 @@ onMounted(async () => {
 
                 const RequestType = shaka.net.NetworkingEngine.RequestType;
 
-                networkingEngine.registerResponseFilter(async (type, response) => {
+                networkingEngine.registerResponseFilter(async (type: any, response: any) => {
                     let mediaData = new Uint8Array(0);
 
                     const handleRedirect = async (redirectData: Protos.SabrRedirect) => {
