@@ -26,12 +26,23 @@
                     <template v-if="data.attachment">
                         <YTNode :data="data.attachment" />
                     </template>
-                    <v-list-item>
-                        <template v-slot:prepend>
-                            <v-icon class="me-1" icon="mdi-thumb-up"></v-icon>
-                            <v-list-item-subtitle>{{ data.vote_count?.text }}</v-list-item-subtitle>
-                        </template>
-                    </v-list-item>
+                    <v-card-actions>
+                        <v-list-item>
+                            <template v-slot:prepend>
+                                <v-icon class="me-1" icon="mdi-thumb-up"></v-icon>
+                                <v-list-item-subtitle>{{ data.vote_count?.text }}</v-list-item-subtitle>
+                            </template>
+                        </v-list-item>
+                        <v-list-item v-if="data.action_buttons?.reply_button"
+                            :to="data.action_buttons?.reply_button?.endpoint.metadata.url">
+                            <template v-slot:prepend>
+                                <v-icon class="me-1" icon="mdi-comment-text-outline"></v-icon>
+                                <v-list-item-subtitle>
+                                    {{ data.action_buttons?.reply_button?.text }}
+                                </v-list-item-subtitle>
+                            </template>
+                        </v-list-item>
+                    </v-card-actions>
                 </v-col>
             </v-row>
         </v-list-item>
