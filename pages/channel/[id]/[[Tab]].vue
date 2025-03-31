@@ -71,6 +71,10 @@ watch(() => route.query.bp as string, async (bp) => {
     await fetchData(bp);
 });
 
+watch(() => route.query.lb as string, async () => {
+    await fetchData();
+});
+
 watch(has_contents, (newValue) => {
     if (!newValue) {
         updateTab();
@@ -472,6 +476,13 @@ const fetchData = async (bp?: string) => {
             } else {
                 results.value = null;
             }
+            sourceresults = searchResults;
+            HeaderResults.value = undefined;
+            MetaResults.value = undefined;
+            TabResults.value = undefined;
+            about.value = undefined;
+            filter.value = undefined;
+
 
         }
     } catch (error) {
@@ -538,7 +549,7 @@ await fetchData();
                     <template v-if="(Tab instanceof YTNodes.Tab) && Tab.title !== 'N/A'">
                         <v-tab :to="Tab.endpoint.metadata.url" :value="getLastParam(Tab.endpoint.metadata.url ?? '')">{{
                             Tab.title
-                            }}</v-tab>
+                        }}</v-tab>
                     </template>
                 </template>
             </v-tabs>
