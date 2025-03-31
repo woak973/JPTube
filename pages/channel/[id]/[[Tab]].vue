@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, YTNodes, ReloadContinuationItemsCommand, Helpers, NavigateAction, ShowMiniplayerCommand } from 'youtubei.js';
+import { Innertube, UniversalCache, YT, YTNodes, Mixins, Helpers, NavigateAction, ShowMiniplayerCommand } from 'youtubei.js';
 
 
 
@@ -15,9 +15,12 @@ const HeaderResults = ref<YTNodes.C4TabbedHeader | YTNodes.CarouselHeader | YTNo
 const MetaResults = ref<YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>>();
 const about = ref<YTNodes.ChannelAboutFullMetadata | YTNodes.AboutChannel>();
 const TabResults = ref<Array<Helpers.YTNode>>();
+const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>();
 let sourceresults: YT.Channel | YT.ChannelListContinuation;
 let sourceTab: YT.Channel;
 let sourcefilter: YT.Channel | undefined;
+let comsource: YT.Comments;
+let yt: Innertube;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 const has_contents = ref<boolean>(true);
@@ -25,6 +28,8 @@ const selectedTab = ref<string>(route.params.Tab as string || 'featured');
 const selectedFilters = ref<string>();
 const searchDialog = ref<boolean>(false);
 const searchQuery = ref<string>('');
+const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
+
 
 const applyFilters = async (filter: string) => {
     try {
@@ -128,11 +133,63 @@ const LoadMore = async ({ done }: any) => {
 
 };
 
-const getSearchResults = async (yt: Innertube, bp?: string): Promise<YT.Channel> => {
+const ComLoadMore = async ({ done }: any) => {
+    try {
+        if (comsource && comsource.has_continuation) {
+            const continuationResults = await comsource.getContinuation();
+            for (const comment of continuationResults.contents) {
+                if (comment.has_replies) {
+                    await comment.getReplies();
+                }
+            }
+            if (Commentresults.value) {
+                Commentresults.value.push(...await continuationResults.contents);
+            } else {
+                Commentresults.value = await continuationResults.contents;
+            }
+            comsource = continuationResults;
+            done('ok');
+        } else {
+            done('empty');
+
+        }
+    } catch (error) {
+        alert.value = true;
+        if (error instanceof Error) {
+            errorMessage.value = error.message;
+        } else {
+            errorMessage.value = 'An unknown error occurred';
+        }
+        done('error');
+    }
+
+};
+
+const ApplyComSort = async () => {
+    try {
+
+        const SortResults = await yt.getPostComments(route.query.lb as string, route.params.id as string, selectedSort.value);
+        Commentresults.value = await SortResults.contents;
+        comsource = SortResults;
+
+
+    } catch (error) {
+        alert.value = true;
+        if (error instanceof Error) {
+            errorMessage.value = error.message;
+        } else {
+            errorMessage.value = 'An unknown error occurred';
+        }
+    }
+};
+
+const getSearchResults = async (yt: Innertube, bp?: string): Promise<YT.Channel | Mixins.Feed> => {
     if (bp) {
         const nav = new YTNodes.NavigationEndpoint({ browseEndpoint: { browseId: "FEstorefront", params: bp } });
         const CallResults = await nav.call(yt.actions, { parse: true });
         return new YT.Channel(yt.actions, CallResults, true);
+    } else if (route.query.lb) {
+        return await yt.getPost(route.query.lb as string, route.params.id as string);
     } else {
         let getID: string = route.params.id as string;
         getID = getID.startsWith('@') ? `https://m.youtube.com/${getID}` : `https://m.youtube.com/channel/${getID}`;
@@ -146,252 +203,277 @@ const getSearchResults = async (yt: Innertube, bp?: string): Promise<YT.Channel>
 
 const fetchData = async (bp?: string) => {
     try {
-
         const lang = langStore.lang || 'ja';
         const location = locationStore.location || 'JP';
-        const yt = await Innertube.create({
+        yt = await Innertube.create({
             fetch: fetchFn,
             cache: new UniversalCache(false),
             lang: lang,
             location: location
         });
         const searchResults = await getSearchResults(yt, bp);
-
-        HeaderResults.value = searchResults.header;
-        MetaResults.value = searchResults.metadata as YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>;
-        TabResults.value = await searchResults.page.contents_memo?.get('Tab');
-        sourceTab = searchResults;
-        if (searchResults.has_about) {
-            about.value = await searchResults.getAbout();
-        }
-
-
-        let AddResults: YT.Channel | undefined;
-        switch (route.params.Tab) {
-            case 'videos':
-                if (searchResults.has_videos) {
-                    AddResults = await searchResults.getVideos();
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'playlists':
-                if (searchResults.has_playlists) {
-                    AddResults = await searchResults.getPlaylists();
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'streams':
-                if (searchResults.has_live_streams) {
-                    AddResults = await searchResults.getLiveStreams();
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'community':
-                if (searchResults.has_community) {
-                    AddResults = await searchResults.getCommunity();
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-            case 'shorts':
-                if (searchResults.has_shorts) {
-                    AddResults = await searchResults.getShorts();
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'search':
-                if (searchResults.has_search) {
-                    AddResults = await searchResults.search(route.query.query as string || '');
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'podcasts':
-                if (searchResults.has_podcasts) {
-                    AddResults = await searchResults.getPodcasts();
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'courses':
-                if (searchResults.has_courses) {
-                    AddResults = await searchResults.getCourses();
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'store':
-                if (searchResults.hasTabWithURL('store')) {
-                    const tab = await searchResults.getTabByURL('store');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'home':
-                if (searchResults.hasTabWithURL('home')) {
-                    const tab = await searchResults.getTabByURL('home');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'letsplay':
-                if (searchResults.hasTabWithURL('letsplay')) {
-                    const tab = await searchResults.getTabByURL('letsplay');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'recent':
-                if (searchResults.hasTabWithURL('recent')) {
-                    const tab = await searchResults.getTabByURL('recent');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'official':
-                if (searchResults.hasTabWithURL('official')) {
-                    const tab = await searchResults.getTabByURL('official');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'live':
-                if (searchResults.hasTabWithURL('live')) {
-                    const tab = await searchResults.getTabByURL('live');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'sports':
-                if (searchResults.hasTabWithURL('sports')) {
-                    const tab = await searchResults.getTabByURL('sports');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'entertainment':
-                if (searchResults.hasTabWithURL('entertainment')) {
-                    const tab = await searchResults.getTabByURL('entertainment');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'business':
-                if (searchResults.hasTabWithURL('business')) {
-                    const tab = await searchResults.getTabByURL('business');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'technology':
-                if (searchResults.hasTabWithURL('technology')) {
-                    const tab = await searchResults.getTabByURL('technology');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'world':
-                if (searchResults.hasTabWithURL('world')) {
-                    const tab = await searchResults.getTabByURL('world');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'national':
-                if (searchResults.hasTabWithURL('national')) {
-                    const tab = await searchResults.getTabByURL('national');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'science':
-                if (searchResults.hasTabWithURL('science')) {
-                    const tab = await searchResults.getTabByURL('science');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'health':
-                if (searchResults.hasTabWithURL('health')) {
-                    const tab = await searchResults.getTabByURL('health');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            case 'about':
-                if (searchResults.hasTabWithURL('about')) {
-                    const tab = await searchResults.getTabByURL('about');
-                    AddResults = new YT.Channel(yt.actions, tab.page, true);
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-            default:
-                if (searchResults.has_home) {
-                    AddResults = await searchResults.getHome();
-                } else {
-                    has_contents.value = false;
-                }
-                break;
-
-        }
-        if (AddResults) {
-            filter.value = await AddResults.filters;
-            if (AddResults?.current_tab?.content && 'contents' in AddResults.current_tab.content) {
-                results.value = AddResults.current_tab.content.contents;
+        if (searchResults instanceof YT.Channel) {
+            HeaderResults.value = searchResults.header;
+            MetaResults.value = searchResults.metadata as YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>;
+            TabResults.value = await searchResults.page.contents_memo?.get('Tab');
+            sourceTab = searchResults;
+            if (searchResults.has_about) {
+                about.value = await searchResults.getAbout();
             }
-            sourceresults = AddResults;
-        } else if (!has_contents.value) {
-            const AddResultsPage = await searchResults.current_tab?.content;
-            if (AddResultsPage && 'contents' in AddResultsPage) {
-                results.value = AddResultsPage.contents;
+
+
+            let AddResults: YT.Channel | undefined;
+            switch (route.params.Tab) {
+                case 'videos':
+                    if (searchResults.has_videos) {
+                        AddResults = await searchResults.getVideos();
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'playlists':
+                    if (searchResults.has_playlists) {
+                        AddResults = await searchResults.getPlaylists();
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'streams':
+                    if (searchResults.has_live_streams) {
+                        AddResults = await searchResults.getLiveStreams();
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'community':
+                    if (searchResults.has_community) {
+                        AddResults = await searchResults.getCommunity();
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+                case 'shorts':
+                    if (searchResults.has_shorts) {
+                        AddResults = await searchResults.getShorts();
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'search':
+                    if (searchResults.has_search) {
+                        AddResults = await searchResults.search(route.query.query as string || '');
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'podcasts':
+                    if (searchResults.has_podcasts) {
+                        AddResults = await searchResults.getPodcasts();
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'courses':
+                    if (searchResults.has_courses) {
+                        AddResults = await searchResults.getCourses();
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'store':
+                    if (searchResults.hasTabWithURL('store')) {
+                        const tab = await searchResults.getTabByURL('store');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'home':
+                    if (searchResults.hasTabWithURL('home')) {
+                        const tab = await searchResults.getTabByURL('home');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'letsplay':
+                    if (searchResults.hasTabWithURL('letsplay')) {
+                        const tab = await searchResults.getTabByURL('letsplay');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'recent':
+                    if (searchResults.hasTabWithURL('recent')) {
+                        const tab = await searchResults.getTabByURL('recent');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'official':
+                    if (searchResults.hasTabWithURL('official')) {
+                        const tab = await searchResults.getTabByURL('official');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'live':
+                    if (searchResults.hasTabWithURL('live')) {
+                        const tab = await searchResults.getTabByURL('live');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'sports':
+                    if (searchResults.hasTabWithURL('sports')) {
+                        const tab = await searchResults.getTabByURL('sports');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'entertainment':
+                    if (searchResults.hasTabWithURL('entertainment')) {
+                        const tab = await searchResults.getTabByURL('entertainment');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'business':
+                    if (searchResults.hasTabWithURL('business')) {
+                        const tab = await searchResults.getTabByURL('business');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'technology':
+                    if (searchResults.hasTabWithURL('technology')) {
+                        const tab = await searchResults.getTabByURL('technology');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'world':
+                    if (searchResults.hasTabWithURL('world')) {
+                        const tab = await searchResults.getTabByURL('world');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'national':
+                    if (searchResults.hasTabWithURL('national')) {
+                        const tab = await searchResults.getTabByURL('national');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'science':
+                    if (searchResults.hasTabWithURL('science')) {
+                        const tab = await searchResults.getTabByURL('science');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'health':
+                    if (searchResults.hasTabWithURL('health')) {
+                        const tab = await searchResults.getTabByURL('health');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                case 'about':
+                    if (searchResults.hasTabWithURL('about')) {
+                        const tab = await searchResults.getTabByURL('about');
+                        AddResults = new YT.Channel(yt.actions, tab.page, true);
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+                default:
+                    if (searchResults.has_home) {
+                        AddResults = await searchResults.getHome();
+                    } else {
+                        has_contents.value = false;
+                    }
+                    break;
+
+            }
+            if (AddResults) {
+                filter.value = await AddResults.filters;
+                if (AddResults?.current_tab?.content && 'contents' in AddResults.current_tab.content) {
+                    results.value = AddResults.current_tab.content.contents;
+                }
+                sourceresults = AddResults;
+            } else if (!has_contents.value) {
+                const AddResultsPage = await searchResults.current_tab?.content;
+                if (AddResultsPage && 'contents' in AddResultsPage) {
+                    results.value = AddResultsPage.contents;
+                } else {
+                    results.value = null;
+                }
+                sourceresults = searchResults;
+            }
+            sourcefilter = AddResults;
+        } else if (searchResults instanceof Mixins.Feed) {
+            try {
+                const searchcommentResults = await yt.getPostComments(route.query.lb as string, route.params.id as string);
+                for (const comment of searchcommentResults.contents) {
+                    if (comment.has_replies) {
+                        await comment.getReplies();
+                    }
+                }
+                Commentresults.value = await searchcommentResults.contents;
+                comsource = searchcommentResults;
+            } catch (error) {
+                Commentresults.value = null;
+                console.error('Error fetching comments:', error);
+                if (error instanceof Error) {
+                    errorMessage.value = error.message;
+                } else {
+                    errorMessage.value = 'An unknown error occurred';
+                }
+            }
+
+            if (searchResults.page_contents && 'contents' in searchResults.page_contents) {
+                results.value = searchResults.page_contents.contents;
             } else {
                 results.value = null;
             }
-            sourceresults = searchResults;
-        }
-        sourcefilter = AddResults;
 
+        }
     } catch (error) {
         alert.value = true;
         if (error instanceof Error) {
@@ -450,15 +532,17 @@ await fetchData();
 
         </template>
 
-        <v-tabs v-model="selectedTab" background-color="primary" dark>
-            <template v-for="Tab in TabResults">
-                <template v-if="(Tab instanceof YTNodes.Tab) && Tab.title !== 'N/A'">
-                    <v-tab :to="Tab.endpoint.metadata.url" :value="getLastParam(Tab.endpoint.metadata.url ?? '')">{{
-                        Tab.title
-                        }}</v-tab>
+        <template v-if="TabResults">
+            <v-tabs v-model="selectedTab" background-color="primary" dark>
+                <template v-for="Tab in TabResults">
+                    <template v-if="(Tab instanceof YTNodes.Tab) && Tab.title !== 'N/A'">
+                        <v-tab :to="Tab.endpoint.metadata.url" :value="getLastParam(Tab.endpoint.metadata.url ?? '')">{{
+                            Tab.title
+                            }}</v-tab>
+                    </template>
                 </template>
-            </template>
-        </v-tabs>
+            </v-tabs>
+        </template>
 
         <template v-if="filter">
             <v-chip-group column v-model="selectedFilters">
@@ -477,5 +561,22 @@ await fetchData();
                 </template>
             </v-row>
         </v-infinite-scroll>
+
+        <template v-if="Commentresults">
+            <template v-if="comsource.header">
+                <YTCommonCommentsHeader :data="comsource.header" @update:selectedSort="selectedSort = $event"
+                    @apply-com-sort="ApplyComSort" />
+            </template>
+
+            <v-infinite-scroll mode="intersect" @load="ComLoadMore" v-if="Commentresults.length">
+                <v-row style="width: 100%; margin-left: 0;">
+                    <template v-for="result in Commentresults">
+                        <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
+                            <YTCommonCommentThread :data="result" />
+                        </v-col>
+                    </template>
+                </v-row>
+            </v-infinite-scroll>
+        </template>
     </v-container>
 </template>
