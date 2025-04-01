@@ -9,35 +9,105 @@
                 <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text>
-                <v-card-title><v-icon left>mdi-web</v-icon>Language</v-card-title>
-                <v-select v-model="selectedLang" :items="languages" label="Select Language"></v-select>
+                <v-tabs v-model="activeTab" background-color="primary" dark>
+                    <v-tab value="Language/Region">Language/Region</v-tab>
+                    <v-tab value="Player">Player</v-tab>
+                    <v-tab value="Backends">Backends</v-tab>
+                    <v-tab value="Export/Import">Export/Import</v-tab>
+                    <v-tab value="Credits">Credits</v-tab>
+                </v-tabs>
 
-                <v-card-title><v-icon left>mdi-earth</v-icon>Region</v-card-title>
-                <v-select v-model="selectedLocation" :items="regions" label="Select Region"></v-select>
+                <v-tabs-window v-model="activeTab">
+                    <!-- Language/Region Tab -->
+                    <v-tabs-window-item value="Language/Region">
+                        <v-card-title><v-icon left>mdi-web</v-icon>Language</v-card-title>
+                        <v-select v-model="selectedLang" :items="languages" label="Select Language"></v-select>
+                        <v-card-title><v-icon left>mdi-earth</v-icon>Region</v-card-title>
+                        <v-select v-model="selectedLocation" :items="regions" label="Select Region"></v-select>
+                    </v-tabs-window-item>
 
-                <v-card-title><v-icon left>mdi-play-box-multiple</v-icon>Player</v-card-title>
-                <v-select v-model="selectedPlayer" :items="players" label="Select Player"></v-select>
-                <template v-if="selectedPlayer === 'shaka-player'">
-                    <v-switch v-model="selectedAutoPlay" color="primary" label="Enable Auto Play"></v-switch>
-                </template>
-                <v-card-title><v-icon left>mdi-server-network</v-icon>Backends</v-card-title>
-                <v-text-field v-model="selectedBackend" label="Backend"></v-text-field>
-                <v-text-field v-model="selectedPlayerBackend" label="PlayerBackend"></v-text-field>
+                    <!-- Player Tab -->
+                    <v-tabs-window-item value="Player">
+                        <v-card-title><v-icon left>mdi-play-box-multiple</v-icon>Player</v-card-title>
+                        <v-select v-model="selectedPlayer" :items="players" label="Select Player"></v-select>
+                        <template v-if="selectedPlayer === 'shaka-player'">
+                            <v-switch v-model="selectedAutoPlay" color="primary" label="Enable Auto Play"></v-switch>
+                        </template>
+                    </v-tabs-window-item>
 
-                <v-card-title><v-icon left>mdi-file-export</v-icon>Export/Import Settings</v-card-title>
-                <v-row>
-                    <v-col cols="auto">
-                        <v-btn color="primary" @click="exportSettings">Export Settings</v-btn>
-                    </v-col>
-                    <v-col>
+                    <!-- Backends Tab -->
+                    <v-tabs-window-item value="Backends">
+                        <v-card-title><v-icon left>mdi-server-network</v-icon>Backends</v-card-title>
+                        <v-combobox v-model="selectedBackend" label="Backend" :items="backendHistoryStore.history">
+                            <template v-slot:item="{ props, item }">
+                                <v-list-item @click="props.onClick!">
+                                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                                    <template v-slot:append>
+                                        <v-btn icon color="error"
+                                            @click.stop="backendHistoryStore.removeBackend(item.title)">
+                                            <v-icon>mdi-delete</v-icon>
+                                        </v-btn>
+                                    </template>
+                                </v-list-item>
+                            </template>
+                        </v-combobox>
+                        <v-combobox v-model="selectedPlayerBackend" label="PlayerBackend"
+                            :items="backendHistoryStore.history">
+                            <template v-slot:item="{ props, item }">
+                                <v-list-item @click="props.onClick!">
+                                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                                    <template v-slot:append>
+                                        <v-btn icon color="error"
+                                            @click.stop="backendHistoryStore.removeBackend(item.title)">
+                                            <v-icon>mdi-delete</v-icon>
+                                        </v-btn>
+                                    </template>
+                                </v-list-item>
+                            </template>
+                        </v-combobox>
+                        <v-card-actions>
+                            <v-btn color="error" @click="backendHistoryStore.clearHistory();">Clear Backend
+                                History</v-btn>
+                        </v-card-actions>
+                    </v-tabs-window-item>
+
+                    <!-- Export/Import Tab -->
+                    <v-tabs-window-item value="Export/Import">
+                        <v-card-title><v-icon left>mdi-file-export</v-icon>Export/Import Settings</v-card-title>
+                        <v-card-actions>
+                            <v-btn color="primary" @click="exportSettings">Export Current Settings</v-btn>
+                        </v-card-actions>
                         <v-file-input label="Import Settings" @change="importSettings" accept=".json"></v-file-input>
-                    </v-col>
-                </v-row>
+                    </v-tabs-window-item>
+
+                    <!-- Credits Tab -->
+                    <v-tabs-window-item value="Credits">
+                        <v-card-title><v-icon left>mdi-information</v-icon>Credits</v-card-title>
+                        <v-card-text>
+                            <p>Author: Woak973/JPTubeDev</p>
+                            <p>Repository: <a href="https://github.com/woak973/JPTube"
+                                    target="_blank">woak973/JPTube</a></p>
+                            <p>Copyright © 2025 Woak973. All rights reserved.</p>
+                        </v-card-text>
+                    </v-tabs-window-item>
+                </v-tabs-window>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="reset">Reset</v-btn>
+                <v-btn color="error" @click="openConfirmDialog">Reset</v-btn>
                 <v-btn color="primary" @click="save">Save</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="ResetConfirmDialog" max-width="400">
+        <v-card>
+            <v-card-title class="headline">Warning</v-card-title>
+            <v-card-text>Are you sure you want to reset the settings?</v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click="confirmReset">Yes</v-btn>
+                <v-btn color="error" @click="ResetConfirmDialog = false">No</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -45,14 +115,16 @@
 
 <script setup lang="ts">
 
-const dialog = ref(false);
+const dialog = ref<boolean>(false);
+const ResetConfirmDialog = ref<boolean>(false);
+const activeTab = ref<string>('Language/Region');
 
-const selectedLang = ref('en');
-const selectedLocation = ref('US');
-const selectedPlayer = ref('shaka-player');
-const selectedBackend = ref('');
-const selectedPlayerBackend = ref('');
-const selectedAutoPlay = ref(false);
+const selectedLang = ref<string>('en');
+const selectedLocation = ref<string>('US');
+const selectedPlayer = ref<string>('shaka-player');
+const selectedBackend = ref<string>('');
+const selectedPlayerBackend = ref<string>('');
+const selectedAutoPlay = ref<boolean>(false);
 
 const languages = [
     { title: 'Afrikaans', value: 'af' },
@@ -109,6 +181,7 @@ const playerStore = usePlayerStore();
 const backendStore = useBackendStore() as { backend: string; setBackend: (newBackend: string) => void; resetBackend: () => void };
 const playerBackendStore = usePlayerBackendStore() as { playerbackend: string; setPlayerBackend: (newPlayerBackend: string) => void; resetPlayerBackend: () => void };
 const autoplayStore = useAutoPlayStore();
+const backendHistoryStore = useBackendHistoryStore();
 
 const router = useRouter();
 const emit = defineEmits(['Refresh']);
@@ -122,6 +195,15 @@ const close = () => {
     dialog.value = false;
 };
 
+const openConfirmDialog = () => {
+    ResetConfirmDialog.value = true;
+};
+
+const confirmReset = () => {
+    ResetConfirmDialog.value = false;
+    reset();
+};
+
 const save = () => {
     langStore.setLang(selectedLang.value);
     locationStore.setLocation(selectedLocation.value);
@@ -129,6 +211,12 @@ const save = () => {
     backendStore.setBackend(selectedBackend.value);
     playerBackendStore.setPlayerBackend(selectedPlayerBackend.value);
     autoplayStore.setAutoPlay(selectedAutoPlay.value);
+    if (selectedBackend.value) {
+        backendHistoryStore.addBackend(selectedBackend.value);
+    }
+    if (selectedPlayerBackend.value) {
+        backendHistoryStore.addBackend(selectedPlayerBackend.value);
+    }
     emit('Refresh');
     close();
 
@@ -141,6 +229,7 @@ const reset = () => {
     backendStore.resetBackend();
     playerBackendStore.resetPlayerBackend();
     autoplayStore.resetAutoPlay();
+    backendHistoryStore.clearHistory();
     emit('Refresh');
     close();
 };
@@ -161,7 +250,8 @@ const exportSettings = () => {
         player: playerStore.player,
         backend: backendStore.backend,
         playerBackend: playerBackendStore.playerbackend,
-        autoPlay: autoplayStore.autoplay
+        autoPlay: autoplayStore.autoplay,
+        backendHistory: backendHistoryStore.history
     };
     const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -188,6 +278,9 @@ const importSettings = (event: Event) => {
             if (settings.backend !== undefined) selectedBackend.value = settings.backend;
             if (settings.playerBackend !== undefined) selectedPlayerBackend.value = settings.playerBackend;
             if (settings.autoPlay !== undefined) selectedAutoPlay.value = settings.autoPlay;
+            if (settings.backendHistory !== undefined) {
+                backendHistoryStore.history = settings.backendHistory;
+            }
         } catch (error) {
             console.error('Invalid settings file:', error);
         }
