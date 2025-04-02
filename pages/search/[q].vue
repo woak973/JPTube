@@ -157,7 +157,7 @@ await fetchData();
             </v-dialog>
         </div>
 
-        <v-chip-group v-if="chipOptions" v-model="selectedChip" column color="primary" @update:modelValue="applyChips">
+        <v-chip-group v-if="chipOptions" v-model="selectedChip" color="primary" @update:modelValue="applyChips">
             <v-chip v-for="chip in chipOptions.chips" :key="chip.text" :value="chip.endpoint?.payload?.token">
                 {{ chip.text }}
             </v-chip>
