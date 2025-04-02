@@ -35,8 +35,8 @@ onMounted(async () => {
         const langStore = useLangStore();
         const locationStore = useLocationStore();
 
-        const DLlang = langStore.lang || 'ja';
-        const DLlocation = locationStore.location || 'JP';
+        const DLlang = langStore.lang || 'en';
+        const DLlocation = locationStore.location || 'US';
         const DLyt = await Innertube.create({
             fetch: PlayerfetchFn,
             cache: new UniversalCache(false),

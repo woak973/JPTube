@@ -89,8 +89,8 @@ const LoadMore = async ({ done }: any) => {
 
 const fetchData = async (chip?: string) => {
     try {
-        const lang = langStore.lang || 'ja';
-        const location = locationStore.location || 'JP';
+        const lang = langStore.lang || 'en';
+        const location = locationStore.location || 'US';
 
         const sortData = route.query.sort as Types.SortBy || 'relevance';
         const durationData = route.query.duration as Types.Duration || 'all';

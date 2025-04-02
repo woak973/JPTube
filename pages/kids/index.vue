@@ -22,8 +22,8 @@ definePageMeta({
 const fetchData = async (Z?: number): Promise<void> => {
     try {
         if (!yt) {
-            const lang = langStore.lang || 'ja';
-            const location = locationStore.location || 'JP';
+            const lang = langStore.lang || 'en';
+            const location = locationStore.location || 'US';
             yt = await Innertube.create({
                 fetch: fetchFn,
                 cache: new UniversalCache(false),
