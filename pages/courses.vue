@@ -44,8 +44,8 @@ const LoadMore = async ({ done }: any) => {
 
 const fetchData = async () => {
     try {
-        const lang = langStore.lang || 'ja';
-        const location = locationStore.location || 'JP';
+        const lang = langStore.lang || 'en';
+        const location = locationStore.location || 'US';
         const yt = await Innertube.create({
             fetch: fetchFn,
             cache: new UniversalCache(false),

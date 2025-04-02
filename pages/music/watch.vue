@@ -15,7 +15,7 @@ const results = ref<YTMusic.TrackInfo>();
 const Nextresults = ref<YTNodes.PlaylistPanel>();
 const Lyricsresults = ref<YTNodes.MusicDescriptionShelf>();
 const Relatedresults = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf | YTNodes.MusicDescriptionShelf>>();
-const Playlistresults = ref<YTNodes.MusicResponsiveListItem[]>([]);
+const Playlistresults = ref<Array<YTNodes.MusicResponsiveListItem>>([]);
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 const fatalError = ref<boolean>(false);
@@ -26,6 +26,7 @@ const child = ref<{ seek: (seconds: number) => void; } | null>(null);
 
 const tab = ref<string>('option-2');
 const PLBtn = ref<boolean>(false);
+const autoplaySnackbar = ref<boolean>(false);
 
 watch(results, (newVal): void => {
     if (newVal) {
@@ -59,11 +60,17 @@ const AutoPlay = () => {
         if (Nextresults.value && Nextresults.value.contents.length > 1) {
             const nextVideo = Nextresults.value.contents[1];
             if (nextVideo instanceof YTNodes.PlaylistPanelVideo) {
-                const videoId = nextVideo.video_id;
-                if (videoId) {
-                    const router = useRouter();
-                    router.push({ query: { ...route.query, v: videoId } });
-                }
+                autoplaySnackbar.value = true;
+                setTimeout(() => {
+                    if (autoplaySnackbar.value) {
+                        const videoId = nextVideo.video_id;
+                        if (videoId) {
+                            const router = useRouter();
+                            router.push({ query: { v: videoId } });
+                        }
+                    }
+                }, 5000);
+
             } else {
                 console.error('AutoPlay has been cancelled.');
             }
@@ -76,8 +83,8 @@ const AutoPlay = () => {
 const downloadVideo = async (): Promise<void> => {
     downloading.value = true;
     try {
-        const DLlang = langStore.lang || 'ja';
-        const DLlocation = locationStore.location || 'JP';
+        const DLlang = langStore.lang || 'en';
+        const DLlocation = locationStore.location || 'US';
         const DLyt = await Innertube.create({
             fetch: PlayerfetchFn,
             cache: new UniversalCache(false),
@@ -122,8 +129,8 @@ const downloadVideo = async (): Promise<void> => {
 
 const fetchData = async (): Promise<void> => {
     try {
-        const lang = langStore.lang || 'ja';
-        const location = locationStore.location || 'JP';
+        const lang = langStore.lang || 'en';
+        const location = locationStore.location || 'US';
         const yt = await Innertube.create({
             fetch: fetchFn,
             cache: new UniversalCache(false),
@@ -176,11 +183,13 @@ const fetchData = async (): Promise<void> => {
 
             videoId.value = PLvideoId;
             searchResults = await ytmusic.getInfo(PLvideoId);
+            console.log(Playlistresults.value);
+            console.log(searchResults);
+
         } else {
             PLBtn.value = false;
             searchResults = await ytmusic.getInfo(route.query.v as string);
         }
-
 
 
         results.value = searchResults;
@@ -224,6 +233,16 @@ await fetchData();
                 </v-card>
             </v-dialog>
         </div>
+
+        <v-snackbar v-model="autoplaySnackbar" timeout="5000" top right>
+            Navigate to the next video in 5 seconds.
+            <template v-slot:actions>
+                <v-btn color="red" @click="autoplaySnackbar = false">
+                    Cancel
+                </v-btn>
+            </template>
+        </v-snackbar>
+
         <v-row wrap v-if="!fatalError">
             <v-col cols="12" md="8">
                 <div v-if="playerStore.player === 'embed'" class="video-container">
@@ -252,7 +271,7 @@ await fetchData();
                 </v-tabs>
 
                 <v-tabs-window v-model="tab">
-                    <v-tabs-window-item value="option-1">
+                    <v-tabs-window-item v-if="PLBtn" value="option-1">
                         <template v-if="Playlistresults">
                             <div class="scrollable-component">
                                 <v-row style="width: 100%; margin-left: 0;">

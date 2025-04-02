@@ -70,8 +70,8 @@ const AutoPlay = () => {
 const downloadVideo = async (): Promise<void> => {
     downloading.value = true;
     try {
-        const DLlang = langStore.lang || 'ja';
-        const DLlocation = locationStore.location || 'JP';
+        const DLlang = langStore.lang || 'en';
+        const DLlocation = locationStore.location || 'US';
         const DLyt = await Innertube.create({
             fetch: PlayerfetchFn,
             cache: new UniversalCache(false),
@@ -116,8 +116,8 @@ const downloadVideo = async (): Promise<void> => {
 
 const fetchData = async (): Promise<void> => {
     try {
-        const lang = langStore.lang || 'ja';
-        const location = locationStore.location || 'JP';
+        const lang = langStore.lang || 'en';
+        const location = locationStore.location || 'US';
         const yt = await Innertube.create({
             fetch: fetchFn,
             cache: new UniversalCache(false),

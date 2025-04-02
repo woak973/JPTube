@@ -187,8 +187,8 @@ const handleError = (message: string) => {
 const downloadVideo = async () => {
     downloading.value = true;
     try {
-        const DLlang = langStore.lang || 'ja';
-        const DLlocation = locationStore.location || 'JP';
+        const DLlang = langStore.lang || 'en';
+        const DLlocation = locationStore.location || 'US';
         const DLyt = await Innertube.create({
             fetch: PlayerfetchFn,
             cache: new UniversalCache(false),
@@ -252,8 +252,8 @@ const ApplyComSort = async () => {
 
 const fetchData = async () => {
     try {
-        const lang = langStore.lang || 'ja';
-        const location = locationStore.location || 'JP';
+        const lang = langStore.lang || 'en';
+        const location = locationStore.location || 'US';
         yt = await Innertube.create({
             fetch: fetchFn,
             cache: new UniversalCache(false),

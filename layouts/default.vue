@@ -12,8 +12,8 @@ const locationStore = useLocationStore();
 const child = ref<string>(uuidv4());
 
 const createYTInstance = async (): Promise<Innertube> => {
-  const lang = langStore.lang || 'ja';
-  const location = locationStore.location || 'JP';
+  const lang = langStore.lang || 'en';
+  const location = locationStore.location || 'US';
   return await Innertube.create({
     fetch: fetchFn,
     cache: new UniversalCache(false),

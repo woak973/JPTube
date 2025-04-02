@@ -14,6 +14,8 @@ const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>(
 const Chatresults = ref<Array<Helpers.YTNode>>([]);
 const ChatBannerResults = ref<Array<Helpers.YTNode>>([]);
 const PLResults = ref<YTNodes.TwoColumnWatchNextResults['playlist']>();
+const AutoPlayResults = ref<YTNodes.TwoColumnWatchNextResults['autoplay']>();
+
 
 
 const videoId = ref(route.query.v as string);
@@ -72,6 +74,7 @@ const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 const fatalError = ref<boolean>(false);
 const showFullDescription = ref<boolean>(false);
+const autoplaySnackbar = ref<boolean>(false);
 
 
 const toggleDescription = () => {
@@ -140,8 +143,8 @@ function moveseek(timer: number) {
 
 const fetchVideoData = async () => {
     try {
-        const lang = langStore.lang || 'ja';
-        const location = locationStore.location || 'JP';
+        const lang = langStore.lang || 'en';
+        const location = locationStore.location || 'US';
         yt = await Innertube.create({
             fetch: fetchFn,
             cache: new UniversalCache(false),
@@ -166,6 +169,7 @@ const fetchVideoData = async () => {
         Relatedresults.value = await searchResults.watch_next_feed;
         HeaderResults.value = searchResults;
         PLResults.value = searchResults.playlist;
+        AutoPlayResults.value = searchResults.autoplay;
         sourceresults = searchResults;
 
         try {
@@ -349,8 +353,8 @@ const ApplyComSort = async () => {
 const downloadVideo = async () => {
     downloading.value = true;
     try {
-        const DLlang = langStore.lang || 'ja';
-        const DLlocation = locationStore.location || 'JP';
+        const DLlang = langStore.lang || 'en';
+        const DLlocation = locationStore.location || 'US';
         const DLyt = await Innertube.create({
             fetch: PlayerfetchFn,
             cache: new UniversalCache(false),
@@ -399,17 +403,13 @@ const handleError = (message: string) => {
 
 const AutoPlay = () => {
     if (autoplayStore.autoplay) {
-        if (Relatedresults.value && Relatedresults.value.length > 0) {
-            const firstVideo = Relatedresults.value[0];
-            if (firstVideo instanceof YTNodes.CompactVideo) {
-                const videoId = firstVideo.video_id;
-                if (videoId) {
-                    const router = useRouter();
-                    router.push({ query: { ...route.query, v: videoId } });
+        if (AutoPlayResults.value && AutoPlayResults.value.sets) {
+            autoplaySnackbar.value = true;
+            setTimeout(() => {
+                if (autoplaySnackbar.value && AutoPlayResults.value) {
+                    navigateTo(AutoPlayResults.value.sets[0].autoplay_video.metadata.url);
                 }
-            } else {
-                console.error('AutoPlay has been cancelled.');
-            }
+            }, (AutoPlayResults.value.count_down_secs ?? 5) * 1000);
         } else {
             console.error('RelatedVideos is empty or undefined.');
         }
@@ -436,6 +436,15 @@ await fetchVideoData();
                 </v-card>
             </v-dialog>
         </div>
+
+        <v-snackbar v-model="autoplaySnackbar" timeout="5000" top right>
+            Navigate to the next video in {{ AutoPlayResults?.count_down_secs ?? 5 }} seconds.
+            <template v-slot:actions>
+                <v-btn color="red" @click="autoplaySnackbar = false">
+                    Cancel
+                </v-btn>
+            </template>
+        </v-snackbar>
 
         <v-row wrap v-if="!fatalError">
             <v-col cols="12" md="8">
