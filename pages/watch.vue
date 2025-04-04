@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, YTNodes, Helpers, Types, Misc } from 'youtubei.js';
+import { Innertube, YT, YTNodes, Helpers, Types } from 'youtubei.js';
 
 const route = useRoute();
-const langStore = useLangStore();
-const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
 const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
@@ -143,14 +141,7 @@ function moveseek(timer: number) {
 
 const fetchVideoData = async () => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        yt = await useInnertube('common');
 
         const nav = new YTNodes.NavigationEndpoint({ watchEndpoint: { videoId: route.query.v as string, playlistId: route.query.list as string, playlistIndex: route.query.index as string } });
 
@@ -353,14 +344,7 @@ const ApplyComSort = async () => {
 const downloadVideo = async () => {
     downloading.value = true;
     try {
-        const DLlang = langStore.lang || 'en';
-        const DLlocation = locationStore.location || 'US';
-        const DLyt = await Innertube.create({
-            fetch: PlayerfetchFn,
-            cache: new UniversalCache(false),
-            lang: DLlang,
-            location: DLlocation
-        });
+        const DLyt = await useInnertube('player');
         const DLResults = await DLyt.getInfo(route.query.v as string);
         const DLOption: Types.DownloadOptions = { quality: 'best' }
         const stream = await DLResults.download(DLOption);

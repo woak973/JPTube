@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, Helpers, YTNodes, YTMusic } from 'youtubei.js';
+import { Helpers, YTNodes, YTMusic } from 'youtubei.js';
 
-const langStore = useLangStore();
-const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf | YTNodes.MusicTastebuilderShelf> | undefined>();
 let sourceresults: YTMusic.HomeFeed;
@@ -44,14 +42,7 @@ const LoadMore = async ({ done }: any): Promise<void> => {
 
 const fetchData = async (): Promise<void> => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        const yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        const yt = await useInnertube('common');
 
         const ytmusic = await yt.music;
 

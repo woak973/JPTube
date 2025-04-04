@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, Helpers, YTNodes, YTKids, Types } from 'youtubei.js';
+import { Helpers, YTNodes, YTKids, Types } from 'youtubei.js';
 
 const route = useRoute();
-const langStore = useLangStore();
-const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
 const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
@@ -70,14 +68,7 @@ const AutoPlay = () => {
 const downloadVideo = async (): Promise<void> => {
     downloading.value = true;
     try {
-        const DLlang = langStore.lang || 'en';
-        const DLlocation = locationStore.location || 'US';
-        const DLyt = await Innertube.create({
-            fetch: PlayerfetchFn,
-            cache: new UniversalCache(false),
-            lang: DLlang,
-            location: DLlocation
-        });
+        const DLyt = await useInnertube('player');
         const DLResults = await DLyt.getInfo(route.query.v as string);
         const DLOption: Types.DownloadOptions = { quality: 'best' }
         const stream = await DLResults.download(DLOption);
@@ -116,14 +107,7 @@ const downloadVideo = async (): Promise<void> => {
 
 const fetchData = async (): Promise<void> => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        const yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        const yt = await useInnertube('common');
 
         const ytkids = await yt.kids;
 
@@ -170,7 +154,7 @@ await fetchData();
                 </div>
 
                 <YTCommonPlayer v-else-if="playerStore.player === 'shaka-player'" ref="child" :videoId="videoId"
-                    :key="videoId" @errors="handleError" @complete="AutoPlay"/>
+                    :key="videoId" @errors="handleError" @complete="AutoPlay" />
 
                 <YTCommonVideoJS v-else-if="playerStore.player === 'VideoJS'" ref="child" :videoId="videoId"
                     :key="videoId + 'JS'" @errors="handleError" />

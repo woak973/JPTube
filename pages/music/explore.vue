@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, Helpers, YTNodes, YTMusic } from 'youtubei.js';
-
-const langStore = useLangStore();
-const locationStore = useLocationStore();
+import { Helpers, YTNodes, YTMusic } from 'youtubei.js';
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf> | undefined>();
 let sourceresults: YTMusic.Explore;
@@ -20,14 +17,7 @@ definePageMeta({
 
 const fetchData = async (): Promise<void> => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        const yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        const yt = await useInnertube('common');
 
         const ytmusic = await yt.music;
 

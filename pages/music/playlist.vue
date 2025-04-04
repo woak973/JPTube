@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YTMusic, YTNodes, Helpers } from 'youtubei.js';
+import { YTMusic, YTNodes, Helpers } from 'youtubei.js';
 
 
 const route = useRoute();
-const langStore = useLangStore();
-const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicResponsiveListItem | YTNodes.ContinuationItem>>();
 const HeaderResults = ref<YTNodes.MusicResponsiveHeader | YTNodes.MusicDetailHeader | YTNodes.MusicEditablePlaylistDetailHeader | undefined>();
@@ -29,7 +27,7 @@ const LoadMore = async ({ done }: any): Promise<void> => {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
             if (results.value) {
-                results.value.push(...await continuationResults.items);
+                results.value.push(...continuationResults.items);
             }
             sourceresults = continuationResults;
             done('ok');
@@ -52,21 +50,14 @@ const LoadMore = async ({ done }: any): Promise<void> => {
 
 const fetchData = async (): Promise<void> => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        const yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
-        const ytmusic = await yt.music;
+        const yt = await useInnertube('common');
+        const ytmusic = yt.music;
 
         const searchResults: YTMusic.Playlist = await ytmusic.getPlaylist(route.query.list as string);
         sourceresults = searchResults;
         HeaderResults.value = searchResults.header;
         if (searchResults.items) {
-            results.value = await searchResults.items;
+            results.value = searchResults.items;
         } else {
             throw new Error('No Contents Found');
         }

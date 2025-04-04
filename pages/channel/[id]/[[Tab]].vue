@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, YTNodes, Mixins, Helpers, NavigateAction, ShowMiniplayerCommand } from 'youtubei.js';
+import { Innertube, YT, YTNodes, Mixins, Helpers, NavigateAction, ShowMiniplayerCommand } from 'youtubei.js';
 
 
 
 
 const route = useRoute();
 const router = useRouter();
-const langStore = useLangStore();
-const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<Helpers.YTNode> | null>();
 const filter = ref<Array<string>>();
@@ -207,14 +205,7 @@ const getSearchResults = async (yt: Innertube, bp?: string): Promise<YT.Channel 
 
 const fetchData = async (bp?: string) => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        yt = await useInnertube('common');
         const searchResults = await getSearchResults(yt, bp);
         if (searchResults instanceof YT.Channel) {
             HeaderResults.value = searchResults.header;
@@ -549,7 +540,7 @@ await fetchData();
                     <template v-if="(Tab instanceof YTNodes.Tab) && Tab.title !== 'N/A'">
                         <v-tab :to="Tab.endpoint.metadata.url" :value="getLastParam(Tab.endpoint.metadata.url ?? '')">{{
                             Tab.title
-                        }}</v-tab>
+                            }}</v-tab>
                     </template>
                 </template>
             </v-tabs>

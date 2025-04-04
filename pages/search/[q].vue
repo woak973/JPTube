@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, Types, Helpers, YTNodes, Parser } from 'youtubei.js';
+import { YT, Types, Helpers, YTNodes } from 'youtubei.js';
 
 const route = useRoute();
 const router = useRouter();
-const langStore = useLangStore();
-const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<Helpers.YTNode>>();
 let sourceresults: YT.Search;
@@ -89,9 +87,6 @@ const LoadMore = async ({ done }: any) => {
 
 const fetchData = async (chip?: string) => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-
         const sortData = route.query.sort as Types.SortBy || 'relevance';
         const durationData = route.query.duration as Types.Duration || 'all';
         const uploadDateData = route.query.upload_date as Types.UploadDate || 'all';
@@ -109,12 +104,7 @@ const fetchData = async (chip?: string) => {
             filter.features = featureData;
         }
 
-        const yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        const yt = await useInnertube('common');
         if (chip) {
             const nav = await yt.actions.execute('/search', { continuation: chip, parse: true });
             results.value = (((nav as any).on_response_received_commands_memo as Helpers.Memo).get('SectionList') as Helpers.ObservedArray<Helpers.YTNode>);

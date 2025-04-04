@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, Helpers, YTNodes, YTKids, ClientType } from 'youtubei.js';
-
-const langStore = useLangStore();
-const locationStore = useLocationStore();
+import { Innertube, Helpers, YTNodes, YTKids, ClientType } from 'youtubei.js';
 
 const TabResults = ref<Helpers.ObservedArray<YTNodes.AnchoredSection> | undefined>();
 const Results = ref<YTNodes.SectionList | null | undefined>();
@@ -22,15 +19,7 @@ definePageMeta({
 const fetchData = async (Z?: number): Promise<void> => {
     try {
         if (!yt) {
-            const lang = langStore.lang || 'en';
-            const location = locationStore.location || 'US';
-            yt = await Innertube.create({
-                fetch: fetchFn,
-                cache: new UniversalCache(false),
-                lang: lang,
-                location: location,
-                client_type: ClientType.KIDS
-            });
+            yt = await useInnertube('common', ClientType.KIDS);
         }
 
         const ytkids = await yt.kids;

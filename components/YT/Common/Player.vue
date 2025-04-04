@@ -28,13 +28,7 @@ onMounted(async () => {
         const coldStartToken = BG.PoToken.generatePlaceholder(visitorData);
         getPo(visitorData).then((webPo) => poToken = webPo);
 
-        const yt = await Innertube.create({
-            po_token: poToken || coldStartToken,
-            visitor_data: visitorData,
-            fetch: PlayerfetchFn,
-            generate_session_locally: true,
-            cache: new UniversalCache(false)
-        });
+        const yt = await useInnertube('player', undefined, { po_token: poToken || coldStartToken, visitor_data: visitorData }, true);
 
         player = undefined as shaka.Player | undefined;
         ui = undefined as shaka.ui.Overlay | undefined;

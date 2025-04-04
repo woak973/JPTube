@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, Helpers, YTNodes, YTShorts, Types } from 'youtubei.js';
+import { Innertube, YT, Helpers, YTNodes, YTShorts, Types } from 'youtubei.js';
 
 
 const route = useRoute();
-const langStore = useLangStore();
-const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
 const { share } = useShare();
 
@@ -187,14 +185,7 @@ const handleError = (message: string) => {
 const downloadVideo = async () => {
     downloading.value = true;
     try {
-        const DLlang = langStore.lang || 'en';
-        const DLlocation = locationStore.location || 'US';
-        const DLyt = await Innertube.create({
-            fetch: PlayerfetchFn,
-            cache: new UniversalCache(false),
-            lang: DLlang,
-            location: DLlocation
-        });
+        const DLyt = await useInnertube('player');
         const DLResults = await DLyt.getInfo(route.params.v as string);
         const DLOption: Types.DownloadOptions = { quality: 'best' }
         const stream = await DLResults.download(DLOption);
@@ -252,14 +243,7 @@ const ApplyComSort = async () => {
 
 const fetchData = async () => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        yt = await useInnertube('common');
 
         const searchResults: YTShorts.ShortFormVideoInfo = await yt.getShortsVideoInfo(route.params.v as string);
         const typicalsearchResults: YT.VideoInfo = await yt.getInfo(route.params.v as string);

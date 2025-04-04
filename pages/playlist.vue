@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, YTNodes, Helpers } from 'youtubei.js';
+import { YT, YTNodes, Helpers } from 'youtubei.js';
 
 
 const route = useRoute();
-const langStore = useLangStore();
-const locationStore = useLocationStore();
+
 
 const results = ref<Helpers.ObservedArray<YTNodes.PlaylistVideo | YTNodes.ReelItem | YTNodes.ShortsLockupView>>();
 const HeaderResults = ref<YT.Playlist>();
@@ -48,14 +47,7 @@ const LoadMore = async ({ done }: any) => {
 
 const fetchData = async () => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        const yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        const yt = await useInnertube('common');
 
         const searchResults: YT.Playlist = await yt.getPlaylist(route.query.list as string);
         sourceresults = searchResults;

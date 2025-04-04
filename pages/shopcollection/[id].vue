@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, YT, Utils, Helpers, YTNodes } from 'youtubei.js';
+import { YT, Utils, Helpers, YTNodes } from 'youtubei.js';
 import { BinaryWriter } from "@bufbuild/protobuf/wire"
 
 
 const route = useRoute();
-const langStore = useLangStore();
-const locationStore = useLocationStore();
 
 const results = ref<Helpers.ObservedArray<Helpers.YTNode>>();
 const HeaderResults = ref<YTNodes.C4TabbedHeader | YTNodes.CarouselHeader | YTNodes.InteractiveTabbedHeader | YTNodes.PageHeader | undefined>();
@@ -66,14 +64,7 @@ const LoadMore = async ({ done }: any) => {
 
 const fetchData = async () => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        const yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        const yt = await useInnertube('common');
 
         const writer = new BinaryWriter();
         writer.uint32(1090).fork();

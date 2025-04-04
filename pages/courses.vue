@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, Mixins, APIResponseTypes, Helpers, YTNodes, ReloadContinuationItemsCommand } from 'youtubei.js';
-
-const langStore = useLangStore();
-const locationStore = useLocationStore();
+import { Mixins, APIResponseTypes, Helpers, YTNodes, ReloadContinuationItemsCommand } from 'youtubei.js';
 
 const results = ref<Array<YTNodes.RichGrid | ReloadContinuationItemsCommand | YTNodes.SectionList | YTNodes.MusicQueue>>([]);
 const HeaderResult = ref<Array<Helpers.YTNode>>();
 let sourceresults: Mixins.Feed<APIResponseTypes.IBrowseResponse>;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
-const TitleResult = ref<Mixins.TabbedFeed<APIResponseTypes.IBrowseResponse>>();
 
 useHead({
     title: "Courses - JPTube"
@@ -44,17 +40,9 @@ const LoadMore = async ({ done }: any) => {
 
 const fetchData = async () => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        const yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        const yt = await useInnertube('common');
 
         const searchResults = await yt.getCourses();
-        const HeaderResults = await searchResults.page.header_memo;
 
 
 

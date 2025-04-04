@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { Innertube, UniversalCache, Types } from 'youtubei.js';
+import { Types } from 'youtubei.js';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import Player from 'video.js/dist/types/player';
@@ -32,17 +32,7 @@ const seek = (seconds: number) => {
 onMounted(async () => {
     if (props.videoId) {
         player = videojs('videojs-player');
-        const langStore = useLangStore();
-        const locationStore = useLocationStore();
-
-        const DLlang = langStore.lang || 'en';
-        const DLlocation = locationStore.location || 'US';
-        const DLyt = await Innertube.create({
-            fetch: PlayerfetchFn,
-            cache: new UniversalCache(false),
-            lang: DLlang,
-            location: DLlocation,
-        });
+        const DLyt = await useInnertube('player');
 
         const DLResults = await DLyt.getInfo(props.videoId);
         try {

@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, Helpers, YTNodes, YTKids, ItemSectionContinuation } from 'youtubei.js';
+import { YTNodes, YTKids, ItemSectionContinuation } from 'youtubei.js';
 
 const route = useRoute();
-const langStore = useLangStore();
-const locationStore = useLocationStore();
 
 const results = ref<Array<YTNodes.ItemSection | ItemSectionContinuation | undefined>>();
 const HeaderResults = ref<YTNodes.C4TabbedHeader | undefined>();
@@ -52,14 +50,7 @@ const LoadMore = async ({ done }: any) => {
 
 const fetchData = async (): Promise<void> => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        const yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        const yt = await useInnertube('common');
 
         const ytkids = await yt.kids;
 

@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache, Mixins, APIResponseTypes, Helpers, YTNodes, ReloadContinuationItemsCommand } from 'youtubei.js';
-
-const langStore = useLangStore();
-const locationStore = useLocationStore();
+import { Mixins, APIResponseTypes, Helpers, YTNodes, ReloadContinuationItemsCommand } from 'youtubei.js';
 
 const results = ref<Array<YTNodes.SectionList | YTNodes.MusicQueue | YTNodes.RichGrid | ReloadContinuationItemsCommand>>();
 let sourceresults: Mixins.Feed<APIResponseTypes.IBrowseResponse>;
@@ -45,25 +42,14 @@ const LoadMore = async ({ done }: any) => {
 
 const fetchData = async (N?: number) => {
     try {
-        const lang = langStore.lang || 'en';
-        const location = locationStore.location || 'US';
-        const yt = await Innertube.create({
-            fetch: fetchFn,
-            cache: new UniversalCache(false),
-            lang: lang,
-            location: location
-        });
+        const yt = await useInnertube('common');
 
         const searchResults = await yt.getTrending();
         if (!N) {
-            const HeaderResults = await searchResults.page.header_memo;
-            const TabResults = await searchResults.page.contents_memo
-
             results.value = await [searchResults.page_contents];
             sourceresults = searchResults;
             HeaderResult.value = await searchResults.page.header_memo?.get("PageHeader");
             TabResult.value = await searchResults.page.contents_memo?.get("Tab");
-
         } else {
             if (searchResults.page.contents_memo?.get("Tab")) {
                 const GetTab = await searchResults.page.contents_memo?.get("Tab")?.[N];
