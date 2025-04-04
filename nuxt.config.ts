@@ -5,24 +5,20 @@ export default defineNuxtConfig({
     enabled: true,
 
     timeline: {
-      enabled: false
-    }
+      enabled: false,
+    },
   },
-  modules: [
-    'vuetify-nuxt-module',
-    '@pinia/nuxt',
-    'pinia-plugin-persistedstate'
-  ],
+  modules: ['vuetify-nuxt-module', '@pinia/nuxt', 'pinia-plugin-persistedstate', '@nuxt/eslint'],
   vite: {
     server: {
-      hmr: false
-    }
+      hmr: false,
+    },
   },
   runtimeConfig: {
     public: {
       backendHost: process.env.BACKEND_HOST || 'jptube-server.onrender.com',
       playerbackendHost: process.env.PLAYER_BACKEND_HOST || 'jptube-player-server.onrender.com',
-      loginPassword: process.env.LOGIN_PASSWORD || '20531'
-    }
-  }
-})
+      loginPassword: process.env.LOGIN_PASSWORD || '20531',
+    },
+  },
+});
