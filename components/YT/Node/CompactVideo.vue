@@ -1,27 +1,27 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
-        <v-row>
-            <v-col cols="4" class="d-flex align-center justify-center image">
-                <v-img :src="getProxifiedUrl(data.thumbnails[0]?.url)" aspect-ratio="16/9" rounded>
-                    <template v-slot:placeholder>
-                        <div class="d-flex align-center justify-center fill-height">
-                            <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                        </div>
-                    </template>
-                    <div class="duration-overlay">{{ data.duration.text }}</div>
-                </v-img>
-            </v-col>
-            <v-col cols="8" class="description">
-                <v-card-title class="small-text omit">{{ data.title }}</v-card-title>
-                <v-card-subtitle class="tiny-text">{{ data.author.name }}</v-card-subtitle>
-                <v-card-subtitle class="tiny-text">{{ data.short_view_count?.text }}・{{ data.published?.text
-                    }}</v-card-subtitle>
-            </v-col>
-        </v-row>
-    </v-card>
-    <div v-else>
-        No data was provided
-    </div>
+  <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
+    <v-row>
+      <v-col cols="4" class="d-flex align-center justify-center image">
+        <v-img :src="getProxifiedUrl(data.thumbnails[0]?.url)" aspect-ratio="16/9" rounded>
+          <template #placeholder>
+            <div class="d-flex align-center justify-center fill-height">
+              <v-progress-circular color="grey-lighten-4" indeterminate />
+            </div>
+          </template>
+          <div class="duration-overlay">{{ data.duration.text }}</div>
+        </v-img>
+      </v-col>
+      <v-col cols="8" class="description">
+        <v-card-title class="small-text omit">{{ data.title }}</v-card-title>
+        <v-card-subtitle class="tiny-text">{{ data.author.name }}</v-card-subtitle>
+        <v-card-subtitle class="tiny-text">{{ data.short_view_count?.text }}・{{ data.published?.text
+        }}</v-card-subtitle>
+      </v-col>
+    </v-row>
+  </v-card>
+  <div v-else>
+    No data was provided
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -29,7 +29,7 @@
 import { YTNodes } from 'youtubei.js';
 
 const props = defineProps({
-    data: YTNodes.CompactVideo
+  data: YTNodes.CompactVideo,
 });
 </script>
 

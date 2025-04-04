@@ -6,7 +6,6 @@ const playerStore = usePlayerStore();
 const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
 
-
 const videoId = ref<string>(route.query.v as string);
 
 const results = ref<YTMusic.TrackInfo>();
@@ -18,286 +17,276 @@ const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 const fatalError = ref<boolean>(false);
 
-
 const downloading = ref<boolean>(false);
-const child = ref<{ seek: (seconds: number) => void; } | null>(null);
+const child = ref<{ seek: (seconds: number) => void } | null>(null);
 
 const tab = ref<string>('option-2');
 const PLBtn = ref<boolean>(false);
 const autoplaySnackbar = ref<boolean>(false);
 
 watch(results, (newVal): void => {
-    if (newVal) {
-        useHead({
-            title: `${newVal.basic_info.title} - JPTube Music` || "Watch - JPTube Music"
-        });
-    }
+  if (newVal) {
+    useHead({
+      title: `${newVal.basic_info.title} - JPTube Music` || 'Watch - JPTube Music',
+    });
+  }
 });
 
 definePageMeta({
-    layout: "music"
+  layout: 'music',
 });
 
 watch(() => route.query.v, async (newVideoId): Promise<void> => {
-    videoId.value = newVideoId as string;
-    window.scrollTo(0, 0);
-    await fetchData();
-
+  videoId.value = newVideoId as string;
+  window.scrollTo(0, 0);
+  await fetchData();
 });
 
-
-
-
 const handleError = (message: string): void => {
-    alert.value = true;
-    errorMessage.value = message;
+  alert.value = true;
+  errorMessage.value = message;
 };
 
 const AutoPlay = () => {
-    if (autoplayStore.autoplay) {
-        if (Nextresults.value && Nextresults.value.contents.length > 1) {
-            const nextVideo = Nextresults.value.contents[1];
-            if (nextVideo instanceof YTNodes.PlaylistPanelVideo) {
-                autoplaySnackbar.value = true;
-                setTimeout(() => {
-                    if (autoplaySnackbar.value) {
-                        const videoId = nextVideo.video_id;
-                        if (videoId) {
-                            const router = useRouter();
-                            router.push({ query: { v: videoId } });
-                        }
-                    }
-                }, 5000);
-
-            } else {
-                console.error('AutoPlay has been cancelled.');
+  if (autoplayStore.autoplay) {
+    if (Nextresults.value && Nextresults.value.contents.length > 1) {
+      const nextVideo = Nextresults.value.contents[1];
+      if (nextVideo instanceof YTNodes.PlaylistPanelVideo) {
+        autoplaySnackbar.value = true;
+        setTimeout(() => {
+          if (autoplaySnackbar.value) {
+            const videoId = nextVideo.video_id;
+            if (videoId) {
+              const router = useRouter();
+              router.push({ query: { v: videoId } });
             }
-        } else {
-            console.error('RelatedVideos is empty or undefined.');
-        }
+          }
+        }, 5000);
+      } else {
+        console.error('AutoPlay has been cancelled.');
+      }
+    } else {
+      console.error('RelatedVideos is empty or undefined.');
     }
+  }
 };
 
 const downloadVideo = async (): Promise<void> => {
-    downloading.value = true;
-    try {
-        const DLyt = await useInnertube('player');
-        const DLResults = await DLyt.getInfo(route.query.v as string);
-        const DLOption: Types.DownloadOptions = { quality: 'best' }
-        const stream = await DLResults.download(DLOption);
-        const reader = stream.getReader();
-        const chunks = [];
-        let receivedLength = 0;
+  downloading.value = true;
+  try {
+    const DLyt = await useInnertube('player');
+    const DLResults = await DLyt.getInfo(route.query.v as string);
+    const DLOption: Types.DownloadOptions = { quality: 'best' };
+    const stream = await DLResults.download(DLOption);
+    const reader = stream.getReader();
+    const chunks = [];
+    let receivedLength = 0;
 
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-            receivedLength += value.length;
-        }
-
-        const blob = new Blob(chunks);
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'videoplayback.mp4';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    } catch (error) {
-        alert.value = true;
-        if (error instanceof Error) {
-            errorMessage.value = error.message;
-        } else {
-            errorMessage.value = 'An unknown error occurred';
-        }
-    } finally {
-        downloading.value = false;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      receivedLength += value.length;
     }
+
+    const blob = new Blob(chunks);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'videoplayback.mp4';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    alert.value = true;
+    if (error instanceof Error) {
+      errorMessage.value = error.message;
+    } else {
+      errorMessage.value = 'An unknown error occurred';
+    }
+  } finally {
+    downloading.value = false;
+  }
 };
 
-
 const fetchData = async (): Promise<void> => {
-    try {
-        const yt = await useInnertube('common');
+  try {
+    const yt = await useInnertube('common');
 
-        const ytmusic = yt.music;
+    const ytmusic = yt.music;
 
-        let searchResults: YTMusic.TrackInfo;
+    let searchResults: YTMusic.TrackInfo;
 
+    if (route.query.list) {
+      let PLvideoId: string = '';
+      const PL = await ytmusic.getPlaylist(route.query.list as string);
+      if (PL.items) {
+        let PLcontents = PL;
+        let flag = false;
 
-        if (route.query.list) {
-            let PLvideoId: string = '';
-            const PL = await ytmusic.getPlaylist(route.query.list as string);
-            if (PL.items) {
-                let PLcontents = PL;
-                let flag = false;
-
-                while (!flag) {
-                    PLcontents.items.forEach((video) => {
-                        if (video instanceof YTNodes.MusicResponsiveListItem) {
-                            if (typeof video.id === 'string' && route.query.v === video.id) {
-                                PLvideoId = video.id;
-                                flag = true;
-                            }
-                            Playlistresults.value.push(video);
-                        }
-                    });
-
-                    if (!flag && PLcontents.has_continuation) {
-                        const ContPL = await PLcontents.getContinuation();
-                        PLcontents = ContPL;
-                    } else {
-                        break;
-                    }
-                }
-
-                if (PLvideoId === '') {
-                    if ((PL.items[0] instanceof YTNodes.MusicResponsiveListItem)) {
-                        PLvideoId = PL.items[0].id as string;
-                    }
-                }
-
-
-            } else {
-                throw new Error('No Contents Found');
+        while (!flag) {
+          PLcontents.items.forEach((video) => {
+            if (video instanceof YTNodes.MusicResponsiveListItem) {
+              if (typeof video.id === 'string' && route.query.v === video.id) {
+                PLvideoId = video.id;
+                flag = true;
+              }
+              Playlistresults.value.push(video);
             }
-            PLBtn.value = true;
+          });
 
-            videoId.value = PLvideoId;
-            searchResults = await ytmusic.getInfo(PLvideoId);
-            console.log(Playlistresults.value);
-            console.log(searchResults);
-
-        } else {
-            PLBtn.value = false;
-            searchResults = await ytmusic.getInfo(route.query.v as string);
+          if (!flag && PLcontents.has_continuation) {
+            const ContPL = await PLcontents.getContinuation();
+            PLcontents = ContPL;
+          } else {
+            break;
+          }
         }
 
-
-        results.value = searchResults;
-        Nextresults.value = await searchResults?.getUpNext();
-        Relatedresults.value = await searchResults?.getRelated();
-
-        try {
-            Lyricsresults.value = await searchResults?.getLyrics();
-        } catch (error) {
-            console.error(error);
-            Lyricsresults.value = undefined;
+        if (PLvideoId === '') {
+          if ((PL.items[0] instanceof YTNodes.MusicResponsiveListItem)) {
+            PLvideoId = PL.items[0].id as string;
+          }
         }
+      } else {
+        throw new Error('No Contents Found');
+      }
+      PLBtn.value = true;
 
-
-
-        fatalError.value = false;
-    } catch (error) {
-        alert.value = true;
-        fatalError.value = true;
-        if (error instanceof Error) {
-            errorMessage.value = error.message;
-        } else {
-            errorMessage.value = 'An unknown error occurred';
-        }
+      videoId.value = PLvideoId;
+      searchResults = await ytmusic.getInfo(PLvideoId);
+      console.log(Playlistresults.value);
+      console.log(searchResults);
+    } else {
+      PLBtn.value = false;
+      searchResults = await ytmusic.getInfo(route.query.v as string);
     }
+
+    results.value = searchResults;
+    Nextresults.value = await searchResults?.getUpNext();
+    Relatedresults.value = await searchResults?.getRelated();
+
+    try {
+      Lyricsresults.value = await searchResults?.getLyrics();
+    } catch (error) {
+      console.error(error);
+      Lyricsresults.value = undefined;
+    }
+
+    fatalError.value = false;
+  } catch (error) {
+    alert.value = true;
+    fatalError.value = true;
+    if (error instanceof Error) {
+      errorMessage.value = error.message;
+    } else {
+      errorMessage.value = 'An unknown error occurred';
+    }
+  }
 };
 
 await fetchData();
 </script>
 <template>
-    <v-container :fluid="true">
-        <div>
-            <v-dialog v-model="alert" max-width="500">
-                <v-card>
-                    <v-card-title class="headline">Warning</v-card-title>
-                    <v-card-text>{{ errorMessage }}</v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="primary" @click="alert = false">Close</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+  <v-container :fluid="true">
+    <div>
+      <v-dialog v-model="alert" max-width="500">
+        <v-card>
+          <v-card-title class="headline">Warning</v-card-title>
+          <v-card-text>{{ errorMessage }}</v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="primary" @click="alert = false">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+
+    <v-snackbar v-model="autoplaySnackbar" timeout="5000" top right>
+      Navigate to the next video in 5 seconds.
+      <template #actions>
+        <v-btn color="red" @click="autoplaySnackbar = false">
+          Cancel
+        </v-btn>
+      </template>
+    </v-snackbar>
+
+    <v-row v-if="!fatalError" wrap>
+      <v-col cols="12" md="8">
+        <div v-if="playerStore.player === 'embed'" class="video-container">
+          <iframe
+            id="youtubeiframechild"
+            :src="`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1`" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen />
         </div>
 
-        <v-snackbar v-model="autoplaySnackbar" timeout="5000" top right>
-            Navigate to the next video in 5 seconds.
-            <template v-slot:actions>
-                <v-btn color="red" @click="autoplaySnackbar = false">
-                    Cancel
-                </v-btn>
+        <YTCommonPlayer
+          v-else-if="playerStore.player === 'shaka-player'" ref="child" :key="videoId"
+          :videoId="videoId" @errors="handleError" @complete="AutoPlay" />
+
+        <YTCommonVideoJS
+          v-else-if="playerStore.player === 'VideoJS'" ref="child" :key="videoId + 'JS'"
+          :videoId="videoId" @errors="handleError" />
+
+        <YTMusicCommonTrackInfo
+          :data="results" :downloading="downloading" @downloadVideo="downloadVideo"
+          @share="share" />
+      </v-col>
+      <v-col cols="12" md="4">
+        <v-tabs v-model="tab">
+          <v-tab v-if="PLBtn" value="option-1">Playlist</v-tab>
+          <v-tab value="option-2">Next</v-tab>
+          <v-tab value="option-3">Lyrics</v-tab>
+          <v-tab value="option-4">Related</v-tab>
+        </v-tabs>
+
+        <v-tabs-window v-model="tab">
+          <v-tabs-window-item v-if="PLBtn" value="option-1">
+            <template v-if="Playlistresults">
+              <div class="scrollable-component">
+                <v-row style="width: 100%; margin-left: 0;">
+                  <template v-for="result in Playlistresults">
+                    <YTMusicNode
+                      :data="(result as unknown as Helpers.YTNode)"
+                      :PLid="(route.query.list as string)" />
+                  </template>
+                </v-row>
+              </div>
             </template>
-        </v-snackbar>
+          </v-tabs-window-item>
+          <v-tabs-window-item value="option-2">
+            <template v-if="Nextresults">
+              <v-row style="width: 100%; margin-left: 0;">
+                <template v-for="result in Nextresults.contents">
+                  <YTMusicNode :data="result" />
+                </template>
+              </v-row>
+            </template>
+          </v-tabs-window-item>
+          <v-tabs-window-item value="option-3">
+            <template v-if="Lyricsresults">
+              <v-card>
+                <v-card-text>{{ Lyricsresults.description.text }}</v-card-text>
+              </v-card>
+            </template>
+          </v-tabs-window-item>
+          <v-tabs-window-item value="option-4">
+            <template v-if="Relatedresults">
+              <v-row style="width: 100%; margin-left: 0;">
+                <template v-for="result in Relatedresults">
+                  <YTMusicNode :data="result" />
+                </template>
+              </v-row>
+            </template>
+          </v-tabs-window-item>
+        </v-tabs-window>
 
-        <v-row wrap v-if="!fatalError">
-            <v-col cols="12" md="8">
-                <div v-if="playerStore.player === 'embed'" class="video-container">
-                    <iframe
-                        :src="`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&enablejsapi=1`"
-                        id="youtubeiframechild" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                </div>
+      </v-col>
+    </v-row>
 
-                <YTCommonPlayer v-else-if="playerStore.player === 'shaka-player'" ref="child" :videoId="videoId"
-                    :key="videoId" @errors="handleError" @complete="AutoPlay" />
-
-                <YTCommonVideoJS v-else-if="playerStore.player === 'VideoJS'" ref="child" :videoId="videoId"
-                    :key="videoId + 'JS'" @errors="handleError" />
-
-                <YTMusicCommonTrackInfo :data="results" :downloading="downloading" @downloadVideo="downloadVideo"
-                    @share="share" />
-            </v-col>
-            <v-col cols="12" md="4">
-                <v-tabs v-model="tab">
-                    <v-tab v-if="PLBtn" value="option-1">Playlist</v-tab>
-                    <v-tab value="option-2">Next</v-tab>
-                    <v-tab value="option-3">Lyrics</v-tab>
-                    <v-tab value="option-4">Related</v-tab>
-                </v-tabs>
-
-                <v-tabs-window v-model="tab">
-                    <v-tabs-window-item v-if="PLBtn" value="option-1">
-                        <template v-if="Playlistresults">
-                            <div class="scrollable-component">
-                                <v-row style="width: 100%; margin-left: 0;">
-                                    <template v-for="result in Playlistresults">
-                                        <YTMusicNode :data="(result as unknown as Helpers.YTNode)"
-                                            :PLid="(route.query.list as string)" />
-                                    </template>
-                                </v-row>
-                            </div>
-                        </template>
-                    </v-tabs-window-item>
-                    <v-tabs-window-item value="option-2">
-                        <template v-if="Nextresults">
-                            <v-row style="width: 100%; margin-left: 0;">
-                                <template v-for="result in Nextresults.contents">
-                                    <YTMusicNode :data="result" />
-                                </template>
-                            </v-row>
-                        </template>
-                    </v-tabs-window-item>
-                    <v-tabs-window-item value="option-3">
-                        <template v-if="Lyricsresults">
-                            <v-card>
-                                <v-card-text>{{ Lyricsresults.description.text }}</v-card-text>
-                            </v-card>
-                        </template>
-                    </v-tabs-window-item>
-                    <v-tabs-window-item value="option-4">
-                        <template v-if="Relatedresults">
-                            <v-row style="width: 100%; margin-left: 0;">
-                                <template v-for="result in Relatedresults">
-                                    <YTMusicNode :data="result" />
-                                </template>
-                            </v-row>
-                        </template>
-                    </v-tabs-window-item>
-                </v-tabs-window>
-
-            </v-col>
-        </v-row>
-
-    </v-container>
+  </v-container>
 </template>
 <style scoped>
 .video-container {

@@ -3,9 +3,9 @@
     <v-row>
       <v-col cols="12" sm="4" class="d-flex align-center justify-center image">
         <v-img :src="getProxifiedUrl(data.thumbnail[0]?.url)" aspect-ratio="16/9" rounded>
-          <template v-slot:placeholder>
+          <template #placeholder>
             <div class="d-flex align-center justify-center fill-height">
-              <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+              <v-progress-circular color="grey-lighten-4" indeterminate />
             </div>
           </template>
           <div class="duration-overlay">{{ data.duration.text }}</div>
@@ -30,7 +30,7 @@
 import { YTNodes } from 'youtubei.js';
 
 const props = defineProps({
-  data: YTNodes.PlaylistPanelVideo
+  data: YTNodes.PlaylistPanelVideo,
 });
 </script>
 

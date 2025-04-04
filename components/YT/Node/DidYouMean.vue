@@ -11,6 +11,6 @@
 import { YTNodes } from 'youtubei.js';
 
 const props = defineProps({
-  data: YTNodes.DidYouMean
+  data: YTNodes.DidYouMean,
 });
 </script>

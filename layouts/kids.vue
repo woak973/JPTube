@@ -18,7 +18,7 @@ const createYTInstance = async (): Promise<Innertube> => {
     fetch: fetchFn,
     cache: new UniversalCache(false),
     lang: lang,
-    location: location
+    location: location,
   });
 };
 
@@ -76,12 +76,13 @@ const Refresh = (): void => {
 <template>
   <v-app id="inspire">
     <v-app-bar>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="drawer = !drawer" />
       <router-link to="/kids" style="text-decoration: none; color: inherit;">
         <v-app-bar-title>JPTube Kids</v-app-bar-title>
       </router-link>
-      <v-spacer></v-spacer>
-      <v-combobox v-model="searchQuery" :items="suggestions" label="Search" single-line hide-details clearable
+      <v-spacer />
+      <v-combobox
+        v-model="searchQuery" :items="suggestions" label="Search" single-line hide-details clearable
         :filter="() => { return true; }" prepend-inner-icon="mdi-magnify" clear-icon="mdi-close-circle"
         @keyup.enter="search" @click:prepend-inner="search" @click:clear="clearSearch" />
       <v-btn icon @click="openLangDialog">
@@ -90,19 +91,18 @@ const Refresh = (): void => {
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" temporary>
-      <v-list-item title="JPTube Kids" subtitle="Welcome"></v-list-item>
-      <v-divider></v-divider>
-      <v-list-item prepend-icon="mdi-home" link title="Home" to="/kids"></v-list-item>
-      <v-divider></v-divider>
-      <v-list-item title="Other Services" subtitle="Welcome"></v-list-item>
-      <v-list-item prepend-icon="mdi-play-box" link title="JPTube" to="/"></v-list-item>
-      <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music"></v-list-item>
-
+      <v-list-item title="JPTube Kids" subtitle="Welcome" />
+      <v-divider />
+      <v-list-item prepend-icon="mdi-home" link title="Home" to="/kids" />
+      <v-divider />
+      <v-list-item title="Other Services" subtitle="Welcome" />
+      <v-list-item prepend-icon="mdi-play-box" link title="JPTube" to="/" />
+      <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music" />
 
     </v-navigation-drawer>
 
     <v-main class="bg-grey-lighten-2">
-      <slot :value="value" :key="child" />
+      <slot :key="child" :value="value" />
     </v-main>
 
     <YTCommonLangDialog ref="langDialog" @Refresh="Refresh" />

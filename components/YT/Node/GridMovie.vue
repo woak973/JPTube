@@ -1,26 +1,26 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
-        <v-img :src="getProxifiedUrl(data.thumbnails[0]?.url)">
-            <template v-slot:placeholder>
-                <div class="d-flex align-center justify-center fill-height">
-                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                </div>
-            </template>
-            <div class="duration-overlay">{{ data.duration?.text }}</div>
-        </v-img>
-        <v-card-text class="omit">{{ data.title.text }}</v-card-text>
-        <v-card-subtitle>{{ data.metadata.text }}</v-card-subtitle>
-        <template v-if="data.badges">
-            <v-slide-group>
-                <template v-for="badge in data.badges">
-                    <v-chip>{{ badge.label }}</v-chip>
-                </template>
-            </v-slide-group>
+  <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
+    <v-img :src="getProxifiedUrl(data.thumbnails[0]?.url)">
+      <template #placeholder>
+        <div class="d-flex align-center justify-center fill-height">
+          <v-progress-circular color="grey-lighten-4" indeterminate />
+        </div>
+      </template>
+      <div class="duration-overlay">{{ data.duration?.text }}</div>
+    </v-img>
+    <v-card-text class="omit">{{ data.title.text }}</v-card-text>
+    <v-card-subtitle>{{ data.metadata.text }}</v-card-subtitle>
+    <template v-if="data.badges">
+      <v-slide-group>
+        <template v-for="badge in data.badges">
+          <v-chip>{{ badge.label }}</v-chip>
         </template>
-    </v-card>
-    <div v-else>
-        No data was provided
-    </div>
+      </v-slide-group>
+    </template>
+  </v-card>
+  <div v-else>
+    No data was provided
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -28,7 +28,7 @@
 import { YTNodes } from 'youtubei.js';
 
 const props = defineProps({
-    data: YTNodes.GridMovie
+  data: YTNodes.GridMovie,
 });
 </script>
 

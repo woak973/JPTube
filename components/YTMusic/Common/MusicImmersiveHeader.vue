@@ -1,26 +1,22 @@
 <template>
-    <v-card v-if="data" elevation="16" :image="getProxifiedUrl(data.thumbnail?.contents[0]?.url || '')">
+  <v-card v-if="data" elevation="16" :image="getProxifiedUrl(data.thumbnail?.contents[0]?.url || '')">
 
-        <v-card-title class="semi-transparent-background">{{ data.title.text }}</v-card-title>
-        <v-card-text class="omit semi-transparent-background">{{ data.description.text
-            }}</v-card-text>
+    <v-card-title class="semi-transparent-background">{{ data.title.text }}</v-card-title>
+    <v-card-text class="omit semi-transparent-background">{{ data.description.text
+    }}</v-card-text>
 
-
-    </v-card>
-    <div v-else>
-        データがありません
-    </div>
+  </v-card>
+  <div v-else>
+    データがありません
+  </div>
 
 </template>
-
-
 
 <script setup lang="ts">
 import { YTNodes } from 'youtubei.js';
 
-
 const props = defineProps({
-    data: YTNodes.MusicImmersiveHeader
+  data: YTNodes.MusicImmersiveHeader,
 });
 
 </script>

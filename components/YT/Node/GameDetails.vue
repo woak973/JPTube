@@ -1,17 +1,17 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="data.endpoint.payload.canonicalBaseUrl" link>
-        <v-img :src="getProxifiedUrl(data.box_art[0]?.url)" aspect-ratio="16/9" rounded>
-            <template v-slot:placeholder>
-                <div class="d-flex align-center justify-center fill-height">
-                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                </div>
-            </template>
-        </v-img>
-        <v-card-text class="omit">{{ data.title }}</v-card-text>
-    </v-card>
-    <div v-else>
-        No data was provided
-    </div>
+  <v-card v-if="data" elevation="16" :to="data.endpoint.payload.canonicalBaseUrl" link>
+    <v-img :src="getProxifiedUrl(data.box_art[0]?.url)" aspect-ratio="16/9" rounded>
+      <template #placeholder>
+        <div class="d-flex align-center justify-center fill-height">
+          <v-progress-circular color="grey-lighten-4" indeterminate />
+        </div>
+      </template>
+    </v-img>
+    <v-card-text class="omit">{{ data.title }}</v-card-text>
+  </v-card>
+  <div v-else>
+    No data was provided
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -19,7 +19,7 @@
 import { YTNodes } from 'youtubei.js';
 
 const props = defineProps({
-    data: YTNodes.GameDetails
+  data: YTNodes.GameDetails,
 });
 </script>
 

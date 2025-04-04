@@ -1,47 +1,48 @@
 <template>
-    <template v-if="data">
-        <v-card>
+  <template v-if="data">
+    <v-card>
+      <template v-if="data.slim_video_metadata">
+        <v-card-title class="titletext" style="padding-bottom: 0">{{ data.slim_video_metadata.title.text
+        }}</v-card-title>
+      </template>
+      <v-card-actions>
+        <v-row justify="space-between">
+          <v-col cols="auto">
             <template v-if="data.slim_video_metadata">
-                <v-card-title class="titletext" style="padding-bottom: 0">{{ data.slim_video_metadata.title.text
-                    }}</v-card-title>
+              <template v-if="(data.slim_video_metadata.owner instanceof YTNodes.SlimOwner)">
+                <YTKidsNodeSlimOwner :data="data.slim_video_metadata.owner" />
+              </template>
             </template>
-            <v-card-actions>
-                <v-row justify="space-between">
-                    <v-col cols="auto">
-                        <template v-if="data.slim_video_metadata">
-                            <template v-if="(data.slim_video_metadata.owner instanceof YTNodes.SlimOwner)">
-                                <YTKidsNodeSlimOwner :data="data.slim_video_metadata.owner" />
-                            </template>
-                        </template>
-                    </v-col>
-                    <v-col cols="auto">
-                        <v-list-item>
-                            <v-slide-group>
-                                <div>
-                                    <v-btn :disabled="downloading" @click="$emit('downloadVideo')" variant="tonal"
-                                        class="rounded-pill mx-2">
-                                        <v-icon v-if="!downloading">mdi-download</v-icon>
-                                        <v-progress-circular v-else indeterminate size="20"></v-progress-circular>
-                                        Download
-                                    </v-btn>
-                                </div>
-                                <div>
-                                    <v-btn @click.stop="$emit('share')" variant="tonal" class="rounded-pill mx-2">
-                                        <v-icon>mdi-share</v-icon>
-                                        Share
-                                    </v-btn>
-                                </div>
-                            </v-slide-group>
-                        </v-list-item>
-                    </v-col>
+          </v-col>
+          <v-col cols="auto">
+            <v-list-item>
+              <v-slide-group>
+                <div>
+                  <v-btn
+                    :disabled="downloading" variant="tonal" class="rounded-pill mx-2"
+                    @click="$emit('downloadVideo')">
+                    <v-icon v-if="!downloading">mdi-download</v-icon>
+                    <v-progress-circular v-else indeterminate size="20" />
+                    Download
+                  </v-btn>
+                </div>
+                <div>
+                  <v-btn variant="tonal" class="rounded-pill mx-2" @click.stop="$emit('share')">
+                    <v-icon>mdi-share</v-icon>
+                    Share
+                  </v-btn>
+                </div>
+              </v-slide-group>
+            </v-list-item>
+          </v-col>
 
-                </v-row>
-            </v-card-actions>
-        </v-card>
-    </template>
-    <div v-else>
-        No data was provided
-    </div>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+  </template>
+  <div v-else>
+    No data was provided
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -49,9 +50,9 @@
 import { YTKids, Misc, Helpers, YTNodes } from 'youtubei.js';
 
 const props = defineProps({
-    data: YTKids.VideoInfo,
-    downloading: Boolean,
-    showFullDescription: Boolean
+  data: YTKids.VideoInfo,
+  downloading: Boolean,
+  showFullDescription: Boolean,
 });
 </script>
 

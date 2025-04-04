@@ -1,27 +1,28 @@
 <template>
-    <v-card v-if="data" elevation="16" :image="getProxifiedUrl(data.banner[0]?.url)">
-        <v-row>
-            <v-col cols="4" class="d-flex align-center justify-center">
-                <v-img v-if="data.box_art && data.box_art[0]?.url" :src="getProxifiedUrl(data.box_art[0]?.url)"
-                    max-width="50%">
-                    <template v-slot:placeholder>
-                        <div class="d-flex align-center justify-center fill-height">
-                            <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                        </div>
-                    </template>
-                </v-img>
-            </v-col>
-            <v-col cols="8">
-                <v-card-title class="semi-transparent-background">{{ data.title?.text }}</v-card-title>
-                <v-card-text class="omit semi-transparent-background">{{ data.description?.text }}</v-card-text>
-                <v-card-subtitle class="bg-white">{{ data.metadata?.text }}</v-card-subtitle>
-            </v-col>
-        </v-row>
+  <v-card v-if="data" elevation="16" :image="getProxifiedUrl(data.banner[0]?.url)">
+    <v-row>
+      <v-col cols="4" class="d-flex align-center justify-center">
+        <v-img
+          v-if="data.box_art && data.box_art[0]?.url" :src="getProxifiedUrl(data.box_art[0]?.url)"
+          max-width="50%">
+          <template #placeholder>
+            <div class="d-flex align-center justify-center fill-height">
+              <v-progress-circular color="grey-lighten-4" indeterminate />
+            </div>
+          </template>
+        </v-img>
+      </v-col>
+      <v-col cols="8">
+        <v-card-title class="semi-transparent-background">{{ data.title?.text }}</v-card-title>
+        <v-card-text class="omit semi-transparent-background">{{ data.description?.text }}</v-card-text>
+        <v-card-subtitle class="bg-white">{{ data.metadata?.text }}</v-card-subtitle>
+      </v-col>
+    </v-row>
 
-    </v-card>
-    <div v-else>
-        No data was provided
-    </div>
+  </v-card>
+  <div v-else>
+    No data was provided
+  </div>
 
 </template>
 

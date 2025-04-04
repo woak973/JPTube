@@ -1,18 +1,18 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
-        <v-img :src="getProxifiedUrl(data.author.thumbnails[0]?.url)" style="border-radius: 50%;">
-            <template v-slot:placeholder>
-                <div class="d-flex align-center justify-center fill-height">
-                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                </div>
-            </template>
-        </v-img>
-        <v-card-text class="omit">{{ data.author.name }}</v-card-text>
-        <v-card-subtitle>{{ data.subscribers.text }}</v-card-subtitle>
-    </v-card>
-    <div v-else>
-        No data was provided
-    </div>
+  <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
+    <v-img :src="getProxifiedUrl(data.author.thumbnails[0]?.url)" style="border-radius: 50%;">
+      <template #placeholder>
+        <div class="d-flex align-center justify-center fill-height">
+          <v-progress-circular color="grey-lighten-4" indeterminate />
+        </div>
+      </template>
+    </v-img>
+    <v-card-text class="omit">{{ data.author.name }}</v-card-text>
+    <v-card-subtitle>{{ data.subscribers.text }}</v-card-subtitle>
+  </v-card>
+  <div v-else>
+    No data was provided
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -20,7 +20,7 @@
 import { YTNodes } from 'youtubei.js';
 
 const props = defineProps({
-    data: YTNodes.GridChannel
+  data: YTNodes.GridChannel,
 });
 </script>
 
