@@ -108,7 +108,8 @@
 </template>
 
 <script setup lang="ts">
-import { Helpers, YTNodes } from 'youtubei.js';
+import type { YTNodes } from 'youtubei.js';
+import { Helpers } from 'youtubei.js';
 
 const props = defineProps({
   data: Helpers.YTNode,

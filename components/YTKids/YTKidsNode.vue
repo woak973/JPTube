@@ -223,7 +223,8 @@
 </template>
 
 <script setup lang="ts">
-import { Helpers, ItemSectionContinuation, YTNodes } from 'youtubei.js';
+import type { ItemSectionContinuation, YTNodes } from 'youtubei.js';
+import { Helpers } from 'youtubei.js';
 
 const props = defineProps({
   data: Helpers.YTNode,

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { YTNodes, YTKids, ItemSectionContinuation } from 'youtubei.js';
+import type { YTKids, ItemSectionContinuation } from 'youtubei.js';
+import { YTNodes } from 'youtubei.js';
 
 const route = useRoute();
 

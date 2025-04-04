@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { YTMusic, YTNodes, Helpers } from 'youtubei.js';
+import type { YTMusic, Helpers } from 'youtubei.js';
+import { YTNodes } from 'youtubei.js';
 
 const route = useRoute();
 

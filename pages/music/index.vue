@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Helpers, YTNodes, YTMusic } from 'youtubei.js';
+import type { Helpers, YTNodes, YTMusic } from 'youtubei.js';
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf | YTNodes.MusicTastebuilderShelf> | undefined>();
 let sourceresults: YTMusic.HomeFeed;

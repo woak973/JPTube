@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Innertube, YT, YTNodes, Mixins, Helpers, NavigateAction, ShowMiniplayerCommand } from 'youtubei.js';
+import type { Innertube } from 'youtubei.js';
+import { YT, YTNodes, Mixins, Helpers, NavigateAction, ShowMiniplayerCommand } from 'youtubei.js';
 
 const route = useRoute();
 const router = useRouter();

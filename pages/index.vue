@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Mixins, APIResponseTypes, Helpers, YTNodes, ReloadContinuationItemsCommand } from 'youtubei.js';
+import type { Mixins, APIResponseTypes, ReloadContinuationItemsCommand } from 'youtubei.js';
+import { Helpers, YTNodes } from 'youtubei.js';
 
 const results = ref<Array<YTNodes.SectionList | YTNodes.MusicQueue | YTNodes.RichGrid | ReloadContinuationItemsCommand>>();
 let sourceresults: Mixins.Feed<APIResponseTypes.IBrowseResponse>;

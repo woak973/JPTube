@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { YT, Mixins, Helpers, YTNodes } from 'youtubei.js';
+import type { YT, Mixins } from 'youtubei.js';
+import { Helpers, YTNodes } from 'youtubei.js';
 
 const route = useRoute();
 

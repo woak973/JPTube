@@ -35,7 +35,8 @@
 
 <script setup lang="ts">
 
-import { YTNodes, Misc } from 'youtubei.js';
+import type { YTNodes } from 'youtubei.js';
+import { Misc } from 'youtubei.js';
 
 const props = defineProps<{
   data: YTNodes.TwoColumnWatchNextResults['playlist'];

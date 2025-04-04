@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Innertube, Helpers, YTNodes, YTKids, ClientType } from 'youtubei.js';
+import type { Innertube, YTKids } from 'youtubei.js';
+import { Helpers, YTNodes, ClientType } from 'youtubei.js';
 
 const TabResults = ref<Helpers.ObservedArray<YTNodes.AnchoredSection> | undefined>();
 const Results = ref<YTNodes.SectionList | null | undefined>();

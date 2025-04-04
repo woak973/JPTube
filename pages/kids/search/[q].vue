@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Helpers, YTKids } from 'youtubei.js';
+import type { Helpers, YTKids } from 'youtubei.js';
 
 const route = useRoute();
 

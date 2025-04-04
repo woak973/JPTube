@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Innertube, YT, YTNodes, Helpers, Types } from 'youtubei.js';
+import type { Innertube, YT, Types } from 'youtubei.js';
+import { YTNodes, Helpers } from 'youtubei.js';
 
 const route = useRoute();
 const playerStore = usePlayerStore();
@@ -19,7 +20,7 @@ const videoId = ref(route.query.v as string);
 watch(HeaderResults, (newVal) => {
   if (newVal) {
     useHead({
-      title: `${newVal.primary_info?.title.text} - JPTube` || 'Watch - JPTube',
+      title: `${newVal.primary_info?.title.text ? newVal.primary_info?.title.text : 'Watch'} - JPTube`,
     });
   }
 });
@@ -112,7 +113,7 @@ const seekToTime = (time: number) => {
 };
 
 // 親ページから子ページへのメッセージを送信する関数
-function postMessageToChild(action: string, arg: any = null) {
+function postMessageToChild(action: string, arg: string | number | object | null = null) {
   const message = {
     event: 'command',
     func: action,
@@ -252,7 +253,7 @@ const fetchVideoData = async () => {
   }
 };
 
-const LoadMore = async ({ done }: any) => {
+const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) => {
   try {
     if (sourceresults && sourceresults.wn_has_continuation) {
       const continuationResults = await sourceresults.getWatchNextContinuation();
@@ -277,7 +278,7 @@ const LoadMore = async ({ done }: any) => {
   }
 };
 
-const ComLoadMore = async ({ done }: any) => {
+const ComLoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) => {
   try {
     if (comsource && comsource.has_continuation) {
       const continuationResults = await comsource.getContinuation();

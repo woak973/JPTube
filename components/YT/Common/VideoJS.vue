@@ -5,10 +5,10 @@
 </template>
 
 <script setup lang="ts">
-import { Types } from 'youtubei.js';
+import type { Types } from 'youtubei.js';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-import Player from 'video.js/dist/types/player';
+import type Player from 'video.js/dist/types/player';
 
 const props = defineProps({
   videoId: String,
