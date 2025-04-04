@@ -183,7 +183,6 @@ const playerBackendStore = usePlayerBackendStore() as { playerbackend: string; s
 const autoplayStore = useAutoPlayStore();
 const backendHistoryStore = useBackendHistoryStore();
 
-const router = useRouter();
 const emit = defineEmits(['Refresh']);
 
 const open = () => {

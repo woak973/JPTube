@@ -29,8 +29,8 @@
 
 import { YTNodes } from 'youtubei.js';
 
-const props = defineProps({
-    data: YTNodes.InteractiveTabbedHeader
+defineProps({
+  data: YTNodes.InteractiveTabbedHeader,
 });
 
 </script>

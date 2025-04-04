@@ -21,12 +21,11 @@ watch(HeaderResults, (newVal) => {
             });
         } else if (newVal instanceof YTNodes.CarouselHeader) {
             useHead({
-                title: `${(newVal.contents[1] as YTNodes.TopicChannelDetails).title.text} - JPTube` || "Watch"
+        title: `${((newVal.contents[1] as YTNodes.TopicChannelDetails).title.text) ? (newVal.contents[1] as YTNodes.TopicChannelDetails).title.text : 'Channel'} - JPTube`,
             });
         } else if (newVal instanceof YTNodes.InteractiveTabbedHeader) {
             useHead({
-                title: `${newVal.title.text
-                    } - JPTube` || "Watch"
+        title: `${newVal.title.text ? newVal.title.text : 'Channel'} - JPTube`,
             });
         }
     }
@@ -37,7 +36,7 @@ watch(HeaderResults, (newVal) => {
 
 
 
-const LoadMore = async ({ done }: any) => {
+const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) => {
     try {
         if (sourceresults && sourceresults.has_continuation) {
             const continuationResults = await sourceresults.getContinuation();
@@ -130,8 +129,7 @@ await fetchData();
 
         </template>
 
-
-        <v-infinite-scroll mode="intersect" @load="LoadMore" v-if="results && results.length">
+    <v-infinite-scroll v-if="results && results.length" mode="intersect" @load="LoadMore">
             <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="result in results">
                     <template v-if="(result instanceof Helpers.YTNode)">
