@@ -1,18 +1,20 @@
 <template>
-    <div class="videojs-container">
-        <video id="videojs-player" class="video-js vjs-default-skin" controls preload="auto" width="640" height="264">
-        </video>
-    </div>
+  <div class="videojs-container">
+    <video id="videojs-player" class="video-js vjs-default-skin" controls preload="auto" width="640" height="264" />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { Innertube, UniversalCache, Types } from 'youtubei.js';
+import type { Types } from 'youtubei.js';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-import Player from 'video.js/dist/types/player';
+import type Player from 'video.js/dist/types/player';
 
 const props = defineProps({
-    videoId: String,
+  videoId: {
+    type: String,
+    default: '',
+  },
 });
 
 const emit = defineEmits(['errors']);
@@ -20,71 +22,58 @@ const emit = defineEmits(['errors']);
 let player: Player;
 
 const seek = (seconds: number) => {
-    if (player) {
-        player.currentTime(seconds);
-        console.log('Seeking to', seconds);
-    } else {
-        console.error('Video element is not found');
-    }
+  if (player) {
+    player.currentTime(seconds);
+    console.log('Seeking to', seconds);
+  } else {
+    console.error('Video element is not found');
+  }
 };
 
-
 onMounted(async () => {
-    if (props.videoId) {
-        player = videojs('videojs-player');
-        const langStore = useLangStore();
-        const locationStore = useLocationStore();
+  if (props.videoId) {
+    player = videojs('videojs-player');
+    const DLyt = await useInnertube('player');
 
-        const DLlang = langStore.lang || 'en';
-        const DLlocation = locationStore.location || 'US';
-        const DLyt = await Innertube.create({
-            fetch: PlayerfetchFn,
-            cache: new UniversalCache(false),
-            lang: DLlang,
-            location: DLlocation,
+    const DLResults = await DLyt.getInfo(props.videoId);
+    try {
+      const DLOption: Types.DownloadOptions = { quality: 'best' };
+      const stream = await DLResults.download(DLOption);
+      const reader = stream.getReader();
+      const chunks = [];
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+      }
+
+      const blob = new Blob(chunks);
+      const url = URL.createObjectURL(blob);
+
+      player.src({
+        src: url,
+        type: 'video/webm',
+      });
+    } catch (e) {
+      if (DLResults.streaming_data && DLResults.streaming_data.hls_manifest_url) {
+        const uri = DLResults.streaming_data.hls_manifest_url;
+        player.src({
+          src: uri,
+          type: 'application/x-mpegURL',
         });
-
-        const DLResults = await DLyt.getInfo(props.videoId);
-        try {
-            const DLOption: Types.DownloadOptions = { quality: 'best' }
-            const stream = await DLResults.download(DLOption);
-            const reader = stream.getReader();
-            const chunks = [];
-            let receivedLength = 0;
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                chunks.push(value);
-                receivedLength += value.length;
-            }
-
-            const blob = new Blob(chunks);
-            const url = URL.createObjectURL(blob);
-
-            player.src({
-                src: url,
-                type: "video/webm"
-            });
-        } catch (e) {
-            if (DLResults.streaming_data && DLResults.streaming_data.hls_manifest_url) {
-                const uri = DLResults.streaming_data.hls_manifest_url;
-                player.src({
-                    src: uri,
-                    type: "application/x-mpegURL"
-                });
-            } else {
-                console.error(e);
-                emit('errors', e);
-            }
-        }
+      } else {
+        console.error(e);
+        emit('errors', e);
+      }
     }
+  }
 });
 
 onBeforeUnmount(() => {
-    if (player) {
-        player.dispose();
-    }
+  if (player) {
+    player.dispose();
+  }
 });
 
 defineExpose({ seek });

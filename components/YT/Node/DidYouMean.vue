@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { YTNodes } from 'youtubei.js';
 
-const props = defineProps({
-  data: YTNodes.DidYouMean
+defineProps({
+  data: YTNodes.DidYouMean,
 });
 </script>

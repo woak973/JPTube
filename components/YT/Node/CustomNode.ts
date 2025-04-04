@@ -1,4 +1,4 @@
-import { YTNodes, Misc } from 'youtubei.js';
+import type { YTNodes, Misc } from 'youtubei.js';
 
 export interface VerticalProductCard {
   title: string;
@@ -28,6 +28,6 @@ export interface VerticalProductCard {
   price_replacement_text?: string;
 }
 
-export interface EmptyProductDetails{
+export interface EmptyProductDetails {
   title: Misc.Text;
 }

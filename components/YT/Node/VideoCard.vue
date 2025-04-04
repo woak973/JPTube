@@ -1,34 +1,34 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
-        <v-img :src="getProxifiedUrl(data.thumbnails[0].url)" aspect-ratio="16/9" rounded>
-            <template v-slot:placeholder>
-                <div class="d-flex align-center justify-center fill-height">
-                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                </div>
-            </template>
-            <div class="duration-overlay">{{ data.duration.text }}</div>
-        </v-img>
-        <v-card-text class="omit">{{ data.title }}</v-card-text>
-        <v-card-subtitle>{{ data.author.name }}
-            <template v-if="data.author.badges">
-                <template v-for="badge in data.author.badges">
-                    <YTNode :data="badge" :attribute="'slide'" />
-                </template>
-            </template>
-        </v-card-subtitle>
-        <v-card-subtitle>{{ data.short_view_count?.text }}・{{ data.published?.text }}</v-card-subtitle>
-    </v-card>
-    <div v-else>
-        No data was provided
-    </div>
+  <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
+    <v-img :src="getProxifiedUrl(data.thumbnails[0].url)" aspect-ratio="16/9" rounded>
+      <template #placeholder>
+        <div class="d-flex align-center justify-center fill-height">
+          <v-progress-circular color="grey-lighten-4" indeterminate />
+        </div>
+      </template>
+      <div class="duration-overlay">{{ data.duration.text }}</div>
+    </v-img>
+    <v-card-text class="omit">{{ data.title }}</v-card-text>
+    <v-card-subtitle>{{ data.author.name }}
+      <template v-if="data.author.badges">
+        <template v-for="badge in data.author.badges">
+          <YTNode :data="badge" :attribute="'slide'" />
+        </template>
+      </template>
+    </v-card-subtitle>
+    <v-card-subtitle>{{ data.short_view_count?.text }}・{{ data.published?.text }}</v-card-subtitle>
+  </v-card>
+  <div v-else>
+    No data was provided
+  </div>
 </template>
 
 <script setup lang="ts">
 
 import { YTNodes } from 'youtubei.js';
 
-const props = defineProps({
-    data: YTNodes.VideoCard
+defineProps({
+  data: YTNodes.VideoCard,
 });
 </script>
 

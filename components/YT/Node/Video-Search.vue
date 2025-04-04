@@ -3,9 +3,9 @@
     <v-row>
       <v-col cols="12" sm="4" class="d-flex align-center justify-center">
         <v-img :src="getProxifiedUrl(data.thumbnails[0].url)" aspect-ratio="16/9" rounded>
-          <template v-slot:placeholder>
+          <template #placeholder>
             <div class="d-flex align-center justify-center fill-height">
-              <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+              <v-progress-circular color="grey-lighten-4" indeterminate />
             </div>
           </template>
           <div class="duration-overlay">{{ data.duration.text }}</div>
@@ -16,8 +16,8 @@
         <v-card-subtitle>{{ data.short_view_count?.text }}・{{ data.published?.text }}</v-card-subtitle>
         <v-card-actions>
           <v-list-item :to="data.author.endpoint?.metadata?.url" link>
-            <template v-slot:prepend>
-              <v-avatar :image="getProxifiedUrl(data.author.thumbnails[0].url)" size="24"></v-avatar>
+            <template #prepend>
+              <v-avatar :image="getProxifiedUrl(data.author.thumbnails[0].url)" size="24" />
             </template>
             <v-list-item-title>{{ data.author.name }}</v-list-item-title>
           </v-list-item>
@@ -34,8 +34,8 @@
 <script setup lang="ts">
 import { YTNodes } from 'youtubei.js';
 
-const props = defineProps({
-  data: YTNodes.Video
+defineProps({
+  data: YTNodes.Video,
 });
 </script>
 

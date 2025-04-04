@@ -3,9 +3,9 @@
     <v-row>
       <v-col cols="4" class="d-flex align-center justify-center">
         <v-img :src="getProxifiedUrl(data.author.thumbnails[0]?.url)" max-width="50%" style="border-radius: 50%;">
-          <template v-slot:placeholder>
+          <template #placeholder>
             <div class="d-flex align-center justify-center fill-height">
-              <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+              <v-progress-circular color="grey-lighten-4" indeterminate />
             </div>
           </template>
         </v-img>
@@ -26,8 +26,7 @@
 
 import { YTNodes } from 'youtubei.js';
 
-
-const props = defineProps({
-  data: YTNodes.Channel
+defineProps({
+  data: YTNodes.Channel,
 });
 </script>

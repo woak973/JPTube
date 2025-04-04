@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache } from 'youtubei.js';
+import { Helpers, Innertube, UniversalCache, YTNodes } from 'youtubei.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const drawer = ref<boolean>(false);
@@ -18,7 +18,7 @@ const createYTInstance = async (): Promise<Innertube> => {
     fetch: fetchFn,
     cache: new UniversalCache(false),
     lang: lang,
-    location: location
+    location: location,
   });
 };
 
@@ -46,7 +46,10 @@ const fetchSuggestions = async (query: string): Promise<void> => {
     const yt = await createYTInstance();
     const music = await yt.music;
     const response = await music.getSearchSuggestions(query);
-    suggestions.value = response[0].contents.map((suggestion: any) => suggestion.suggestion.text);
+    suggestions.value = response[0].contents
+      .filter((suggestion: Helpers.YTNode) => suggestion instanceof YTNodes.SearchSuggestion)
+      .map(suggestion => suggestion.suggestion.text)
+      .filter((text): text is string => text !== undefined);
   } catch (error) {
     console.error('Error fetching suggestions:', error);
   }
@@ -54,7 +57,7 @@ const fetchSuggestions = async (query: string): Promise<void> => {
 
 const openLangDialog = (): void => {
   if (langDialog.value) {
-    (langDialog.value as any).open();
+    (langDialog.value as unknown as { open: () => void }).open();
   }
 };
 
@@ -66,12 +69,13 @@ const Refresh = (): void => {
 <template>
   <v-app id="inspire">
     <v-app-bar>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="drawer = !drawer" />
       <router-link to="/music" style="text-decoration: none; color: inherit;">
         <v-app-bar-title>JPTube Music</v-app-bar-title>
       </router-link>
-      <v-spacer></v-spacer>
-      <v-combobox v-model="searchQuery" :items="suggestions" label="Search" single-line hide-details clearable
+      <v-spacer />
+      <v-combobox
+        v-model="searchQuery" :items="suggestions" label="Search" single-line hide-details clearable
         :filter="() => { return true; }" prepend-inner-icon="mdi-magnify" clear-icon="mdi-close-circle"
         @keyup.enter="search" @click:prepend-inner="search" @click:clear="clearSearch" />
       <v-btn icon @click="openLangDialog">
@@ -80,20 +84,20 @@ const Refresh = (): void => {
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" temporary>
-      <v-list-item title="JPTube Music" subtitle="Welcome"></v-list-item>
-      <v-divider></v-divider>
-      <v-list-item prepend-icon="mdi-home" link title="Home" to="/music"></v-list-item>
-      <v-list-item prepend-icon="mdi-compass" link title="Explore" to="/music/explore"></v-list-item>
-      <v-divider></v-divider>
-      <v-list-item title="Other Services" subtitle="Welcome"></v-list-item>
-      <v-list-item prepend-icon="mdi-play-box" link title="JPTube" to="/"></v-list-item>
-      <v-list-item prepend-icon="mdi-play-protected-content" link title="JPTube Kids" to="/kids"></v-list-item>
-      <v-list-item prepend-icon="mdi-forum" link title="JPTube Forum" to="/firebase/"></v-list-item>
+      <v-list-item title="JPTube Music" subtitle="Welcome" />
+      <v-divider />
+      <v-list-item prepend-icon="mdi-home" link title="Home" to="/music" />
+      <v-list-item prepend-icon="mdi-compass" link title="Explore" to="/music/explore" />
+      <v-divider />
+      <v-list-item title="Other Services" subtitle="Welcome" />
+      <v-list-item prepend-icon="mdi-play-box" link title="JPTube" to="/" />
+      <v-list-item prepend-icon="mdi-play-protected-content" link title="JPTube Kids" to="/kids" />
+      <v-list-item prepend-icon="mdi-forum" link title="JPTube Forum" to="/firebase/" />
 
     </v-navigation-drawer>
 
     <v-main class="bg-grey-lighten-2">
-      <slot :value="value" :key="child" />
+      <slot :key="child" :value="value" />
     </v-main>
 
     <YTCommonLangDialog ref="langDialog" @Refresh="Refresh" />

@@ -1,29 +1,29 @@
 <template>
-    <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
-        <v-img :src="getProxifiedUrl(data.thumbnails[0]?.url)" aspect-ratio="16/9" rounded>
-            <template v-slot:placeholder>
-                <div class="d-flex align-center justify-center fill-height">
-                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                </div>
-            </template>
-            <div class="duration-overlay">{{ data.video_count.text }}</div>
-        </v-img>
-        <v-card-text class="omit">{{ data.title.text }}</v-card-text>
-        <v-list-item style="min-height: 0px;" :to="data.view_playlist.endpoint?.metadata?.url">
-            <v-list-item-subtitle>{{ data.view_playlist.text }}</v-list-item-subtitle>
-        </v-list-item>
-    </v-card>
-    <div v-else>
-        No data was provided
-    </div>
+  <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
+    <v-img :src="getProxifiedUrl(data.thumbnails[0]?.url)" aspect-ratio="16/9" rounded>
+      <template #placeholder>
+        <div class="d-flex align-center justify-center fill-height">
+          <v-progress-circular color="grey-lighten-4" indeterminate />
+        </div>
+      </template>
+      <div class="duration-overlay">{{ data.video_count.text }}</div>
+    </v-img>
+    <v-card-text class="omit">{{ data.title.text }}</v-card-text>
+    <v-list-item style="min-height: 0px;" :to="data.view_playlist.endpoint?.metadata?.url">
+      <v-list-item-subtitle>{{ data.view_playlist.text }}</v-list-item-subtitle>
+    </v-list-item>
+  </v-card>
+  <div v-else>
+    No data was provided
+  </div>
 </template>
 
 <script setup lang="ts">
 
 import { YTNodes } from 'youtubei.js';
 
-const props = defineProps({
-    data: YTNodes.GridPlaylist
+defineProps({
+  data: YTNodes.GridPlaylist,
 });
 
 </script>

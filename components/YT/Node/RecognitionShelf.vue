@@ -1,35 +1,35 @@
 <template>
-    <v-card v-if="data" elevation="16">
-        <v-row>
-            <v-col cols="12" sm="6">
-                <v-card-title>{{ data.title?.text }}</v-card-title>
-                <v-card-subtitle>{{ data.subtitle?.text }}</v-card-subtitle>
-            </v-col>
-            <v-col cols="12" sm="6">
-                <v-slide-group>
-                    <div v-for="avatar in data.avatars">
-                        <v-img :src="getProxifiedUrl(avatar.url)" aspect-ratio="16/9" rounded>
-                            <template v-slot:placeholder>
-                                <div class="d-flex align-center justify-center fill-height">
-                                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                                </div>
-                            </template>
-                        </v-img>
-                    </div>
-                </v-slide-group>
-            </v-col>
-        </v-row>
-    </v-card>
-    <div v-else>
-        No data was provided
-    </div>
+  <v-card v-if="data" elevation="16">
+    <v-row>
+      <v-col cols="12" sm="6">
+        <v-card-title>{{ data.title?.text }}</v-card-title>
+        <v-card-subtitle>{{ data.subtitle?.text }}</v-card-subtitle>
+      </v-col>
+      <v-col cols="12" sm="6">
+        <v-slide-group>
+          <div v-for="avatar in data.avatars">
+            <v-img :src="getProxifiedUrl(avatar.url)" aspect-ratio="16/9" rounded>
+              <template #placeholder>
+                <div class="d-flex align-center justify-center fill-height">
+                  <v-progress-circular color="grey-lighten-4" indeterminate />
+                </div>
+              </template>
+            </v-img>
+          </div>
+        </v-slide-group>
+      </v-col>
+    </v-row>
+  </v-card>
+  <div v-else>
+    No data was provided
+  </div>
 </template>
 
 <script setup lang="ts">
 import { YTNodes } from 'youtubei.js';
 
-const props = defineProps({
-    data: YTNodes.RecognitionShelf
+defineProps({
+  data: YTNodes.RecognitionShelf,
 });
 </script>
 
