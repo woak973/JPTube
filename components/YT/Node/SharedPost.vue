@@ -35,7 +35,7 @@
 
 import { YTNodes } from 'youtubei.js';
 
-const props = defineProps({
+defineProps({
   data: YTNodes.SharedPost,
 });
 </script>

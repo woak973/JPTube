@@ -14,7 +14,7 @@ useHead({
   title: 'Home - JPTube',
 });
 
-const LoadMore = async ({ done }: any) => {
+const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) => {
   try {
     if (sourceresults && sourceresults.has_continuation) {
       const continuationResults: Mixins.Feed<APIResponseTypes.IBrowseResponse> = await sourceresults.getContinuation();

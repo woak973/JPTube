@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { YTNodes } from 'youtubei.js';
 
-const props = defineProps({
+defineProps({
   data: YTNodes.C4TabbedHeader,
 });
 

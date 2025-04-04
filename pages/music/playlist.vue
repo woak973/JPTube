@@ -13,7 +13,7 @@ const errorMessage = ref<string>('');
 watch(HeaderResults, (newVal): void => {
   if (newVal && !(newVal instanceof YTNodes.MusicEditablePlaylistDetailHeader)) {
     useHead({
-      title: `${newVal.title.text} - JPTube Music` || 'Playlist - JPTube Music',
+      title: `${newVal.title.text ? newVal.title.text : 'Playlist'} - JPTube Music`,
     });
   }
 });
@@ -22,7 +22,7 @@ definePageMeta({
   layout: 'music',
 });
 
-const LoadMore = async ({ done }: any): Promise<void> => {
+const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }): Promise<void> => {
   try {
     if (sourceresults && sourceresults.has_continuation) {
       const continuationResults = await sourceresults.getContinuation();

@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import type { Helpers, YTMusic } from 'youtubei.js';
+import type { Helpers } from 'youtubei.js';
 import { YTNodes } from 'youtubei.js';
 
 const route = useRoute();
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf | YTNodes.MusicShelf>>();
 const HeaderResults = ref<YTNodes.MusicHeader | YTNodes.MusicImmersiveHeader | YTNodes.MusicVisualHeader | undefined>();
-let sourceresults: YTMusic.Artist;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
 watch(HeaderResults, (newVal): void => {
   if (newVal) {
     useHead({
-      title: `${newVal?.title?.text} - JPTube Music` || 'Channel - JPTube Music',
+      title: `${newVal?.title?.text ? newVal?.title?.text : 'Channel'} - JPTube Music`,
     });
   }
 });
@@ -29,7 +28,6 @@ const fetchData = async (): Promise<void> => {
     const ytmusic = await yt.music;
 
     const searchResults = await ytmusic.getArtist(route.params.id as string);
-    sourceresults = searchResults;
 
     results.value = await searchResults?.sections;
     HeaderResults.value = searchResults.header;

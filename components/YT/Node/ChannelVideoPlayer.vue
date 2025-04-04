@@ -48,14 +48,11 @@ const playerStore = usePlayerStore();
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
-const props = defineProps({
+defineProps({
   data: YTNodes.ChannelVideoPlayer,
 });
 
-const handleError = (message: string): void => {
-  alert.value = true;
-  errorMessage.value = message;
-};
+const handleError = inject('handleError') as (message: string) => void;
 </script>
 <style scoped>
 .video-container {

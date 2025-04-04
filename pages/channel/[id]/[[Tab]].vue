@@ -13,7 +13,6 @@ const about = ref<YTNodes.ChannelAboutFullMetadata | YTNodes.AboutChannel>();
 const TabResults = ref<Array<Helpers.YTNode>>();
 const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>();
 let sourceresults: YT.Channel | YT.ChannelListContinuation;
-let sourceTab: YT.Channel;
 let sourcefilter: YT.Channel | undefined;
 let comsource: YT.Comments;
 let yt: Innertube;
@@ -84,16 +83,15 @@ watch(HeaderResults, (newVal) => {
   if (newVal) {
     if (newVal instanceof YTNodes.PageHeader) {
       useHead({
-        title: `${newVal.page_title} - JPTube` || 'Watch',
+        title: `${newVal.page_title ? newVal.page_title : 'Channel'} - JPTube`,
       });
     } else if (newVal instanceof YTNodes.CarouselHeader) {
       useHead({
-        title: `${(newVal.contents[1] as YTNodes.TopicChannelDetails).title.text} - JPTube` || 'Watch',
+        title: `${(newVal.contents[1] as YTNodes.TopicChannelDetails).title.text ? (newVal.contents[1] as YTNodes.TopicChannelDetails).title.text : 'Channel'} - JPTube`,
       });
     } else if (newVal instanceof YTNodes.InteractiveTabbedHeader) {
       useHead({
-        title: `${newVal.title.text
-        } - JPTube` || 'Watch',
+        title: `${newVal.title.text ? newVal.title.text : 'Channel'} - JPTube`,
       });
     }
   }
@@ -105,7 +103,7 @@ const getLastParam = (url: string): string => {
   return parts[parts.length - 1] || '';
 };
 
-const LoadMore = async ({ done }: any) => {
+const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) => {
   try {
     if (sourceresults && sourceresults.has_continuation) {
       const continuationResults = await sourceresults.getContinuation();
@@ -130,7 +128,7 @@ const LoadMore = async ({ done }: any) => {
   }
 };
 
-const ComLoadMore = async ({ done }: any) => {
+const ComLoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) => {
   try {
     if (comsource && comsource.has_continuation) {
       const continuationResults = await comsource.getContinuation();
@@ -201,7 +199,6 @@ const fetchData = async (bp?: string) => {
       HeaderResults.value = searchResults.header;
       MetaResults.value = searchResults.metadata as YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>;
       TabResults.value = await searchResults.page.contents_memo?.get('Tab');
-      sourceTab = searchResults;
       if (searchResults.has_about) {
         about.value = await searchResults.getAbout();
       }
@@ -476,6 +473,7 @@ const handleError = (message: string) => {
   alert.value = true;
   errorMessage.value = message;
 };
+provide('handleError', handleError);
 
 await fetchData();
 </script>

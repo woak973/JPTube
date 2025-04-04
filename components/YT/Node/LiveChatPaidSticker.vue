@@ -45,9 +45,9 @@
 
 <script setup lang="ts">
 
-import { YTNodes, Misc } from 'youtubei.js';
+import { YTNodes } from 'youtubei.js';
 
-const props = defineProps({
+defineProps({
   data: YTNodes.LiveChatPaidSticker,
 });
 </script>

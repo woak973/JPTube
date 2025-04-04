@@ -35,15 +35,13 @@
         <template v-for="(row, index) in data.metadata?.metadata?.metadata_rows">
           <template v-if="index === 0">
             <template
-              v-for="part in row.metadata_parts" style="min-height: 0px;"
-              :to="part.text?.endpoint?.metadata?.url">
+              v-for="part in row.metadata_parts">
               <v-card-subtitle class="tiny-text">{{ part.text }}</v-card-subtitle>
             </template>
           </template>
           <template v-else-if="index === 1">
             <template
-              v-for="(part, INDEX) in row.metadata_parts" style="min-height: 0px;"
-              :to="part.text?.endpoint?.metadata?.url">
+              v-for="(part, INDEX) in row.metadata_parts">
               <template v-if="INDEX === 0">
                 <v-card-subtitle class="tiny-text" style="display: inline-block; padding-right: 0">{{
                   part.text +
@@ -70,7 +68,7 @@
 
 import { YTNodes } from 'youtubei.js';
 
-const props = defineProps({
+defineProps({
   data: YTNodes.LockupView,
 });
 

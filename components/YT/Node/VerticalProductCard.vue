@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import type { VerticalProductCard } from './CustomNode';
 
-const props = defineProps<{
+defineProps<{
   data: VerticalProductCard;
 }>();
 

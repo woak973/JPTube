@@ -35,7 +35,7 @@
 
 import { YTNodes, Misc } from 'youtubei.js';
 
-const props = defineProps({
+defineProps({
   data: YTNodes.LiveChatSponsorshipsHeader,
 });
 </script>

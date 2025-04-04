@@ -149,8 +149,7 @@
         </v-card>
         <v-row style="margin-top: 0;">
           <template
-            v-for="item in (data as YTNodes.ChannelFeaturedContent).items" class="ma-2"
-            style="width: 200px;">
+            v-for="item in (data as YTNodes.ChannelFeaturedContent).items">
             <template v-if="(item instanceof Helpers.YTNode)">
               <YTKidsNode :data="item" :attribute="attribute" :page="page" />
             </template>
@@ -223,13 +222,19 @@
 </template>
 
 <script setup lang="ts">
-import type { ItemSectionContinuation, YTNodes } from 'youtubei.js';
-import { Helpers } from 'youtubei.js';
+import type { ItemSectionContinuation } from 'youtubei.js';
+import { Helpers, YTNodes } from 'youtubei.js';
 
-const props = defineProps({
+defineProps({
   data: Helpers.YTNode,
-  attribute: String,
-  page: String,
+  attribute: {
+    type: String,
+    default: '',
+  },
+  page: {
+    type: String,
+    default: '',
+  },
 
 });
 </script>

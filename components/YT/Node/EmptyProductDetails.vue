@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import type { EmptyProductDetails } from './CustomNode';
 
-const props = defineProps<{
+defineProps<{
   data: EmptyProductDetails;
 }>();
 </script>

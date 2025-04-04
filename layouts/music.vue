@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache } from 'youtubei.js';
+import { Helpers, Innertube, UniversalCache, YTNodes } from 'youtubei.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const drawer = ref<boolean>(false);
@@ -46,7 +46,10 @@ const fetchSuggestions = async (query: string): Promise<void> => {
     const yt = await createYTInstance();
     const music = await yt.music;
     const response = await music.getSearchSuggestions(query);
-    suggestions.value = response[0].contents.map((suggestion: any) => suggestion.suggestion.text);
+    suggestions.value = response[0].contents
+      .filter((suggestion: Helpers.YTNode) => suggestion instanceof YTNodes.SearchSuggestion)
+      .map(suggestion => suggestion.suggestion.text)
+      .filter((text): text is string => text !== undefined);
   } catch (error) {
     console.error('Error fetching suggestions:', error);
   }
@@ -54,7 +57,7 @@ const fetchSuggestions = async (query: string): Promise<void> => {
 
 const openLangDialog = (): void => {
   if (langDialog.value) {
-    (langDialog.value as any).open();
+    (langDialog.value as unknown as { open: () => void }).open();
   }
 };
 

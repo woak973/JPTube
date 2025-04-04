@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Types } from 'youtubei.js';
 import { YT, Helpers, YTNodes } from 'youtubei.js';
+import type { LocationQueryValue } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
@@ -18,7 +19,7 @@ const sortOptions: Array<Types.SortBy> = ['relevance', 'upload_date', 'view_coun
 const typeOptions: Array<Types.SearchType> = ['video', 'channel', 'playlist', 'movie'];
 const featureOptions: Array<Types.Feature> = ['live', '4k', 'hd', 'subtitles', 'creative_commons', '360', 'vr180', '3d', 'hdr', 'location', 'purchased'];
 const applyFilters = async () => {
-  const query: Record<string, any> = {};
+  const query: Record<string, string | LocationQueryValue[]> = {};
   if (selectedFilter.value.upload_date) {
     query.upload_date = selectedFilter.value.upload_date;
   }
@@ -55,10 +56,10 @@ const selectedFilter = ref({
 const selectedChip = ref<string>();
 
 useHead({
-  title: `${route.params.q as string} - JPTube` || 'Search - JPTube',
+  title: `${route.params.q as string ? route.params.q as string : 'Search'} - JPTube`,
 });
 
-const LoadMore = async ({ done }: any) => {
+const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) => {
   try {
     if (sourceresults && sourceresults.has_continuation) {
       const continuationResults = await sourceresults.getContinuation();
@@ -103,7 +104,7 @@ const fetchData = async (chip?: string) => {
     const yt = await useInnertube('common');
     if (chip) {
       const nav = await yt.actions.execute('/search', { continuation: chip, parse: true });
-      results.value = (((nav as any).on_response_received_commands_memo as Helpers.Memo).get('SectionList') as Helpers.ObservedArray<Helpers.YTNode>);
+      results.value = (((nav as { on_response_received_commands_memo: Helpers.Memo }).on_response_received_commands_memo).get('SectionList') as Helpers.ObservedArray<Helpers.YTNode>);
       sourceresults = new YT.Search(yt.actions, nav, true);
     } else {
       const searchResults = await yt.search(route.params.q as string, filter as Types.SearchFilters);

@@ -13,7 +13,7 @@ const errorMessage = ref<string>('');
 watch(HeaderResults, (newVal): void => {
   if (newVal) {
     useHead({
-      title: `${newVal?.author.name} - JPTube Kids` || 'Channel - JPTube Kids',
+      title: `${newVal?.author.name ? newVal?.author.name : 'Channel'} - JPTube Kids`,
     });
   }
 });
@@ -22,7 +22,7 @@ definePageMeta({
   layout: 'kids',
 });
 
-const LoadMore = async ({ done }: any) => {
+const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) => {
   try {
     if (sourceresults && sourceresults.has_continuation) {
       const continuationResults = await sourceresults.getContinuation();

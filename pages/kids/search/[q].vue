@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import type { Helpers, YTKids } from 'youtubei.js';
+import type { Helpers } from 'youtubei.js';
 
 const route = useRoute();
 
 const results = ref<Helpers.ObservedArray<Helpers.YTNode> | null>();
-let sourceresults: YTKids.Search;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
 useHead({
-  title: `${route.params.q as string} - JPTube Kids` || 'Search - JPTube Kids',
+  title: `${route.params.q as string ? route.params.q as string : 'Search'} - JPTube Kids`,
 });
 
 definePageMeta({
@@ -23,7 +22,6 @@ const fetchData = async (): Promise<void> => {
     const ytkids = await yt.kids;
 
     const searchResults = await ytkids.search(route.params.q as string);
-    sourceresults = searchResults;
 
     results.value = await searchResults.contents;
   } catch (error) {

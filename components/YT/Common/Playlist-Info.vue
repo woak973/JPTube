@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { YT } from 'youtubei.js';
 
-const props = defineProps({
+defineProps({
   data: YT.Playlist,
 });
 </script>

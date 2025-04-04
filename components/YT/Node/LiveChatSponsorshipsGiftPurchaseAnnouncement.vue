@@ -1,5 +1,5 @@
 <template>
-  <template v-if="data" elevation="16">
+  <template v-if="data">
     <template v-if="data.header">
       <YTNodeLiveChatSponsorshipsHeader :data="data.header" />
     </template>
@@ -13,7 +13,7 @@
 
 import { YTNodes } from 'youtubei.js';
 
-const props = defineProps({
+defineProps({
   data: YTNodes.LiveChatSponsorshipsGiftPurchaseAnnouncement,
 });
 </script>

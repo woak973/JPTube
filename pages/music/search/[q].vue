@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import type { Helpers, YTNodes, YTMusic } from 'youtubei.js';
+import type { Helpers, YTNodes } from 'youtubei.js';
 
 const route = useRoute();
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicShelf | YTNodes.MusicCardShelf | YTNodes.ItemSection>>();
 const HeaderResults = ref<YTNodes.ChipCloud | undefined>();
 
-let sourceresults: YTMusic.Search;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
 useHead({
-  title: `${route.params.q as string} - JPTube Music` || 'Search - JPTube Music',
+  title: `${route.params.q as string ? route.params.q as string : 'Search'} - JPTube Music`,
 });
 
 definePageMeta({
@@ -31,7 +30,6 @@ const fetchData = async (filter?: string): Promise<void> => {
     if (filter) {
       window.scrollTo(0, 0);
     }
-    sourceresults = searchResults;
 
     results.value = await searchResults.contents;
     HeaderResults.value = await searchResults.header;

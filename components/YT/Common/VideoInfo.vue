@@ -80,12 +80,14 @@
             </template>
           </div>
 
-          <template v-for="result in data.secondary_info.metadata?.rows" v-if="showFullDescription">
-            <v-row style="margin: 0;">
-              <template v-if="(result instanceof Helpers.YTNode)">
-                <YTNode :data="result" />
-              </template>
-            </v-row>
+          <template v-if="showFullDescription">
+            <template v-for="result in data.secondary_info.metadata?.rows">
+              <v-row style="margin: 0;">
+                <template v-if="(result instanceof Helpers.YTNode)">
+                  <YTNode :data="result" />
+                </template>
+              </v-row>
+            </template>
           </template>
 
           <v-btn @click="$emit('toggleDescription')">
@@ -105,11 +107,13 @@
 
 import { YT, Misc, Helpers } from 'youtubei.js';
 
-const props = defineProps({
+defineProps({
   data: YT.VideoInfo,
   downloading: Boolean,
   showFullDescription: Boolean,
 });
+
+defineEmits(['downloadVideo', 'share', 'toggleDescription']);
 </script>
 
 <style scoped>

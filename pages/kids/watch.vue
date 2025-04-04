@@ -21,7 +21,7 @@ const downloading = ref<boolean>(false);
 watch(results, (newVal): void => {
   if (newVal) {
     useHead({
-      title: `${newVal.basic_info.title} - JPTube Kids` || 'Watch - JPTube Kids',
+      title: `${newVal.basic_info.title ? newVal.basic_info.title : 'Watch'} - JPTube Kids`,
     });
   }
 });
@@ -69,13 +69,11 @@ const downloadVideo = async (): Promise<void> => {
     const stream = await DLResults.download(DLOption);
     const reader = stream.getReader();
     const chunks = [];
-    let receivedLength = 0;
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       chunks.push(value);
-      receivedLength += value.length;
     }
 
     const blob = new Blob(chunks);

@@ -38,7 +38,7 @@
 import type { YTNodes } from 'youtubei.js';
 import { Misc } from 'youtubei.js';
 
-const props = defineProps<{
+defineProps<{
   data: YTNodes.TwoColumnWatchNextResults['playlist'];
 }>();
 </script>

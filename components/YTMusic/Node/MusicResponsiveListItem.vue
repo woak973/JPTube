@@ -33,7 +33,10 @@ import { YTNodes } from 'youtubei.js';
 
 const props = defineProps({
   data: YTNodes.MusicResponsiveListItem,
-  PLid: String,
+  PLid: {
+    type: String,
+    default: '',
+  },
 });
 
 const getLink = () => {

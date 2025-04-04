@@ -155,14 +155,16 @@
 
 <script setup lang="ts">
 import { YTNodes, Misc } from 'youtubei.js';
-const props = defineProps({
+defineProps({
   data: YTNodes.PageHeader,
   about: {
     type: [YTNodes.ChannelAboutFullMetadata, YTNodes.AboutChannel],
     required: false,
+    default: null,
   }, metadata: {
     type: Object as PropType<YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>>,
     required: false,
+    default: () => ({}),
   },
 });
 

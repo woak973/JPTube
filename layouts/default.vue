@@ -56,7 +56,7 @@ const fetchSuggestions = async (query: string): Promise<void> => {
   try {
     const yt = await createYTInstance();
     const response = await yt.getSearchSuggestions(query);
-    suggestions.value = response.map((suggestion: any) => suggestion);
+    suggestions.value = response.map((suggestion: string) => suggestion);
   } catch (error) {
     console.error('Error fetching suggestions:', error);
   }
@@ -64,7 +64,7 @@ const fetchSuggestions = async (query: string): Promise<void> => {
 
 const openLangDialog = (): void => {
   if (langDialog.value) {
-    (langDialog.value as any).open();
+    ((langDialog.value as unknown) as { open(): void }).open();
   }
 };
 

@@ -47,13 +47,15 @@
 
 <script setup lang="ts">
 
-import { YTKids, Misc, Helpers, YTNodes } from 'youtubei.js';
+import { YTKids, YTNodes } from 'youtubei.js';
 
-const props = defineProps({
+defineProps({
   data: YTKids.VideoInfo,
   downloading: Boolean,
   showFullDescription: Boolean,
 });
+
+defineEmits(['downloadVideo', 'share']);
 </script>
 
 <style scoped>

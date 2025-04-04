@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import type { Innertube, YTKids } from 'youtubei.js';
+import type { Innertube } from 'youtubei.js';
 import { Helpers, YTNodes, ClientType } from 'youtubei.js';
 
 const TabResults = ref<Helpers.ObservedArray<YTNodes.AnchoredSection> | undefined>();
 const Results = ref<YTNodes.SectionList | null | undefined>();
-let sourceresults: YTKids.HomeFeed;
 let yt: Innertube;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
@@ -26,7 +25,6 @@ const fetchData = async (Z?: number): Promise<void> => {
     const ytkids = await yt.kids;
 
     const searchResults = await ytkids.getHomeFeed();
-    sourceresults = searchResults;
 
     if (!Z) {
       TabResults.value = await searchResults?.contents?.anchors;

@@ -11,10 +11,10 @@ const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
 useHead({
-  title: `${route.params.q as string} - JPTube` || 'HashTag - JPTube',
+  title: `${route.params.q as string ? route.params.q as string : 'HashTag'} - JPTube`,
 });
 
-const LoadMore = async ({ done }: any) => {
+const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) => {
   try {
     if (sourceresults && sourceresults.has_continuation) {
       const continuationResults = await sourceresults.getContinuation();

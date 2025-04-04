@@ -14,7 +14,7 @@ definePageMeta({
   layout: 'music',
 });
 
-const LoadMore = async ({ done }: any): Promise<void> => {
+const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }): Promise<void> => {
   try {
     if (sourceresults && sourceresults.has_continuation) {
       const continuationResults = await sourceresults.getContinuation();

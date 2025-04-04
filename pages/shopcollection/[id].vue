@@ -16,11 +16,11 @@ watch(HeaderResults, (newVal) => {
   if (newVal) {
     if (newVal instanceof YTNodes.PageHeader) {
       useHead({
-        title: `${newVal.page_title} - JPTube` || 'Watch',
+        title: `${newVal.page_title ? newVal.page_title : 'Channel'} - JPTube`,
       });
     } else if (newVal instanceof YTNodes.CarouselHeader) {
       useHead({
-        title: `${((newVal.contents[1] as YTNodes.TopicChannelDetails).title.text) ? (newVal.contents[1] as YTNodes.TopicChannelDetails).title.text : 'Channel'} - JPTube`,
+        title: `${(newVal.contents[1] as YTNodes.TopicChannelDetails).title.text ? (newVal.contents[1] as YTNodes.TopicChannelDetails).title.text : 'Channel'} - JPTube`,
       });
     } else if (newVal instanceof YTNodes.InteractiveTabbedHeader) {
       useHead({

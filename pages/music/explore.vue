@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type { Helpers, YTNodes, YTMusic } from 'youtubei.js';
+import type { Helpers, YTNodes } from 'youtubei.js';
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicCarouselShelf> | undefined>();
-let sourceresults: YTMusic.Explore;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
@@ -21,7 +20,6 @@ const fetchData = async (): Promise<void> => {
     const ytmusic = await yt.music;
 
     const searchResults = await ytmusic.getExplore();
-    sourceresults = searchResults;
 
     results.value = await searchResults?.sections;
   } catch (error) {

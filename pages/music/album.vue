@@ -12,7 +12,7 @@ const errorMessage = ref<string>('');
 watch(HeaderResults, (newVal): void => {
   if (newVal) {
     useHead({
-      title: `${newVal.title.text} - JPTube Music` || 'Album - JPTube Music',
+      title: `${newVal.title.text ? newVal.title.text : 'Album'} - JPTube Music`,
     });
   }
 });

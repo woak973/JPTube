@@ -788,8 +788,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ItemSectionContinuation, YTNodes } from 'youtubei.js';
-import { Helpers } from 'youtubei.js';
+import type { ItemSectionContinuation } from 'youtubei.js';
+import { Helpers, YTNodes } from 'youtubei.js';
 
 import type { VerticalProductCard, EmptyProductDetails } from './Node/CustomNode';
 

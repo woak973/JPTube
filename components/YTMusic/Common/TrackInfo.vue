@@ -43,8 +43,10 @@
 <script setup lang="ts">
 import { YTMusic } from 'youtubei.js';
 
-const props = defineProps({
+defineProps({
   data: YTMusic.TrackInfo,
   downloading: Boolean,
 });
+
+defineEmits(['downloadVideo', 'share']);
 </script>

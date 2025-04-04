@@ -11,7 +11,10 @@ import 'video.js/dist/video-js.css';
 import type Player from 'video.js/dist/types/player';
 
 const props = defineProps({
-  videoId: String,
+  videoId: {
+    type: String,
+    default: '',
+  },
 });
 
 const emit = defineEmits(['errors']);
@@ -38,13 +41,11 @@ onMounted(async () => {
       const stream = await DLResults.download(DLOption);
       const reader = stream.getReader();
       const chunks = [];
-      let receivedLength = 0;
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         chunks.push(value);
-        receivedLength += value.length;
       }
 
       const blob = new Blob(chunks);
