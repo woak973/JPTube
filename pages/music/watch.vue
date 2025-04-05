@@ -155,8 +155,6 @@ const fetchData = async (): Promise<void> => {
 
       videoId.value = PLvideoId;
       searchResults = await ytmusic.getInfo(PLvideoId);
-      console.log(Playlistresults.value);
-      console.log(searchResults);
     } else {
       PLBtn.value = false;
       searchResults = await ytmusic.getInfo(route.query.v as string);

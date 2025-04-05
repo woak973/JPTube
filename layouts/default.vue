@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Innertube, UniversalCache } from 'youtubei.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const drawer = ref<boolean>(false);
@@ -7,20 +6,7 @@ const searchQuery = ref<string>('');
 const value = ref<string>('');
 const suggestions = ref<string[]>([]);
 const langDialog = ref<HTMLElement | null>(null);
-const langStore = useLangStore();
-const locationStore = useLocationStore();
 const child = ref<string>(uuidv4());
-
-const createYTInstance = async (): Promise<Innertube> => {
-  const lang = langStore.lang || 'en';
-  const location = locationStore.location || 'US';
-  return await Innertube.create({
-    fetch: fetchFn,
-    cache: new UniversalCache(false),
-    lang: lang,
-    location: location,
-  });
-};
 
 watch(searchQuery, (newQuery): void => {
   if (newQuery) {
@@ -32,7 +18,7 @@ watch(searchQuery, (newQuery): void => {
 
 const search = async (): Promise<void> => {
   if (searchQuery.value) {
-    const yt = await createYTInstance();
+    const yt = await useInnertube('common');
     try {
       const resolvedURL = await yt.resolveURL(searchQuery.value);
       if (resolvedURL.metadata.page_type !== 'WEB_PAGE_TYPE_UNKNOWN' && !searchQuery.value.startsWith('#')) {
@@ -54,7 +40,7 @@ const clearSearch = (): void => {
 
 const fetchSuggestions = async (query: string): Promise<void> => {
   try {
-    const yt = await createYTInstance();
+    const yt = await useInnertube('common');
     const response = await yt.getSearchSuggestions(query);
     suggestions.value = response.map((suggestion: string) => suggestion);
   } catch (error) {

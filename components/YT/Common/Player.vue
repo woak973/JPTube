@@ -29,7 +29,7 @@ onMounted(async () => {
     const visitorData = ProtoUtils.encodeVisitorData(Utils.generateRandomString(11), Math.floor(Date.now() / 1000));
 
     // Immediately mint a cold start token so we can start playback without delays.
-    const coldStartToken = BG.PoToken.generatePlaceholder(visitorData);
+    const coldStartToken = BG.PoToken.generateColdStartToken(visitorData);
     getPo(visitorData).then(webPo => poToken = webPo);
 
     const yt = await useInnertube('player', undefined, { po_token: poToken || coldStartToken, visitor_data: visitorData }, true);
