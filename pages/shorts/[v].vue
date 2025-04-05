@@ -269,7 +269,7 @@ const fetchData = async () => {
 const AutoPlay = () => {
   if (autoplayStore.autoplay) {
     if (Relatedresults.value && Relatedresults.value.length > 1) {
-      const nextVideo = Relatedresults.value[1];
+      const nextVideo = Relatedresults.value[0];
       if (nextVideo instanceof YTNodes.NavigationEndpoint) {
         autoplaySnackbar.value = true;
         setTimeout(() => {
