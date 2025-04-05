@@ -4,6 +4,7 @@ import { Helpers, YTNodes } from 'youtubei.js';
 
 const route = useRoute();
 const playerStore = usePlayerStore();
+const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
 
 const Relatedresults = ref<YTNodes.NavigationEndpoint[] | undefined>();
@@ -29,6 +30,7 @@ const child = ref<{ seek: (seconds: number) => void } | null>(null);
 const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
 
 const showFullDescription = ref<boolean>(false);
+const autoplaySnackbar = ref<boolean>(false);
 
 const toggleDescription = () => {
   showFullDescription.value = !showFullDescription.value;
@@ -264,6 +266,26 @@ const fetchData = async () => {
   }
 };
 
+const AutoPlay = () => {
+  if (autoplayStore.autoplay) {
+    if (Relatedresults.value && Relatedresults.value.length > 1) {
+      const nextVideo = Relatedresults.value[1];
+      if (nextVideo instanceof YTNodes.NavigationEndpoint) {
+        autoplaySnackbar.value = true;
+        setTimeout(() => {
+          if (autoplaySnackbar.value) {
+            navigateTo(nextVideo.metadata.url);
+          }
+        }, 5000);
+      } else {
+        console.error('AutoPlay has been cancelled.');
+      }
+    } else {
+      console.error('RelatedVideos is empty or undefined.');
+    }
+  }
+};
+
 await fetchData();
 
 </script>
@@ -283,6 +305,15 @@ await fetchData();
 
     </div>
 
+    <v-snackbar v-model="autoplaySnackbar" timeout="5000" top right>
+      Navigate to the next video in 5 seconds.
+      <template #actions>
+        <v-btn color="red" @click="autoplaySnackbar = false">
+          Cancel
+        </v-btn>
+      </template>
+    </v-snackbar>
+
     <v-row v-if="!fatalError" wrap>
       <v-col cols="12" md="8">
         <div v-if="playerStore.player === 'embed'" class="video-container">
@@ -295,7 +326,7 @@ await fetchData();
 
         <YTCommonPlayer
           v-else-if="playerStore.player === 'shaka-player'" ref="child" :key="videoId"
-          :videoId="videoId" @errors="handleError" />
+          :videoId="videoId" @errors="handleError" @complete="AutoPlay" />
 
         <YTCommonVideoJS
           v-else-if="playerStore.player === 'VideoJS'" ref="child" :key="videoId + 'JS'"
