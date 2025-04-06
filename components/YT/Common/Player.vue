@@ -125,9 +125,8 @@ onMounted(async () => {
         });
 
         player.addEventListener('error', (event) => {
-          const error = (event as unknown as shaka.util.Error).message;
-          console.error('Error', error);
-          emit('errors', error);
+          console.error('Error', event);
+          emit('errors', (event as unknown as { detail: string }).detail);
         });
 
         player.addEventListener('complete', () => {
