@@ -3,6 +3,7 @@ import type { Innertube, YT, YTShorts, Types } from 'youtubei.js';
 import { Helpers, YTNodes } from 'youtubei.js';
 
 const route = useRoute();
+const router = useRouter();
 const playerStore = usePlayerStore();
 const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
@@ -51,7 +52,23 @@ watch(() => route.query.t, (newTime) => {
       timeString = timeString.slice(0, -1);
     }
     seekToTime(Number(timeString));
+    const { t, ...remainingQuery } = route.query;
+    router.replace({
+      query: remainingQuery,
+    });
     window.scrollTo(0, 0);
+  }
+});
+
+onBeforeRouteUpdate(() => {
+  if (autoplaySnackbar.value) {
+    autoplaySnackbar.value = false;
+  }
+});
+
+onBeforeRouteLeave(() => {
+  if (autoplaySnackbar.value) {
+    autoplaySnackbar.value = false;
   }
 });
 

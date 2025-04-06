@@ -28,6 +28,7 @@ export default withNuxt(
       'vue/require-v-for-key': 'off',
       'vue/v-on-event-hyphenation': 'off',
       '@typescript-eslint/consistent-type-imports': 'off',
+      '@typescript-eslint/no-inferrable-types': 'error',
     },
   },
 );
