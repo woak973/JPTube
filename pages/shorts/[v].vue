@@ -231,6 +231,7 @@ const ApplyComSort = async () => {
 
 const fetchData = async () => {
   try {
+    autoplaySnackbar.value = false;
     yt = await useInnertube('common');
 
     const searchResults: YTShorts.ShortFormVideoInfo = await yt.getShortsVideoInfo(route.params.v as string);

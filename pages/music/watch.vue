@@ -111,6 +111,7 @@ const downloadVideo = async (): Promise<void> => {
 
 const fetchData = async (): Promise<void> => {
   try {
+    autoplaySnackbar.value = false;
     const yt = await useInnertube('common');
 
     const ytmusic = yt.music;
