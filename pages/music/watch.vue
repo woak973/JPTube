@@ -130,7 +130,7 @@ const fetchData = async (): Promise<void> => {
     let searchResults: YTMusic.TrackInfo;
 
     if (route.query.list) {
-      let PLvideoId: string = '';
+      let PLvideoId = '';
       const PL = await ytmusic.getPlaylist(route.query.list as string);
       if (PL.items) {
         let PLcontents = PL;
