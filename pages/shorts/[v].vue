@@ -60,6 +60,18 @@ watch(() => route.query.t, (newTime) => {
   }
 });
 
+onBeforeRouteUpdate(() => {
+  if (autoplaySnackbar.value) {
+    autoplaySnackbar.value = false;
+  }
+});
+
+onBeforeRouteLeave(() => {
+  if (autoplaySnackbar.value) {
+    autoplaySnackbar.value = false;
+  }
+});
+
 const seekToTime = (time: number) => {
   if (!isFinite(time)) {
     console.error('Invalid seek time:', time);
@@ -231,7 +243,6 @@ const ApplyComSort = async () => {
 
 const fetchData = async () => {
   try {
-    autoplaySnackbar.value = false;
     yt = await useInnertube('common');
 
     const searchResults: YTShorts.ShortFormVideoInfo = await yt.getShortsVideoInfo(route.params.v as string);

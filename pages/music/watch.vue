@@ -43,6 +43,18 @@ watch(() => route.query.v, async (newVideoId): Promise<void> => {
   await fetchData();
 });
 
+onBeforeRouteUpdate(() => {
+  if (autoplaySnackbar.value) {
+    autoplaySnackbar.value = false;
+  }
+});
+
+onBeforeRouteLeave(() => {
+  if (autoplaySnackbar.value) {
+    autoplaySnackbar.value = false;
+  }
+});
+
 const handleError = (message: string): void => {
   alert.value = true;
   errorMessage.value = message;
@@ -111,7 +123,6 @@ const downloadVideo = async (): Promise<void> => {
 
 const fetchData = async (): Promise<void> => {
   try {
-    autoplaySnackbar.value = false;
     const yt = await useInnertube('common');
 
     const ytmusic = yt.music;

@@ -53,12 +53,18 @@ watch(() => route.query.list, async () => {
 });
 
 onBeforeRouteUpdate(() => {
+  if (autoplaySnackbar.value) {
+    autoplaySnackbar.value = false;
+  }
   if (livechat) {
     livechat.stop();
   }
 });
 
 onBeforeRouteLeave(() => {
+  if (autoplaySnackbar.value) {
+    autoplaySnackbar.value = false;
+  }
   if (livechat) {
     livechat.stop();
   }
@@ -138,7 +144,6 @@ function moveseek(timer: number) {
 
 const fetchVideoData = async () => {
   try {
-    autoplaySnackbar.value = false;
     yt = await useInnertube('common');
 
     const nav = new YTNodes.NavigationEndpoint({ watchEndpoint: { videoId: route.query.v as string, playlistId: route.query.list as string, playlistIndex: route.query.index as string } });
