@@ -242,6 +242,7 @@ onMounted(async () => {
   main().catch(console.error);
 
   const route = useRoute();
+  const router = useRouter();
 
   if (route.query.t) {
     let timeString = route.query.t.toString();
@@ -249,16 +250,24 @@ onMounted(async () => {
       timeString = timeString.slice(0, -1);
     }
     seek(Number(timeString));
+    const { t, ...remainingQuery } = route.query;
+    router.replace({
+      query: remainingQuery,
+    });
   }
 });
 
 const seek = (seconds: number) => {
-  const video = document.getElementById('videoel') as HTMLVideoElement;
-  if (video) {
-    video.currentTime = seconds;
-    console.log('Seeking to', seconds);
-  } else {
-    console.error('Video element is not found');
+  try {
+    const video = document.getElementById('videoel') as HTMLVideoElement;
+    if (video) {
+      video.currentTime = seconds;
+      console.log('Seeking to', seconds);
+    } else {
+      console.error('Video element is not found');
+    }
+  } catch (error) {
+    console.error('Error seeking video:', error);
   }
 };
 
