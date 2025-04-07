@@ -8,7 +8,13 @@
       </v-col>
       <v-col>
         <v-card-subtitle style="white-space: pre-wrap; word-break: break-all;">{{ data.author?.name
-        }}・{{ data.published_time }}</v-card-subtitle>
+        }}<template v-if="data.author?.badges">
+          <template v-for="badge in data.author.badges">
+            <YTNode :data="badge" :attribute="'slide'" />
+          </template>
+        </template><template v-if="data.member_badge">
+          <v-avatar :image="getProxifiedUrl(data.member_badge.url)" class="ml-1" rounded="0" size="14" />
+        </template>・{{ data.published_time }}</v-card-subtitle>
         <v-card-text>
           <template v-if="(data.content instanceof Misc.Text)">
             <YTMiscText :data="data.content" />
