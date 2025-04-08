@@ -23,7 +23,7 @@ let player: shaka.Player | undefined;
 let ui: shaka.ui.Overlay | undefined;
 
 onMounted(async () => {
-  const shaka = await import('shaka-player/dist/shaka-player.ui');
+  const shaka = await import('shaka-player/dist/shaka-player.ui').then(module => module.default);
   async function main() {
     let poToken: string | undefined;
     const visitorData = ProtoUtils.encodeVisitorData(Utils.generateRandomString(11), Math.floor(Date.now() / 1000));
@@ -50,7 +50,7 @@ onMounted(async () => {
     try {
       let uri;
       try {
-        const dash = await info.toDash(undefined, undefined, { captions_format: 'vtt' });
+        const dash = await info.toDash(undefined, undefined, { captions_format: 'vtt', include_thumbnails: true });
         uri = `data:application/dash+xml;charset=utf-8;base64,${btoa(unescape(encodeURIComponent(dash)))}`;
       } catch (e) {
         if (info.streaming_data && info.streaming_data.hls_manifest_url) {
