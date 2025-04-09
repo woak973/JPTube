@@ -53,8 +53,10 @@ onBeforeRouteUpdate((to, from, next) => {
       const timeString = to.query.t.toString();
       const seekTime = timeString.endsWith('s') ? timeString.slice(0, -1) : timeString;
       seekToTime(Number(seekTime));
+      next(false);
+    } else {
+      next();
     }
-    next(false);
     window.scrollTo(0, 0);
   } else {
     next();
@@ -70,8 +72,10 @@ onBeforeRouteLeave((to, from, next) => {
       const timeString = to.query.t.toString();
       const seekTime = timeString.endsWith('s') ? timeString.slice(0, -1) : timeString;
       seekToTime(Number(seekTime));
+      next(false);
+    } else {
+      next();
     }
-    next(false);
     window.scrollTo(0, 0);
   } else {
     next();
