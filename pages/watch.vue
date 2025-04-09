@@ -3,7 +3,6 @@ import type { Innertube, YT, Types } from 'youtubei.js';
 import { YTNodes, Helpers } from 'youtubei.js';
 
 const route = useRoute();
-const router = useRouter();
 const playerStore = usePlayerStore();
 const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
@@ -26,21 +25,6 @@ watch(HeaderResults, (newVal) => {
   }
 });
 
-watch(() => route.query.t, (newTime) => {
-  if (newTime) {
-    let timeString = newTime.toString();
-    if (timeString.endsWith('s')) {
-      timeString = timeString.slice(0, -1);
-    }
-    seekToTime(Number(timeString));
-    const { t, ...remainingQuery } = route.query;
-    router.replace({
-      query: remainingQuery,
-    });
-    window.scrollTo(0, 0);
-  }
-});
-
 watch(() => route.query.v, async (newVideoId) => {
   videoId.value = newVideoId as string;
   window.scrollTo(0, 0);
@@ -52,21 +36,43 @@ watch(() => route.query.list, async () => {
   await fetchVideoData();
 });
 
-onBeforeRouteUpdate(() => {
+onBeforeRouteUpdate((to, from, next) => {
   if (autoplaySnackbar.value) {
     autoplaySnackbar.value = false;
   }
-  if (livechat) {
-    livechat.stop();
+  if (to.query.v === from.query.v) {
+    if (to.query.t) {
+      const timeString = to.query.t.toString();
+      const seekTime = timeString.endsWith('s') ? timeString.slice(0, -1) : timeString;
+      seekToTime(Number(seekTime));
+    }
+    next(false);
+    window.scrollTo(0, 0);
+  } else {
+    if (livechat) {
+      livechat.stop();
+    }
+    next();
   }
 });
 
-onBeforeRouteLeave(() => {
+onBeforeRouteLeave((to, from, next) => {
   if (autoplaySnackbar.value) {
     autoplaySnackbar.value = false;
   }
-  if (livechat) {
-    livechat.stop();
+  if (to.query.v === from.query.v) {
+    if (to.query.t) {
+      const timeString = to.query.t.toString();
+      const seekTime = timeString.endsWith('s') ? timeString.slice(0, -1) : timeString;
+      seekToTime(Number(seekTime));
+    }
+    next(false);
+    window.scrollTo(0, 0);
+  } else {
+    if (livechat) {
+      livechat.stop();
+    }
+    next();
   }
 });
 
@@ -183,15 +189,13 @@ const fetchVideoData = async () => {
       }
     }
 
+    ChatComponent.value = false;
+    Chatresults.value = [];
     if (searchResults.livechat) {
       console.log('This video has a live chat.');
       livechat = await searchResults.getLiveChat();
 
       livechat.on('start', (initial_data) => {
-        if (!Chatresults.value) {
-          Chatresults.value = [];
-        }
-
         initial_data.actions.forEach((action) => {
           if (action instanceof YTNodes.AddChatItemAction) {
             const items = action.item;
@@ -222,10 +226,6 @@ const fetchVideoData = async () => {
         }
       });
       livechat.on('chat-update', (message) => {
-        if (!Chatresults.value) {
-          Chatresults.value = [];
-        }
-
         if (message instanceof YTNodes.AddChatItemAction) {
           const items = message.item;
           Chatresults.value.unshift(items);
@@ -250,7 +250,6 @@ const fetchVideoData = async () => {
       ChatBtn.value = true;
     } else {
       ChatBtn.value = false;
-      ChatComponent.value = false;
     }
     fatalError.value = false;
   } catch (error) {

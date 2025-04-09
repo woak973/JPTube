@@ -3,7 +3,6 @@ import type { Innertube, YT, YTShorts, Types } from 'youtubei.js';
 import { Helpers, YTNodes } from 'youtubei.js';
 
 const route = useRoute();
-const router = useRouter();
 const playerStore = usePlayerStore();
 const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
@@ -45,30 +44,37 @@ watch(HeaderResults, (newVal) => {
   }
 });
 
-watch(() => route.query.t, (newTime) => {
-  if (newTime) {
-    let timeString = newTime.toString();
-    if (timeString.endsWith('s')) {
-      timeString = timeString.slice(0, -1);
+onBeforeRouteUpdate((to, from, next) => {
+  if (autoplaySnackbar.value) {
+    autoplaySnackbar.value = false;
+  }
+  if (to.query.v === from.params.v) {
+    if (to.query.t) {
+      const timeString = to.query.t.toString();
+      const seekTime = timeString.endsWith('s') ? timeString.slice(0, -1) : timeString;
+      seekToTime(Number(seekTime));
     }
-    seekToTime(Number(timeString));
-    const { t, ...remainingQuery } = route.query;
-    router.replace({
-      query: remainingQuery,
-    });
+    next(false);
     window.scrollTo(0, 0);
+  } else {
+    next();
   }
 });
 
-onBeforeRouteUpdate(() => {
+onBeforeRouteLeave((to, from, next) => {
   if (autoplaySnackbar.value) {
     autoplaySnackbar.value = false;
   }
-});
-
-onBeforeRouteLeave(() => {
-  if (autoplaySnackbar.value) {
-    autoplaySnackbar.value = false;
+  if (to.query.v === from.params.v) {
+    if (to.query.t) {
+      const timeString = to.query.t.toString();
+      const seekTime = timeString.endsWith('s') ? timeString.slice(0, -1) : timeString;
+      seekToTime(Number(seekTime));
+    }
+    next(false);
+    window.scrollTo(0, 0);
+  } else {
+    next();
   }
 });
 
