@@ -8,9 +8,7 @@ export async function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
       host: backendStore.backend,
     },
   };
-  const respond = $fetch<Response>('/api/proxy', opt);
-  console.log((await respond).bytes);
-  return respond;
+  return $fetch.raw<Response>('/api/proxy', opt);
 }
 
 export async function PlayerfetchFn(input: RequestInfo | URL, init?: RequestInit) {
@@ -23,7 +21,5 @@ export async function PlayerfetchFn(input: RequestInfo | URL, init?: RequestInit
       host: playerbackendStore.playerbackend,
     },
   };
-  const respond = $fetch<Response>('/api/proxy', opt);
-  console.log((await respond).ok);
-  return respond;
+  return $fetch.raw<Response>('/api/proxy', opt);
 }
