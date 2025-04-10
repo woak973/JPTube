@@ -9,7 +9,7 @@
         <v-col v-if="page === 'Search'" cols="12">
           <YTNodeVideoSearch :data="(data as YTNodes.Video)" />
         </v-col>
-        <v-col v-else cols="12" md="3" lg="2" sm="6">
+        <v-col v-else cols="12" md="4" lg="3" sm="6">
           <YTNodeVideo :data="(data as YTNodes.Video)" />
         </v-col>
       </template>
@@ -23,7 +23,7 @@
         <v-col v-if="page === 'Search'" cols="12">
           <YTNodeChannel :data="(data as YTNodes.Channel)" />
         </v-col>
-        <v-col v-else cols="12" md="3" lg="2" sm="6">
+        <v-col v-else cols="12" md="4" lg="3" sm="6">
           <YTNodeChannel :data="(data as YTNodes.Channel)" />
         </v-col>
       </template>
@@ -34,7 +34,7 @@
         <YTNodeShortsLockupView :data="(data as YTNodes.ShortsLockupView)" />
       </template>
       <template v-else>
-        <v-col cols="12" md="3" lg="2" sm="6">
+        <v-col cols="12" md="4" lg="3" sm="6">
           <YTNodeShortsLockupView :data="(data as YTNodes.ShortsLockupView)" />
         </v-col>
       </template>
@@ -45,7 +45,7 @@
         <YTNodeGridPlaylist :data="(data as YTNodes.GridPlaylist)" />
       </template>
       <template v-else>
-        <v-col cols="12" md="3" lg="2" sm="6">
+        <v-col cols="12" md="4" lg="3" sm="6">
           <YTNodeGridPlaylist :data="(data as YTNodes.GridPlaylist)" />
         </v-col>
       </template>
@@ -56,7 +56,7 @@
         <YTNodeGridVideo :data="(data as YTNodes.GridVideo)" />
       </template>
       <template v-else>
-        <v-col cols="12" md="3" lg="2" sm="6">
+        <v-col cols="12" md="4" lg="3" sm="6">
           <YTNodeGridVideo :data="(data as YTNodes.GridVideo)" />
         </v-col>
       </template>
@@ -67,7 +67,7 @@
         <YTNodePlaylist :data="(data as YTNodes.Playlist)" />
       </template>
       <template v-else>
-        <v-col cols="12" md="3" lg="2" sm="6">
+        <v-col cols="12" md="4" lg="3" sm="6">
           <YTNodePlaylist :data="(data as YTNodes.Playlist)" />
         </v-col>
       </template>
@@ -78,7 +78,7 @@
         <YTNodeVerticalProductCard :data="(data as unknown as VerticalProductCard)" />
       </template>
       <template v-else>
-        <v-col cols="12" md="3" lg="2" sm="6">
+        <v-col cols="12" md="4" lg="3" sm="6">
           <YTNodeVerticalProductCard :data="(data as unknown as VerticalProductCard)" />
         </v-col>
       </template>
@@ -161,7 +161,7 @@
         <v-col v-else-if="page === 'Watch'" cols="12">
           <YTNodeLockupViewWatch :data="(data as YTNodes.LockupView)" />
         </v-col>
-        <v-col v-else cols="12" md="3" lg="2" sm="6">
+        <v-col v-else cols="12" md="4" lg="3" sm="6">
           <YTNodeLockupView :data="(data as YTNodes.LockupView)" />
         </v-col>
       </template>
@@ -172,7 +172,7 @@
         <YTNodeGridChannel :data="(data as YTNodes.GridChannel)" />
       </template>
       <template v-else>
-        <v-col cols="12" md="3" lg="2" sm="6">
+        <v-col cols="12" md="4" lg="3" sm="6">
           <YTNodeGridChannel :data="(data as YTNodes.GridChannel)" />
         </v-col>
       </template>
@@ -183,7 +183,7 @@
         <YTNodeGridMovie :data="(data as YTNodes.GridMovie)" />
       </template>
       <template v-else>
-        <v-col cols="12" md="3" lg="2" sm="6">
+        <v-col cols="12" md="4" lg="3" sm="6">
           <YTNodeGridMovie :data="(data as YTNodes.GridMovie)" />
         </v-col>
       </template>
@@ -194,7 +194,7 @@
         <YTNodeDefaultPromoPanel :data="(data as YTNodes.DefaultPromoPanel)" />
       </template>
       <template v-else>
-        <v-col cols="12" md="3" lg="2" sm="6">
+        <v-col cols="12" md="4" lg="3" sm="6">
           <YTNodeDefaultPromoPanel :data="(data as YTNodes.DefaultPromoPanel)" />
         </v-col>
       </template>
