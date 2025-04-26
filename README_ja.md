@@ -99,7 +99,7 @@ bun run preview
 
 ## JPTubeのデプロイ
 ### 推奨
-[バックエンド](https://github.com/woak973/JPTube-Server)と同時にデプロイしてください。
+[バックエンド](https://github.com/woak973/JPTube-Server)と同時にデプロイされます。
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/woak973/JPTube)
 
