@@ -148,11 +148,11 @@ await fetchData();
     </v-chip-group>
 
     <v-btn v-if="filterOptions" color="primary" @click="filterDialog = true">
-      {{ filterOptions.label }}<v-icon right>mdi-tune</v-icon></v-btn>
+      {{ filterOptions.text }}<v-icon right>mdi-tune</v-icon></v-btn>
 
     <v-dialog v-if="filterOptions" v-model="filterDialog" max-width="500">
       <v-card v-if="(filterOptions.endpoint.open_popup?.popup instanceof YTNodes.SearchFilterOptionsDialog)">
-        <v-card-title class="headline">{{ filterOptions.label }}</v-card-title>
+        <v-card-title class="headline">{{ filterOptions.tooltip }}</v-card-title>
         <v-card-text>
           <v-form>
             <v-card-text class="headline">
