@@ -2,11 +2,14 @@
 [![GitHub stars](https://img.shields.io/github/stars/woak973/JPTube)](https://github.com/woak973/JPTube/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/woak973/JPTube)](https://github.com/woak973/JPTube/network)
 [![GitHub issues](https://img.shields.io/github/issues/woak973/JPTube)](https://github.com/woak973/JPTube/issues)
+[![GitHub license](https://img.shields.io/github/license/woak973/JPTube)](https://github.com/woak973/JPTube/blob/master/LICENSE)
+[![Last updated](https://img.shields.io/github/last-commit/woak973/JPTube)](https://github.com/woak973/JPTube/commits/master)
 
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ## About JPTube
+![JPTube UI](https://github.com/user-attachments/assets/42e33aae-992c-4dae-8067-ce707310d57b)
 JPTube is an alternative frontend for YouTube. It uses [LuanRT/YouTube.js](https://github.com/LuanRT/YouTube.js) to retrieve information. JPTube is built using Nuxt and Vuetify.
 
 ### Backend
