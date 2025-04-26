@@ -5,7 +5,7 @@
 [![GitHub license](https://img.shields.io/github/license/woak973/JPTube)](https://github.com/woak973/JPTube/blob/master/LICENSE)
 [![Last updated](https://img.shields.io/github/last-commit/woak973/JPTube)](https://github.com/woak973/JPTube/commits/master)
 
-詳細については、[Nuxt documentation](https://nuxt.com/docs/getting-started/introduction)をご覧ください。
+Nuxtの詳細については、[Nuxt documentation](https://nuxt.com/docs/getting-started/introduction)をご覧ください。
 
 ## JPTubeについて
 ![JPTube UI](https://github.com/user-attachments/assets/42e33aae-992c-4dae-8067-ce707310d57b)
@@ -99,7 +99,7 @@ bun run preview
 
 ## JPTubeのデプロイ
 ### 推奨
-[バックエンド](https://github.com/woak973/JPTube-Server)と同時にデプロイしてください。
+[バックエンド](https://github.com/woak973/JPTube-Server)と同時にデプロイされます。
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/woak973/JPTube)
 
