@@ -1,13 +1,25 @@
-function createRequest(input: RequestInfo | URL, init: RequestInit | undefined, host: string) {
+function createRequest(proxyhost: string, input: RequestInfo | URL, init?: RequestInit) {
   const url = typeof input === 'string'
     ? new URL(input)
     : input instanceof URL
       ? input
       : new URL(input.url);
 
-  url.searchParams.set('__host', url.host);
-  url.host = host;
-  url.protocol = 'https';
+  const protocolStore = useProtocolStore().protocol;
+  const directStore = useDirectStore().direct;
+
+  if (directStore) {
+    url.searchParams.set('__host', url.host);
+    url.host = proxyhost;
+    url.protocol = protocolStore;
+  } else {
+    url.searchParams.set('__host', url.host);
+    url.searchParams.set('__proxyhost', proxyhost);
+    url.searchParams.set('__proxyProtocol', protocolStore);
+    url.host = window.location.host;
+    url.protocol = window.location.protocol;
+    url.pathname = `/api/proxy${url.pathname}`;
+  }
 
   const headers = init?.headers
     ? new Headers(init.headers)
@@ -18,15 +30,6 @@ function createRequest(input: RequestInfo | URL, init: RequestInit | undefined, 
   // Base64エンコード
   const encodedHeaders = btoa(JSON.stringify([...headers]));
   url.searchParams.set('__headers', encodedHeaders);
-
-  if (input instanceof Request) {
-    try {
-      input.duplex = 'half';
-    } catch (e) {
-      // Handle error
-      console.error(e);
-    }
-  }
 
   const request = new Request(
     url,
@@ -39,13 +42,15 @@ function createRequest(input: RequestInfo | URL, init: RequestInit | undefined, 
 }
 
 export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
-  const backendStore = useBackendStore();
-  const { request, headers } = createRequest(input, init, typeof backendStore.backend === 'string' ? backendStore.backend : 'jptube-server.onrender.com');
+  const backendStore = useBackendStore().backend;
+  const proxyhost = typeof backendStore === 'string' ? backendStore : 'jptube-server.onrender.com';
+  const { request, headers } = createRequest(proxyhost, input, init);
   return fetch(request, init ? { ...init, headers } : { headers });
 }
 
 export function PlayerfetchFn(input: RequestInfo | URL, init?: RequestInit) {
-  const playerbackendStore = usePlayerBackendStore();
-  const { request, headers } = createRequest(input, init, typeof playerbackendStore.playerbackend === 'string' ? playerbackendStore.playerbackend : 'jptube-player-server.onrender.com');
+  const playerbackendStore = usePlayerBackendStore().playerbackend;
+  const proxyhost = typeof playerbackendStore === 'string' ? playerbackendStore : 'jptube-player-server.onrender.com';
+  const { request, headers } = createRequest(proxyhost, input, init);
   return fetch(request, init ? { ...init, headers } : { headers });
 }

@@ -17,7 +17,10 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(['errors', 'complete']);
-const playerbackendStore = usePlayerBackendStore();
+const playerbackendStore = usePlayerBackendStore().playerbackend;
+const directStore = useDirectStore().direct;
+const proxyhost = typeof playerbackendStore === 'string' ? playerbackendStore : 'jptube-player-server.onrender.com';
+const protocolStore = useProtocolStore().protocol;
 
 let player: shaka.Player | undefined;
 let ui: shaka.ui.Overlay | undefined;
@@ -144,9 +147,18 @@ onMounted(async () => {
 
           // For local development.
           if ((url.host.endsWith('.googlevideo.com') || url.href.includes('drm'))) {
-            url.searchParams.set('__host', url.host);
-            url.host = playerbackendStore.playerbackend as string || 'jptube-player-server.onrender.com';
-            url.protocol = 'https';
+            if (directStore) {
+              url.searchParams.set('__host', url.host);
+              url.host = proxyhost;
+              url.protocol = protocolStore;
+            } else {
+              url.searchParams.set('__host', url.host);
+              url.searchParams.set('__proxyhost', proxyhost);
+              url.searchParams.set('__proxyProtocol', protocolStore);
+              url.host = window.location.host;
+              url.protocol = window.location.protocol;
+              url.pathname = `/api/proxy${url.pathname}`;
+            }
           }
 
           if (type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {

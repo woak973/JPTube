@@ -68,6 +68,9 @@
                 </v-list-item>
               </template>
             </v-combobox>
+            <span>Choose whether to fetch directly from the backend or through the Nuxt3 API server.</span>
+            <v-switch v-model="selectedDirect" color="primary" label="Enable Direct Mode" />
+            <v-select v-model="selectedProtocol" :items="protocols" label="Protocol" />
             <v-card-actions>
               <v-btn color="error" @click="backendHistoryStore.clearHistory();">Clear Backend
                 History</v-btn>
@@ -128,7 +131,9 @@ const selectedLocation = ref<string>('US');
 const selectedPlayer = ref<string>('shaka-player');
 const selectedBackend = ref<string>('');
 const selectedPlayerBackend = ref<string>('');
+const selectedProtocol = ref<'http' | 'https'>('https');
 const selectedAutoPlay = ref<boolean>(false);
+const selectedDirect = ref<boolean>(true);
 
 const languages = [
   { title: 'Afrikaans', value: 'af' },
@@ -179,13 +184,20 @@ const players = [
   { title: 'VideoJS(Blob)', value: 'VideoJS' },
 ];
 
+const protocols = [
+  { title: 'http', value: 'http' },
+  { title: 'https', value: 'https' },
+];
+
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
 const backendStore = useBackendStore() as { backend: string; setBackend: (newBackend: string) => void; resetBackend: () => void };
 const playerBackendStore = usePlayerBackendStore() as { playerbackend: string; setPlayerBackend: (newPlayerBackend: string) => void; resetPlayerBackend: () => void };
+const protocolStore = useProtocolStore();
 const autoplayStore = useAutoPlayStore();
 const backendHistoryStore = useBackendHistoryStore();
+const directStore = useDirectStore();
 
 const emit = defineEmits(['Refresh']);
 
@@ -213,7 +225,9 @@ const save = () => {
   playerStore.setPlayer(selectedPlayer.value);
   backendStore.setBackend(selectedBackend.value);
   playerBackendStore.setPlayerBackend(selectedPlayerBackend.value);
+  protocolStore.setProtocol(selectedProtocol.value);
   autoplayStore.setAutoPlay(selectedAutoPlay.value);
+  directStore.setDirect(selectedDirect.value);
   if (selectedBackend.value) {
     backendHistoryStore.addBackend(selectedBackend.value);
   }
@@ -230,7 +244,9 @@ const reset = () => {
   playerStore.resetPlayer();
   backendStore.resetBackend();
   playerBackendStore.resetPlayerBackend();
+  protocolStore.resetProtocol();
   autoplayStore.resetAutoPlay();
+  directStore.resetDirect();
   backendHistoryStore.clearHistory();
   emit('Refresh');
   close();
@@ -242,7 +258,9 @@ const initialize = () => {
   selectedPlayer.value = playerStore.player;
   selectedBackend.value = backendStore.backend;
   selectedPlayerBackend.value = playerBackendStore.playerbackend;
+  selectedProtocol.value = protocolStore.protocol;
   selectedAutoPlay.value = autoplayStore.autoplay;
+  selectedDirect.value = directStore.direct;
 };
 
 const exportSettings = () => {
@@ -252,7 +270,9 @@ const exportSettings = () => {
     player: playerStore.player,
     backend: backendStore.backend,
     playerBackend: playerBackendStore.playerbackend,
+    protocol: protocolStore.protocol,
     autoPlay: autoplayStore.autoplay,
+    directmode: directStore.direct,
     backendHistory: backendHistoryStore.history,
   };
   const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
@@ -279,7 +299,9 @@ const importSettings = (event: Event) => {
       if (settings.player !== undefined) selectedPlayer.value = settings.player;
       if (settings.backend !== undefined) selectedBackend.value = settings.backend;
       if (settings.playerBackend !== undefined) selectedPlayerBackend.value = settings.playerBackend;
+      if (settings.protocol !== undefined) selectedProtocol.value = settings.protocol;
       if (settings.autoPlay !== undefined) selectedAutoPlay.value = settings.autoPlay;
+      if (settings.directmode !== undefined) selectedDirect.value = settings.directmode;
       if (settings.backendHistory !== undefined) {
         backendHistoryStore.history = settings.backendHistory;
       }
