@@ -2,7 +2,7 @@ export function getProxifiedUrl(input: RequestInfo | URL, init?: RequestInit): s
   if (!input) {
     return ''; // デフォルトのURLまたは空文字列を返す
   }
-  const backendStore = useBackendStore();
+  const backendStore = useBackendStore().backend;
   const directStore = useDirectStore().direct;
   const proxyhost = typeof backendStore === 'string' ? backendStore : 'jptube-server.onrender.com';
   const protocolStore = useProtocolStore().protocol;
