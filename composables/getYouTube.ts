@@ -3,6 +3,8 @@ export function getProxifiedUrl(input: RequestInfo | URL, init?: RequestInit): s
     return ''; // デフォルトのURLまたは空文字列を返す
   }
   const backendStore = useBackendStore();
+  const proxyhost = typeof backendStore === 'string' ? backendStore : 'jptube-server.onrender.com';
+  const protocolStore = useProtocolStore().protocol;
   let url: URL;
 
   try {
@@ -17,8 +19,11 @@ export function getProxifiedUrl(input: RequestInfo | URL, init?: RequestInit): s
   }
 
   url.searchParams.set('__host', url.host);
-  url.host = (backendStore.backend as string) || 'jptube-server.onrender.com';
-  url.protocol = 'https';
+  url.searchParams.set('__proxyhost', proxyhost);
+  url.searchParams.set('__proxyschema', protocolStore);
+  url.host = window.location.host;
+  url.protocol = window.location.protocol;
+  url.pathname = `/api/proxy${url.pathname}`;
 
   const headers = init?.headers
     ? new Headers(init.headers)

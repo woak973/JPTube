@@ -68,6 +68,7 @@
                 </v-list-item>
               </template>
             </v-combobox>
+            <v-select v-model="selectedProtocol" :items="protocols" label="Protocol" />
             <v-card-actions>
               <v-btn color="error" @click="backendHistoryStore.clearHistory();">Clear Backend
                 History</v-btn>
@@ -128,6 +129,7 @@ const selectedLocation = ref<string>('US');
 const selectedPlayer = ref<string>('shaka-player');
 const selectedBackend = ref<string>('');
 const selectedPlayerBackend = ref<string>('');
+const selectedProtocol = ref<'http' | 'https'>('https');
 const selectedAutoPlay = ref<boolean>(false);
 
 const languages = [
@@ -179,11 +181,17 @@ const players = [
   { title: 'VideoJS(Blob)', value: 'VideoJS' },
 ];
 
+const protocols = [
+  { title: 'http', value: 'http' },
+  { title: 'https', value: 'https' },
+];
+
 const langStore = useLangStore();
 const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
 const backendStore = useBackendStore() as { backend: string; setBackend: (newBackend: string) => void; resetBackend: () => void };
 const playerBackendStore = usePlayerBackendStore() as { playerbackend: string; setPlayerBackend: (newPlayerBackend: string) => void; resetPlayerBackend: () => void };
+const protocolStore = useProtocolStore();
 const autoplayStore = useAutoPlayStore();
 const backendHistoryStore = useBackendHistoryStore();
 
@@ -213,6 +221,7 @@ const save = () => {
   playerStore.setPlayer(selectedPlayer.value);
   backendStore.setBackend(selectedBackend.value);
   playerBackendStore.setPlayerBackend(selectedPlayerBackend.value);
+  protocolStore.setProtocol(selectedProtocol.value);
   autoplayStore.setAutoPlay(selectedAutoPlay.value);
   if (selectedBackend.value) {
     backendHistoryStore.addBackend(selectedBackend.value);
@@ -230,6 +239,7 @@ const reset = () => {
   playerStore.resetPlayer();
   backendStore.resetBackend();
   playerBackendStore.resetPlayerBackend();
+  protocolStore.resetProtocol();
   autoplayStore.resetAutoPlay();
   backendHistoryStore.clearHistory();
   emit('Refresh');
@@ -242,6 +252,7 @@ const initialize = () => {
   selectedPlayer.value = playerStore.player;
   selectedBackend.value = backendStore.backend;
   selectedPlayerBackend.value = playerBackendStore.playerbackend;
+  selectedProtocol.value = protocolStore.protocol;
   selectedAutoPlay.value = autoplayStore.autoplay;
 };
 
@@ -252,6 +263,7 @@ const exportSettings = () => {
     player: playerStore.player,
     backend: backendStore.backend,
     playerBackend: playerBackendStore.playerbackend,
+    protocol: protocolStore.protocol,
     autoPlay: autoplayStore.autoplay,
     backendHistory: backendHistoryStore.history,
   };
@@ -279,6 +291,7 @@ const importSettings = (event: Event) => {
       if (settings.player !== undefined) selectedPlayer.value = settings.player;
       if (settings.backend !== undefined) selectedBackend.value = settings.backend;
       if (settings.playerBackend !== undefined) selectedPlayerBackend.value = settings.playerBackend;
+      if (settings.protocol !== undefined) selectedProtocol.value = settings.protocol;
       if (settings.autoPlay !== undefined) selectedAutoPlay.value = settings.autoPlay;
       if (settings.backendHistory !== undefined) {
         backendHistoryStore.history = settings.backendHistory;

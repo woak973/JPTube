@@ -1,23 +1,29 @@
 import type { IncomingMessage, IncomingHttpHeaders } from 'node:http';
 import type { H3Event } from 'h3';
 export default defineEventHandler(async (event) => {
-  const req = await event.web?.request;
-  if (req) {
-    console.log('req exsists on event!!');
-    const response = await handler(req);
-    return response;
-  } else {
-    const nodereq = event.node.req;
-    console.log('req does not exsist on event!!');
-    const response = await nodehandler(nodereq, event);
-    return response;
+  try {
+    const req = await event.web?.request;
+    if (req) {
+      const response = await handler(req);
+      return response;
+    } else {
+      const nodereq = event.node.req;
+      const response = await nodehandler(nodereq, event);
+      return response;
+    }
+  } catch (e) {
+    console.error('Error in proxy handler:', e);
+    return new Response('Internal Server Error', { status: 500 });
   }
 });
 
 const handler = async (req: Request): Promise<Response> => {
   const url = new URL(req.url);
   const strippedPathname = url.pathname.replace(/^\/api\/proxy\//, '/');
-  const proxyUrl = new URL(strippedPathname + url.search, 'https://innertube.sitejp.synology.me');
+  const proxyBaseUrlHost = url.searchParams.get('__proxyhost') || 'jptube-player-server.onrender.com';
+  const proxySchema = url.searchParams.get('__proxyschema') || 'https';
+  const proxyBaseUrl = `${proxySchema}://${proxyBaseUrlHost}`;
+  const proxyUrl = new URL(strippedPathname + url.search, proxyBaseUrl);
 
   const proxyReq = new Request(proxyUrl.toString(), {
     method: req.method,
@@ -46,7 +52,10 @@ const handler = async (req: Request): Promise<Response> => {
 const nodehandler = async (req: IncomingMessage, event: H3Event): Promise<Response> => {
   const url = new URL(req.url || '', `https://${event.node.req.headers.host}`);
   const strippedPathname = url.pathname.replace(/^\/api\/proxy\//, '/');
-  const proxyUrl = new URL(strippedPathname + url.search, 'https://innertube.sitejp.synology.me');
+  const proxyBaseUrlHost = url.searchParams.get('__proxyhost') || 'jptube-player-server.onrender.com';
+  const proxySchema = url.searchParams.get('__proxyschema') || 'https';
+  const proxyBaseUrl = `${proxySchema}://${proxyBaseUrlHost}`;
+  const proxyUrl = new URL(strippedPathname + url.search, proxyBaseUrl);
   const headers = headersFromIncomingHttpHeaders(req.headers);
   const body
     = event.method !== 'GET' && event.method !== 'HEAD'

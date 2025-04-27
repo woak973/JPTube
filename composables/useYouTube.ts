@@ -1,13 +1,17 @@
-function createRequest(input: RequestInfo | URL, init?: RequestInit) {
+function createRequest(proxyhost: string, input: RequestInfo | URL, init?: RequestInit) {
   const url = typeof input === 'string'
     ? new URL(input)
     : input instanceof URL
       ? input
       : new URL(input.url);
 
+  const protocolStore = useProtocolStore().protocol;
+
   url.searchParams.set('__host', url.host);
+  url.searchParams.set('__proxyhost', proxyhost);
+  url.searchParams.set('__proxyschema', protocolStore);
   url.host = window.location.host;
-  url.protocol = 'http';
+  url.protocol = window.location.protocol;
   url.pathname = `/api/proxy${url.pathname}`;
 
   const headers = init?.headers
@@ -31,11 +35,15 @@ function createRequest(input: RequestInfo | URL, init?: RequestInit) {
 }
 
 export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
-  const { request, headers } = createRequest(input, init);
+  const backendStore = useBackendStore().backend;
+  const proxyhost = typeof backendStore === 'string' ? backendStore : 'jptube-server.onrender.com';
+  const { request, headers } = createRequest(proxyhost, input, init);
   return fetch(request, init ? { ...init, headers } : { headers });
 }
 
 export function PlayerfetchFn(input: RequestInfo | URL, init?: RequestInit) {
-  const { request, headers } = createRequest(input, init);
+  const playerbackendStore = usePlayerBackendStore().playerbackend;
+  const proxyhost = typeof playerbackendStore === 'string' ? playerbackendStore : 'jptube-player-server.onrender.com';
+  const { request, headers } = createRequest(proxyhost, input, init);
   return fetch(request, init ? { ...init, headers } : { headers });
 }
