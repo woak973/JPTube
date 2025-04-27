@@ -68,6 +68,7 @@
                 </v-list-item>
               </template>
             </v-combobox>
+            <span>Choose whether to fetch directly from the backend or through the Nuxt3 API server.</span>
             <v-switch v-model="selectedDirect" color="primary" label="Enable Direct Mode" />
             <v-select v-model="selectedProtocol" :items="protocols" label="Protocol" />
             <v-card-actions>
