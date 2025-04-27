@@ -6,13 +6,20 @@ function createRequest(proxyhost: string, input: RequestInfo | URL, init?: Reque
       : new URL(input.url);
 
   const protocolStore = useProtocolStore().protocol;
+  const directStore = useDirectStore().direct;
 
-  url.searchParams.set('__host', url.host);
-  url.searchParams.set('__proxyhost', proxyhost);
-  url.searchParams.set('__proxyschema', protocolStore);
-  url.host = window.location.host;
-  url.protocol = window.location.protocol;
-  url.pathname = `/api/proxy${url.pathname}`;
+  if (directStore) {
+    url.searchParams.set('__host', url.host);
+    url.host = proxyhost;
+    url.protocol = protocolStore;
+  } else {
+    url.searchParams.set('__host', url.host);
+    url.searchParams.set('__proxyhost', proxyhost);
+    url.searchParams.set('__proxyProtocol', protocolStore);
+    url.host = window.location.host;
+    url.protocol = window.location.protocol;
+    url.pathname = `/api/proxy${url.pathname}`;
+  }
 
   const headers = init?.headers
     ? new Headers(init.headers)

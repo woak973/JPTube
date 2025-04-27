@@ -21,7 +21,7 @@ const handler = async (req: Request): Promise<Response> => {
   const url = new URL(req.url);
   const strippedPathname = url.pathname.replace(/^\/api\/proxy\//, '/');
   const proxyBaseUrlHost = url.searchParams.get('__proxyhost') || 'jptube-player-server.onrender.com';
-  const proxySchema = url.searchParams.get('__proxyschema') || 'https';
+  const proxySchema = url.searchParams.get('__proxyProtocol') || 'https';
   const proxyBaseUrl = `${proxySchema}://${proxyBaseUrlHost}`;
   const proxyUrl = new URL(strippedPathname + url.search, proxyBaseUrl);
 
@@ -53,7 +53,7 @@ const nodehandler = async (req: IncomingMessage, event: H3Event): Promise<Respon
   const url = new URL(req.url || '', `https://${event.node.req.headers.host}`);
   const strippedPathname = url.pathname.replace(/^\/api\/proxy\//, '/');
   const proxyBaseUrlHost = url.searchParams.get('__proxyhost') || 'jptube-player-server.onrender.com';
-  const proxySchema = url.searchParams.get('__proxyschema') || 'https';
+  const proxySchema = url.searchParams.get('__proxyProtocol') || 'https';
   const proxyBaseUrl = `${proxySchema}://${proxyBaseUrlHost}`;
   const proxyUrl = new URL(strippedPathname + url.search, proxyBaseUrl);
   const headers = headersFromIncomingHttpHeaders(req.headers);

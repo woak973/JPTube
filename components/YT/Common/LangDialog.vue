@@ -68,6 +68,7 @@
                 </v-list-item>
               </template>
             </v-combobox>
+            <v-switch v-model="selectedDirect" color="primary" label="Enable Direct Mode" />
             <v-select v-model="selectedProtocol" :items="protocols" label="Protocol" />
             <v-card-actions>
               <v-btn color="error" @click="backendHistoryStore.clearHistory();">Clear Backend
@@ -131,6 +132,7 @@ const selectedBackend = ref<string>('');
 const selectedPlayerBackend = ref<string>('');
 const selectedProtocol = ref<'http' | 'https'>('https');
 const selectedAutoPlay = ref<boolean>(false);
+const selectedDirect = ref<boolean>(true);
 
 const languages = [
   { title: 'Afrikaans', value: 'af' },
@@ -194,6 +196,7 @@ const playerBackendStore = usePlayerBackendStore() as { playerbackend: string; s
 const protocolStore = useProtocolStore();
 const autoplayStore = useAutoPlayStore();
 const backendHistoryStore = useBackendHistoryStore();
+const directStore = useDirectStore();
 
 const emit = defineEmits(['Refresh']);
 
@@ -223,6 +226,7 @@ const save = () => {
   playerBackendStore.setPlayerBackend(selectedPlayerBackend.value);
   protocolStore.setProtocol(selectedProtocol.value);
   autoplayStore.setAutoPlay(selectedAutoPlay.value);
+  directStore.setDirect(selectedDirect.value);
   if (selectedBackend.value) {
     backendHistoryStore.addBackend(selectedBackend.value);
   }
@@ -241,6 +245,7 @@ const reset = () => {
   playerBackendStore.resetPlayerBackend();
   protocolStore.resetProtocol();
   autoplayStore.resetAutoPlay();
+  directStore.resetDirect();
   backendHistoryStore.clearHistory();
   emit('Refresh');
   close();
@@ -254,6 +259,7 @@ const initialize = () => {
   selectedPlayerBackend.value = playerBackendStore.playerbackend;
   selectedProtocol.value = protocolStore.protocol;
   selectedAutoPlay.value = autoplayStore.autoplay;
+  selectedDirect.value = directStore.direct;
 };
 
 const exportSettings = () => {
@@ -265,6 +271,7 @@ const exportSettings = () => {
     playerBackend: playerBackendStore.playerbackend,
     protocol: protocolStore.protocol,
     autoPlay: autoplayStore.autoplay,
+    directmode: directStore.direct,
     backendHistory: backendHistoryStore.history,
   };
   const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
@@ -293,6 +300,7 @@ const importSettings = (event: Event) => {
       if (settings.playerBackend !== undefined) selectedPlayerBackend.value = settings.playerBackend;
       if (settings.protocol !== undefined) selectedProtocol.value = settings.protocol;
       if (settings.autoPlay !== undefined) selectedAutoPlay.value = settings.autoPlay;
+      if (settings.directmode !== undefined) selectedDirect.value = settings.directmode;
       if (settings.backendHistory !== undefined) {
         backendHistoryStore.history = settings.backendHistory;
       }
