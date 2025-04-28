@@ -3,9 +3,7 @@ export function getProxifiedUrl(input: RequestInfo | URL, init?: RequestInit): s
     return ''; // デフォルトのURLまたは空文字列を返す
   }
   const backendStore = useBackendStore().backend;
-  const directStore = useDirectStore().direct;
   const proxyhost = typeof backendStore === 'string' ? backendStore : 'jptube-server.onrender.com';
-  const protocolStore = useProtocolStore().protocol;
   let url: URL;
 
   try {
@@ -19,17 +17,29 @@ export function getProxifiedUrl(input: RequestInfo | URL, init?: RequestInit): s
     return ''; // 無効なURLの場合は空文字列を返す
   }
 
-  if (directStore) {
+  const selfStore = useDirectStore().self;
+
+  if (selfStore) {
     url.searchParams.set('__host', url.host);
-    url.host = proxyhost;
-    url.protocol = protocolStore;
-  } else {
-    url.searchParams.set('__host', url.host);
-    url.searchParams.set('__proxyhost', proxyhost);
-    url.searchParams.set('__proxyProtocol', protocolStore);
+    url.searchParams.set('__isSelf', selfStore.toString());
     url.host = window.location.host;
     url.protocol = window.location.protocol;
     url.pathname = `/api/proxy${url.pathname}`;
+  } else {
+    const protocolStore = useProtocolStore().protocol;
+    const directStore = useDirectStore().direct;
+    if (directStore) {
+      url.searchParams.set('__host', url.host);
+      url.host = proxyhost;
+      url.protocol = protocolStore;
+    } else {
+      url.searchParams.set('__host', url.host);
+      url.searchParams.set('__proxyhost', proxyhost);
+      url.searchParams.set('__proxyProtocol', protocolStore);
+      url.host = window.location.host;
+      url.protocol = window.location.protocol;
+      url.pathname = `/api/proxy${url.pathname}`;
+    }
   }
 
   const headers = init?.headers

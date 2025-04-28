@@ -18,6 +18,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['errors', 'complete']);
 const playerbackendStore = usePlayerBackendStore().playerbackend;
+const selfStore = useDirectStore().self;
 const directStore = useDirectStore().direct;
 const proxyhost = typeof playerbackendStore === 'string' ? playerbackendStore : 'jptube-player-server.onrender.com';
 const protocolStore = useProtocolStore().protocol;
@@ -147,17 +148,25 @@ onMounted(async () => {
 
           // For local development.
           if ((url.host.endsWith('.googlevideo.com') || url.href.includes('drm'))) {
-            if (directStore) {
+            if (selfStore) {
               url.searchParams.set('__host', url.host);
-              url.host = proxyhost;
-              url.protocol = protocolStore;
-            } else {
-              url.searchParams.set('__host', url.host);
-              url.searchParams.set('__proxyhost', proxyhost);
-              url.searchParams.set('__proxyProtocol', protocolStore);
+              url.searchParams.set('__isSelf', selfStore.toString());
               url.host = window.location.host;
               url.protocol = window.location.protocol;
               url.pathname = `/api/proxy${url.pathname}`;
+            } else {
+              if (directStore) {
+                url.searchParams.set('__host', url.host);
+                url.host = proxyhost;
+                url.protocol = protocolStore;
+              } else {
+                url.searchParams.set('__host', url.host);
+                url.searchParams.set('__proxyhost', proxyhost);
+                url.searchParams.set('__proxyProtocol', protocolStore);
+                url.host = window.location.host;
+                url.protocol = window.location.protocol;
+                url.pathname = `/api/proxy${url.pathname}`;
+              }
             }
           }
 
