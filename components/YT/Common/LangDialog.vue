@@ -33,6 +33,7 @@
             <template v-if="selectedPlayer === 'shaka-player'">
               <v-switch v-model="selectedAutoPlay" color="primary" label="Enable Auto Play" />
             </template>
+            <v-switch v-model="selectedPuppeteer" color="primary" label="Use Puppeteer to fetch(Beta)" />
           </v-tabs-window-item>
 
           <!-- Backends Tab -->
@@ -139,6 +140,7 @@ const selectedProtocol = ref<'http' | 'https'>('https');
 const selectedAutoPlay = ref<boolean>(false);
 const selectedDirect = ref<boolean>(true);
 const selectedSelf = ref<boolean>(false);
+const selectedPuppeteer = ref<boolean>(false);
 
 const languages = [
   { title: 'Afrikaans', value: 'af' },
@@ -234,6 +236,7 @@ const save = () => {
   autoplayStore.setAutoPlay(selectedAutoPlay.value);
   directStore.setDirect(selectedDirect.value);
   directStore.setSelf(selectedSelf.value);
+  directStore.setPuppeteer(selectedPuppeteer.value);
   if (selectedBackend.value) {
     backendHistoryStore.addBackend(selectedBackend.value);
   }
@@ -254,6 +257,7 @@ const reset = () => {
   autoplayStore.resetAutoPlay();
   directStore.resetDirect();
   directStore.resetSelf();
+  directStore.resetPuppeteer();
   backendHistoryStore.clearHistory();
   emit('Refresh');
   close();
@@ -269,6 +273,7 @@ const initialize = () => {
   selectedAutoPlay.value = autoplayStore.autoplay;
   selectedDirect.value = directStore.direct;
   selectedSelf.value = directStore.self;
+  selectedPuppeteer.value = directStore.puppeteer;
 };
 
 const exportSettings = () => {

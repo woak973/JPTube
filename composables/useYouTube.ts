@@ -6,12 +6,13 @@ function createRequest(proxyhost: string, input: RequestInfo | URL, init?: Reque
       : new URL(input.url);
 
   const selfStore = useDirectStore().self;
+  const puppeteerStore = useDirectStore().puppeteer;
 
   if (selfStore) {
-    if (url.pathname === '/youtubei/v1/player') {
+    if (url.pathname === '/youtubei/v1/player' && puppeteerStore) {
       url.host = window.location.host;
       url.protocol = window.location.protocol;
-      url.pathname = `/api/iframe/aa`;
+      url.pathname = `/api/iframe/player`;
     } else {
       url.searchParams.set('__host', url.host);
       url.searchParams.set('__isSelf', selfStore.toString());
