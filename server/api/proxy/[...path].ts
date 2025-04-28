@@ -85,7 +85,6 @@ const handler = async (event: H3Event): Promise<Response> => {
     });
 
     const headers = new Headers();
-    copyHeader('content-length', headers, fetchRes.headers);
     copyHeader('content-type', headers, fetchRes.headers);
     copyHeader('content-disposition', headers, fetchRes.headers);
     copyHeader('accept-ranges', headers, fetchRes.headers);
