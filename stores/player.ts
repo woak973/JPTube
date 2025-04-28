@@ -1,12 +1,16 @@
+interface PlayerState {
+  player: 'shaka-player' | 'embed' | 'VideoJS';
+}
+
 export const usePlayerStore = defineStore('player', {
-  state: () => ({
+  state: (): PlayerState => ({
     player: 'shaka-player',
   }),
   actions: {
-    setPlayer(this: { player: string }, newPlayer: string) {
+    setPlayer(this: PlayerState, newPlayer: PlayerState['player']) {
       this.player = newPlayer;
     },
-    resetPlayer(this: { player: string }) {
+    resetPlayer(this: PlayerState) {
       this.player = 'shaka-player';
     },
   },
