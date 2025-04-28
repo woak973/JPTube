@@ -8,11 +8,17 @@ function createRequest(proxyhost: string, input: RequestInfo | URL, init?: Reque
   const selfStore = useDirectStore().self;
 
   if (selfStore) {
-    url.searchParams.set('__host', url.host);
-    url.searchParams.set('__isSelf', selfStore.toString());
-    url.host = window.location.host;
-    url.protocol = window.location.protocol;
-    url.pathname = `/api/proxy${url.pathname}`;
+    if (url.pathname === '/youtubei/v1/player') {
+      url.host = window.location.host;
+      url.protocol = window.location.protocol;
+      url.pathname = `/api/iframe/aa`;
+    } else {
+      url.searchParams.set('__host', url.host);
+      url.searchParams.set('__isSelf', selfStore.toString());
+      url.host = window.location.host;
+      url.protocol = window.location.protocol;
+      url.pathname = `/api/proxy${url.pathname}`;
+    }
   } else {
     const protocolStore = useProtocolStore().protocol;
     const directStore = useDirectStore().direct;
