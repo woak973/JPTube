@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
 
 const handler = async (videoId: string) => {
   // Puppeteerのブラウザを起動
-  const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+  const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   const page = await browser.newPage();
 
   // リクエストのインターセプトを有効化
