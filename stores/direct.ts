@@ -8,7 +8,7 @@ export const useDirectStore = defineStore('direct', {
       this.direct = newDirect;
     },
     resetDirect(this: { direct: boolean }) {
-      this.direct = false;
+      this.direct = true;
     },
     setSelf(this: { self: boolean }, newSelf: boolean) {
       this.self = newSelf;
