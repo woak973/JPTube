@@ -26,7 +26,7 @@ const handler = async (event: H3Event): Promise<Response> => {
           'Access-Control-Allow-Origin': event.headers.get('origin') || '*',
           'Access-Control-Allow-Methods': '*',
           'Access-Control-Allow-Headers':
-            'Origin, X-Requested-With, Content-Type, Accept, Authorization, x-goog-visitor-id, x-goog-api-key, x-origin, x-youtube-client-version, x-youtube-client-name, x-goog-api-format-version, x-user-agent, Accept-Language, Range, Referer',
+            'Origin, X-Requested-With, Content-Type, Accept, Authorization, x-goog-visitor-id, x-goog-api-key, x-origin, x-youtube-client-version, x-youtube-client-name, x-goog-api-format-version, x-user-agent, Accept-Language, Range, Referer, Cookie',
           'Access-Control-Max-Age': '86400',
           'Access-Control-Allow-Credentials': 'true',
         }),
@@ -73,6 +73,15 @@ const handler = async (event: H3Event): Promise<Response> => {
       copyHeader('user-agent', request_headers, event.headers);
 
     url.searchParams.delete('__headers');
+
+    if (url.host.includes('youtube')) {
+      request_headers.set('origin', 'https://www.youtube.com');
+      request_headers.set('referer', 'https://www.youtube.com/');
+    }
+
+    if (event.headers.has('Authorization')) {
+      request_headers.set('Authorization', event.headers.get('Authorization')!);
+    }
     const body
     = event.method !== 'GET' && event.method !== 'HEAD'
       ? await readRawBody(event)
