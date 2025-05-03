@@ -106,6 +106,17 @@
       </template>
     </template>
 
+    <template v-else-if="data.type === 'FeedNudge'">
+      <template v-if="attribute === 'slide'">
+        <YTNodeFeedNudge :data="(data as YTNodes.FeedNudge)" />
+      </template>
+      <template v-else>
+        <v-col cols="12">
+          <YTNodeFeedNudge :data="(data as YTNodes.FeedNudge)" />
+        </v-col>
+      </template>
+    </template>
+
     <template v-else-if="data.type === 'PlaylistVideo'">
       <template v-if="attribute === 'slide'">
         <YTNodePlaylistVideo :data="(data as YTNodes.PlaylistVideo)" />
@@ -748,6 +759,18 @@
       </v-col>
     </template>
 
+    <template v-else-if="data.type === 'reloadContinuationItemsCommand'">
+      <v-col cols="12">
+        <v-row>
+          <template v-for="content in (data as ReloadContinuationItemsCommand).contents">
+            <template v-if="(content instanceof Helpers.YTNode)">
+              <YTNode :data="content" :attribute="attribute" :page="page" />
+            </template>
+          </template>
+        </v-row>
+      </v-col>
+    </template>
+
     <template v-else-if="data.type === 'SectionList'">
       <v-col cols="12">
         <v-row>
@@ -789,7 +812,7 @@
 
 <script setup lang="ts">
 import type { ItemSectionContinuation } from 'youtubei.js';
-import { Helpers, YTNodes } from 'youtubei.js';
+import { Helpers, YTNodes, ReloadContinuationItemsCommand } from 'youtubei.js';
 
 import type { VerticalProductCard, EmptyProductDetails } from './Node/CustomNode';
 
