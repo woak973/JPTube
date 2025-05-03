@@ -92,11 +92,11 @@
           </v-tabs-window-item>
 
           <v-tabs-window-item value="Experiment">
-            <v-card-title><v-icon left>mdi-flask</v-icon>Experiment</v-card-title>
+            <v-card-title><v-icon left>mdi-cookie</v-icon>Cookie</v-card-title>
             <v-card-text>
               <v-textarea
                 v-model="selectedCookie"
-                label="Cookie(Beta)"
+                label="CustomCookie"
                 outlined
                 rows="5"
               />
