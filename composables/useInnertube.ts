@@ -4,6 +4,7 @@ import { Innertube, UniversalCache } from 'youtubei.js';
 export async function useInnertube(args: 'common' | 'player', client_type?: ClientType, unique_data?: { po_token: string | undefined; visitor_data: string }, isgenerate?: boolean, cookie?: string) {
   const lang = useLangStore().lang || 'en';
   const location = useLocationStore().location || 'US';
+  const cookie = useRuntimeConfig().public.cookie as string || '';
 
   const fetchFunction = args === 'player' ? PlayerfetchFn : fetchFn;
 
