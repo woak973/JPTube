@@ -36,8 +36,7 @@ onMounted(async () => {
     const coldStartToken = BG.PoToken.generateColdStartToken(visitorData);
     getPo(visitorData).then(webPo => poToken = webPo);
 
-    const cookie = useCookieStore().cookie;
-    const yt = await useInnertube('player', undefined, { po_token: poToken || coldStartToken, visitor_data: visitorData }, true, cookie);
+    const yt = await useInnertube('player', undefined, { po_token: poToken || coldStartToken, visitor_data: visitorData }, true);
 
     player = undefined as shaka.Player | undefined;
     ui = undefined as shaka.ui.Overlay | undefined;
