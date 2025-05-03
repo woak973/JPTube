@@ -80,6 +80,7 @@ const Refresh = (): void => {
       <v-list-item title="JPTube" subtitle="Welcome" />
       <v-divider />
       <v-list-item prepend-icon="mdi-home" link title="Home(Trending)" to="/" />
+      <v-list-item prepend-icon="mdi-home-account" link title="HomeFeed" to="/home" />
       <v-list-item prepend-icon="mdi-music" link title="Music" to="/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ" />
       <v-list-item prepend-icon="mdi-movie-open" link title="Movies & TV" to="/channel/UClgRkhTL3_hImCAmdLfDE4g" />
       <v-list-item

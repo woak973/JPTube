@@ -14,6 +14,7 @@
           <v-tab value="Player">Player</v-tab>
           <v-tab value="Backends">Backends</v-tab>
           <v-tab value="Export/Import">Export/Import</v-tab>
+          <v-tab value="Experiment">Experiment</v-tab>
           <v-tab value="Credits">Credits</v-tab>
         </v-tabs>
 
@@ -90,6 +91,19 @@
             <v-file-input label="Import Settings" accept=".json" @change="importSettings" />
           </v-tabs-window-item>
 
+          <v-tabs-window-item value="Experiment">
+            <v-card-title><v-icon left>mdi-cookie</v-icon>Cookie</v-card-title>
+            <v-card-text>
+              <v-textarea
+                v-model="selectedCookie"
+                label="CustomCookie"
+                outlined
+                rows="5"
+              />
+            </v-card-text>
+            <span>The items in this section will not be exported.</span>
+          </v-tabs-window-item>
+
           <!-- Credits Tab -->
           <v-tabs-window-item value="Credits">
             <v-card-title><v-icon left>mdi-information</v-icon>Credits</v-card-title>
@@ -139,6 +153,7 @@ const selectedProtocol = ref<'http' | 'https'>('https');
 const selectedAutoPlay = ref<boolean>(false);
 const selectedDirect = ref<boolean>(true);
 const selectedSelf = ref<boolean>(false);
+const selectedCookie = ref<string>('');
 
 const languages = [
   { title: 'Afrikaans', value: 'af' },
@@ -203,6 +218,7 @@ const protocolStore = useProtocolStore();
 const autoplayStore = useAutoPlayStore();
 const backendHistoryStore = useBackendHistoryStore();
 const directStore = useDirectStore();
+const cookieStore = useCookieStore();
 
 const emit = defineEmits(['Refresh']);
 
@@ -234,6 +250,8 @@ const save = () => {
   autoplayStore.setAutoPlay(selectedAutoPlay.value);
   directStore.setDirect(selectedDirect.value);
   directStore.setSelf(selectedSelf.value);
+  cookieStore.setCookie(selectedCookie.value);
+
   if (selectedBackend.value) {
     backendHistoryStore.addBackend(selectedBackend.value);
   }
@@ -254,6 +272,7 @@ const reset = () => {
   autoplayStore.resetAutoPlay();
   directStore.resetDirect();
   directStore.resetSelf();
+  cookieStore.resetCookie();
   backendHistoryStore.clearHistory();
   emit('Refresh');
   close();
@@ -269,6 +288,7 @@ const initialize = () => {
   selectedAutoPlay.value = autoplayStore.autoplay;
   selectedDirect.value = directStore.direct;
   selectedSelf.value = directStore.self;
+  selectedCookie.value = cookieStore.cookie;
 };
 
 const exportSettings = () => {
