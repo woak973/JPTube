@@ -92,7 +92,6 @@
           </v-tabs-window-item>
 
           <v-tabs-window-item value="Experiment">
-            <span>The items in this section will not be exported.</span>
             <v-card-title><v-icon left>mdi-cookie</v-icon>Cookie</v-card-title>
             <v-card-text>
               <v-textarea
@@ -102,6 +101,7 @@
                 rows="5"
               />
             </v-card-text>
+            <span>The items in this section will not be exported.</span>
           </v-tabs-window-item>
 
           <!-- Credits Tab -->
