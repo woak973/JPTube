@@ -20,7 +20,7 @@ const emit = defineEmits(['errors', 'complete']);
 const playerbackendStore = usePlayerBackendStore().playerbackend;
 const selfStore = useDirectStore().self;
 const directStore = useDirectStore().direct;
-const proxyhost = typeof playerbackendStore === 'string' ? playerbackendStore : 'jptube-player-server.onrender.com';
+const proxyhost = typeof playerbackendStore === 'string' ? playerbackendStore : 'jptube-server.onrender.com';
 const protocolStore = useProtocolStore().protocol;
 
 let player: shaka.Player | undefined;
