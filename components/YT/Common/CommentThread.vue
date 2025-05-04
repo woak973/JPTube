@@ -1,7 +1,7 @@
 <template>
   <v-card v-if="data" elevation="16">
     <template v-if="data.comment">
-      <YTCommonCommentView :data="data.comment" />
+      <YTCommonCommentView :data="data.comment" :yt="yt" />
     </template>
     <div v-if="data.has_replies && data.replies" class="reply-container">
       <details>
@@ -9,7 +9,7 @@
         <v-row>
           <v-col cols="12">
             <template v-for="reply in data.replies">
-              <YTCommonCommentView :data="reply" />
+              <YTCommonCommentView :data="reply" :yt="yt" />
             </template>
           </v-col>
         </v-row>
@@ -23,10 +23,11 @@
 
 <script setup lang="ts">
 
-import { YTNodes } from 'youtubei.js';
+import { YTNodes, Innertube } from 'youtubei.js';
 
 defineProps({
   data: YTNodes.CommentThread,
+  yt: Innertube,
 });
 </script>
 

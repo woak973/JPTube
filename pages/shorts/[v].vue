@@ -384,7 +384,7 @@ await fetchData();
                 <v-row style="width: 100%; margin-left: 0;">
                   <template v-for="result in Commentresults">
                     <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
-                      <YTCommonCommentThread :data="result" />
+                      <YTCommonCommentThread :data="result" :yt="yt" />
                     </v-col>
                   </template>
                 </v-row>
