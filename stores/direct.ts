@@ -2,7 +2,7 @@ export const useDirectStore = defineStore('direct', {
   state: () => {
     const config = useRuntimeConfig();
     return {
-      direct: typeof config.public.direct === 'boolean' ? config.public.direct : true,
+      direct: typeof config.public.direct === 'boolean' ? config.public.direct : false,
       self: typeof config.public.self === 'boolean' ? config.public.self : true,
     };
   },
@@ -12,7 +12,7 @@ export const useDirectStore = defineStore('direct', {
     },
     resetDirect(this: { direct: boolean }) {
       const config = useRuntimeConfig();
-      this.direct = typeof config.public.direct === 'boolean' ? config.public.direct : true;
+      this.direct = typeof config.public.direct === 'boolean' ? config.public.direct : false;
     },
     setSelf(this: { self: boolean }, newSelf: boolean) {
       this.self = newSelf;

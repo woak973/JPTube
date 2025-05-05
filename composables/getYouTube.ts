@@ -3,7 +3,7 @@ export function getProxifiedUrl(input: RequestInfo | URL, init?: RequestInit): s
     return ''; // デフォルトのURLまたは空文字列を返す
   }
   const backendStore = useBackendStore().backend;
-  const proxyhost = typeof backendStore === 'string' ? backendStore : 'jptube-server.onrender.com';
+  const proxyhost = typeof backendStore === 'string' ? backendStore : 'jptube-companion.deno.dev';
   let url: URL;
 
   try {

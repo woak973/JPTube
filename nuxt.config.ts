@@ -16,12 +16,12 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      backendHost: process.env.BACKEND_HOST || 'jptube-server.onrender.com',
-      playerbackendHost: process.env.PLAYER_BACKEND_HOST || 'jptube-server.onrender.com',
+      backendHost: process.env.BACKEND_HOST || 'jptube-companion.deno.dev',
+      playerbackendHost: process.env.PLAYER_BACKEND_HOST || 'jptube-companion.deno.dev',
       loginPassword: process.env.LOGIN_PASSWORD || '20531',
       cookie: process.env.COOKIE || '',
       self: process.env.SELF === 'false' ? false : true,
-      direct: process.env.DIRECT === 'false' ? false : true,
+      direct: process.env.DIRECT === 'true' ? true : false,
     },
   },
 });
