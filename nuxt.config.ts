@@ -21,7 +21,7 @@ export default defineNuxtConfig({
       loginPassword: process.env.LOGIN_PASSWORD || '20531',
       cookie: process.env.COOKIE || '',
       self: process.env.SELF === 'true',
-      direct: process.env.DIRECT !== 'false',
+      direct: process.env.DIRECT === 'true',
     },
   },
 });
