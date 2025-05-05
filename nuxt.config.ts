@@ -20,6 +20,8 @@ export default defineNuxtConfig({
       playerbackendHost: process.env.PLAYER_BACKEND_HOST || 'jptube-server.onrender.com',
       loginPassword: process.env.LOGIN_PASSWORD || '20531',
       cookie: process.env.COOKIE || '',
+      self: process.env.SELF === 'true',
+      direct: process.env.DIRECT !== 'false',
     },
   },
 });
