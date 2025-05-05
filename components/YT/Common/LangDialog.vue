@@ -151,8 +151,8 @@ const selectedBackend = ref<string>('');
 const selectedPlayerBackend = ref<string>('');
 const selectedProtocol = ref<'http' | 'https'>('https');
 const selectedAutoPlay = ref<boolean>(false);
-const selectedDirect = ref<boolean>(true);
-const selectedSelf = ref<boolean>(false);
+const selectedDirect = ref<boolean>(false);
+const selectedSelf = ref<boolean>(true);
 const selectedCookie = ref<string>('');
 
 const languages = [

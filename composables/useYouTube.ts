@@ -52,14 +52,14 @@ function createRequest(proxyhost: string, input: RequestInfo | URL, init?: Reque
 
 export function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
   const backendStore = useBackendStore().backend;
-  const proxyhost = typeof backendStore === 'string' ? backendStore : 'jptube-server.onrender.com';
+  const proxyhost = typeof backendStore === 'string' ? backendStore : 'jptube-companion.deno.dev';
   const { request, headers } = createRequest(proxyhost, input, init);
   return fetch(request, init ? { ...init, headers } : { headers });
 }
 
 export function PlayerfetchFn(input: RequestInfo | URL, init?: RequestInit) {
   const playerbackendStore = usePlayerBackendStore().playerbackend;
-  const proxyhost = typeof playerbackendStore === 'string' ? playerbackendStore : 'jptube-server.onrender.com';
+  const proxyhost = typeof playerbackendStore === 'string' ? playerbackendStore : 'jptube-companion.deno.dev';
   const { request, headers } = createRequest(proxyhost, input, init);
   return fetch(request, init ? { ...init, headers } : { headers });
 }
