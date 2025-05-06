@@ -26,7 +26,7 @@ const handler = async (event: H3Event): Promise<Response> => {
           'Access-Control-Allow-Origin': event.headers.get('origin') || '*',
           'Access-Control-Allow-Methods': '*',
           'Access-Control-Allow-Headers':
-            'Origin, X-Requested-With, Content-Type, Accept, Authorization, x-goog-visitor-id, x-goog-api-key, x-origin, x-youtube-client-version, x-youtube-client-name, x-goog-api-format-version, x-user-agent, Accept-Language, Range, Referer, Cookie',
+            'Origin, X-Requested-With, Content-Type, Accept, Authorization, x-goog-visitor-id, x-goog-api-key, x-origin, x-youtube-client-version, x-youtube-client-name, x-goog-api-format-version, x-goog-authuser, x-user-agent, Accept-Language, Range, Referer, Cookie',
           'Access-Control-Max-Age': '86400',
           'Access-Control-Allow-Credentials': 'true',
         }),
