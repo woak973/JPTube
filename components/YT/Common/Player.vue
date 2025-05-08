@@ -276,6 +276,10 @@ onMounted(async () => {
       query: remainingQuery,
     });
   }
+
+  if (import.meta.client) {
+    window.addEventListener('keydown', handleKeydown);
+  }
 });
 
 const seek = (seconds: number) => {
@@ -289,6 +293,69 @@ const seek = (seconds: number) => {
     }
   } catch (error) {
     console.error('Error seeking video:', error);
+  }
+};
+
+const handleKeydown = (event: KeyboardEvent) => {
+  const video = document.getElementById('videoel') as HTMLVideoElement;
+  if (!video || event.target !== video) return;
+
+  switch (event.key) {
+    case 'ArrowLeft':
+      video.currentTime = Math.max(0, video.currentTime - 5);
+      break;
+    case 'ArrowRight':
+      video.currentTime = Math.min(video.duration, video.currentTime + 5);
+      break;
+    case 'j':
+      video.currentTime = Math.max(0, video.currentTime - 10);
+      break;
+    case 'k':
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+      break;
+    case 'l':
+      video.currentTime = Math.min(video.duration, video.currentTime + 10);
+      break;
+    case 'c':
+      if (player) {
+        const textTracks = player.getTextTracks();
+        if (textTracks.length > 0) {
+          const activeTrack = textTracks.find(track => track.active);
+          if (activeTrack) {
+            player.setTextTrackVisibility(false);
+          } else {
+            player.setTextTrackVisibility(true);
+          }
+        }
+      } else {
+        console.error('Player is undefined');
+      }
+      break;
+    case 'f':
+      if (!document.fullscreenElement) {
+        video.requestFullscreen().catch((err) => {
+          console.error('Error attempting to enable full-screen mode:', err);
+        });
+      } else {
+        document.exitFullscreen().catch((err) => {
+          console.error('Error attempting to exit full-screen mode:', err);
+        });
+      }
+      break;
+    case 'm':
+      if (player) {
+        const mediaElement = player.getMediaElement();
+        if (mediaElement) {
+          mediaElement.muted = !mediaElement.muted;
+        }
+      } else {
+        console.error('Player is undefined');
+      }
+      break;
   }
 };
 
@@ -308,6 +375,9 @@ const destroyPlayer = async () => {
 };
 
 onBeforeUnmount(async () => {
+  if (import.meta.client) {
+    window.removeEventListener('keydown', handleKeydown);
+  }
   await destroyPlayer();
 });
 
