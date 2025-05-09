@@ -94,7 +94,6 @@ const Refresh = (): void => {
         prepend-icon="mdi-trophy-variant" link title="Sports"
         to="/channel/UCEgdi0XIXXZ-qJOFPf4JSKw" />
       <v-list-item prepend-icon="mdi-school" link title="Courses" to="/courses" />
-      <v-list-item prepend-icon="mdi-help-circle" link title="Help" to="/help" />
       <v-divider />
       <v-list-item title="Other Services" subtitle="Welcome" />
       <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music" />
