@@ -13,7 +13,7 @@ JPTubeはYouTubeの代替フロントエンドです。[LuanRT/YouTube.js](https
 
 ### バックエンド
 
-JPTubeを動作させるにはバックエンドが必要です。[JPTube-server](https://github.com/woak973/JPTube-server)からバックエンドをデプロイできます。
+JPTubeはバックエンドを使用して情報を取得させることもできます。[JPTube-server](https://github.com/woak973/JPTube-server)からDenoのバックエンドを、[JPTube-server-node](https://github.com/woak973/JPTube-server-node)からNode.jsのバックエンドをそれぞれデプロイできます。
 
 ### 環境変数
 
@@ -99,14 +99,8 @@ bun run preview
 詳細については、[deployment documentation](https://nuxt.com/docs/getting-started/deployment)をご覧ください。
 
 ## JPTubeのデプロイ
-### 推奨
-[バックエンド](https://github.com/woak973/JPTube-Server)と同時にデプロイされます。
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/woak973/JPTube)
-
-### その他のサービス
-これらのサービスを使用する場合、バックエンドを別途デプロイし、環境変数で設定する必要があります。
-
 [![Deploy to Vercel](https://binbashbanana.github.io/deploy-buttons/buttons/official/vercel.svg)](https://vercel.com/new/clone?repository-url=https://github.com/woak973/JPTube)
 [![Deploy to Netlify](https://binbashbanana.github.io/deploy-buttons/buttons/official/netlify.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/woak973/JPTube)
 [![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/official/koyeb.svg)](https://app.koyeb.com/deploy?type=git&repository=github.com/woak973/JPTube&branch=master&name=jptube)

@@ -84,7 +84,7 @@ onMounted(async () => {
       shaka.polyfill.installAll();
 
       if (shaka.Player.isBrowserSupported()) {
-        videoEl.poster = info.basic_info.thumbnail![0].url;
+        videoEl.poster = getProxifiedUrl(info.basic_info.thumbnail![0].url);
 
         player = new shaka.Player();
         await player.attach(videoEl);

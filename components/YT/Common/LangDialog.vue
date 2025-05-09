@@ -139,12 +139,13 @@
 </template>
 
 <script setup lang="ts">
+import type { SupportedLangs } from '~/stores/lang';
 
 const dialog = ref<boolean>(false);
 const ResetConfirmDialog = ref<boolean>(false);
 const activeTab = ref<string>('Language/Region');
 
-const selectedLang = ref<string>('en');
+const selectedLang = ref<SupportedLangs>('en');
 const selectedLocation = ref<string>('US');
 const selectedPlayer = ref<'shaka-player' | 'embed' | 'VideoJS'>('shaka-player');
 const selectedBackend = ref<string>('');
