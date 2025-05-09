@@ -13,7 +13,6 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate',
     '@nuxt/eslint',
-    '@nuxtjs/i18n',
   ],
   vite: {
     server: {
@@ -29,21 +28,5 @@ export default defineNuxtConfig({
       self: process.env.SELF === 'false' ? false : true,
       direct: process.env.DIRECT === 'true' ? true : false,
     },
-  },
-  i18n: {
-    locales: [
-      { code: 'en', iso: 'en-US', file: 'en-US.ts' },
-      { code: 'ja', iso: 'ja-JP', file: 'ja-JP.ts' },
-    ],
-    defaultLocale: 'en',
-    strategy: 'no_prefix',
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: 'i18n_redirected',
-      alwaysRedirect: false,
-      fallbackLocale: 'en',
-    },
-    lazy: true,
-    langDir: 'locales/',
   },
 });
