@@ -6,10 +6,4 @@ services:
     plan: free
     buildCommand: "npm install && npm run build"
     startCommand: "node .output/server/index.mjs"
-    
 
-  - name: jptube-server
-    type: web
-    runtime: docker
-    repo: https://github.com/woak973/JPTube-Server.git
-    plan: free
