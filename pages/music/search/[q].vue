@@ -2,6 +2,7 @@
 import type { Helpers, YTNodes } from 'youtubei.js';
 
 const route = useRoute();
+const goTo = useGoTo();
 
 const results = ref<Helpers.ObservedArray<YTNodes.MusicShelf | YTNodes.MusicCardShelf | YTNodes.ItemSection>>();
 const HeaderResults = ref<YTNodes.ChipCloud | undefined>();
@@ -28,7 +29,7 @@ const fetchData = async (filter?: string): Promise<void> => {
       searchResults = await searchResults.applyFilter(filter);
     }
     if (filter) {
-      window.scrollTo(0, 0);
+      goTo(0);
     }
 
     results.value = await searchResults.contents;

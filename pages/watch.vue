@@ -6,6 +6,7 @@ const route = useRoute();
 const playerStore = usePlayerStore();
 const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
+const goTo = useGoTo();
 
 const Relatedresults = ref<Helpers.ObservedArray<Helpers.YTNode> | null | undefined>();
 const HeaderResults = ref<YT.VideoInfo>();
@@ -27,12 +28,12 @@ watch(HeaderResults, (newVal) => {
 
 watch(() => route.query.v, async (newVideoId) => {
   videoId.value = newVideoId as string;
-  window.scrollTo(0, 0);
+  goTo(0);
   await fetchVideoData();
 });
 
 watch(() => route.query.list, async () => {
-  window.scrollTo(0, 0);
+  goTo(0);
   await fetchVideoData();
 });
 
@@ -49,7 +50,7 @@ onBeforeRouteUpdate((to, from, next) => {
     } else {
       next();
     }
-    window.scrollTo(0, 0);
+    goTo(0);
   } else {
     if (livechat) {
       livechat.stop();
@@ -71,7 +72,7 @@ onBeforeRouteLeave((to, from, next) => {
     } else {
       next();
     }
-    window.scrollTo(0, 0);
+    goTo(0);
   } else {
     if (livechat) {
       livechat.stop();

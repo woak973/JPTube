@@ -6,6 +6,7 @@ const route = useRoute();
 const playerStore = usePlayerStore();
 const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
+const goTo = useGoTo();
 
 const Relatedresults = ref<YTNodes.NavigationEndpoint[] | undefined>();
 const HeaderResults = ref<YT.VideoInfo>();
@@ -57,7 +58,7 @@ onBeforeRouteUpdate((to, from, next) => {
     } else {
       next();
     }
-    window.scrollTo(0, 0);
+    goTo(0);
   } else {
     next();
   }
@@ -76,7 +77,7 @@ onBeforeRouteLeave((to, from, next) => {
     } else {
       next();
     }
-    window.scrollTo(0, 0);
+    goTo(0);
   } else {
     next();
   }
