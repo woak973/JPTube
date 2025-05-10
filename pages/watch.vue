@@ -96,6 +96,7 @@ const toggleDescription = () => {
   showFullDescription.value = !showFullDescription.value;
 };
 
+const infiniteScrollKey = ref<string>(route.query.v as string);
 const ChatBtn = ref<boolean>(false);
 const PLBtn = ref<boolean>(false);
 
@@ -168,6 +169,7 @@ const fetchVideoData = async () => {
     }
 
     const searchResults = await yt.getInfo(nav);
+    infiniteScrollKey.value = route.query.v as string;
 
     Relatedresults.value = await searchResults.watch_next_feed;
     HeaderResults.value = searchResults;
@@ -451,7 +453,7 @@ await fetchVideoData();
 
         <template v-if="isMobile">
           <template v-if="Relatedresults">
-            <v-infinite-scroll v-if="Relatedresults.length" :mode="mode" @load="LoadMore">
+            <v-infinite-scroll v-if="Relatedresults.length" :key="infiniteScrollKey" :mode="mode" @load="LoadMore">
               <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="result in Relatedresults">
                   <template v-if="(result instanceof Helpers.YTNode)">
@@ -470,7 +472,7 @@ await fetchVideoData();
                 @update:selectedSort="selectedSort = $event" @apply-com-sort="ApplyComSort" />
             </template>
 
-            <v-infinite-scroll v-if="Commentresults.length" mode="intersect" @load="ComLoadMore">
+            <v-infinite-scroll v-if="Commentresults.length" :key="infiniteScrollKey" mode="intersect" @load="ComLoadMore">
               <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="result in Commentresults">
                   <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
@@ -530,7 +532,7 @@ await fetchVideoData();
                 @update:selectedSort="selectedSort = $event" @apply-com-sort="ApplyComSort" />
             </template>
 
-            <v-infinite-scroll v-if="Commentresults.length" :mode="mode" @load="ComLoadMore">
+            <v-infinite-scroll v-if="Commentresults.length" :key="infiniteScrollKey" :mode="mode" @load="ComLoadMore">
               <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="result in Commentresults">
                   <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
@@ -543,7 +545,7 @@ await fetchVideoData();
         </template>
         <template v-else>
           <template v-if="Relatedresults">
-            <v-infinite-scroll v-if="Relatedresults.length" mode="intersect" @load="LoadMore">
+            <v-infinite-scroll v-if="Relatedresults.length" :key="infiniteScrollKey" mode="intersect" @load="LoadMore">
               <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="result in Relatedresults">
                   <template v-if="(result instanceof Helpers.YTNode)">
