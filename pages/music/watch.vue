@@ -6,6 +6,7 @@ const route = useRoute();
 const playerStore = usePlayerStore();
 const autoplayStore = useAutoPlayStore();
 const { share } = useShare();
+const goTo = useGoTo();
 
 const videoId = ref<string>(route.query.v as string);
 
@@ -39,7 +40,7 @@ definePageMeta({
 
 watch(() => route.query.v, async (newVideoId): Promise<void> => {
   videoId.value = newVideoId as string;
-  window.scrollTo(0, 0);
+  goTo(0);
   await fetchData();
 });
 
