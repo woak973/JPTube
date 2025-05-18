@@ -9,6 +9,7 @@ const { share } = useShare();
 const goTo = useGoTo();
 
 const Relatedresults = ref<Helpers.ObservedArray<Helpers.YTNode> | null | undefined>();
+const ChipResults = ref<Helpers.ObservedArray<Helpers.YTNode> | null | undefined>();
 const chipOptions = ref<YTNodes.ChipCloud | null | undefined>();
 const HeaderResults = ref<YT.VideoInfo>();
 const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>();
@@ -93,6 +94,7 @@ const fatalError = ref<boolean>(false);
 const showFullDescription = ref<boolean>(false);
 const autoplaySnackbar = ref<boolean>(false);
 const selectedChip = ref<string>();
+const ischipselected = ref<boolean>(false);
 
 const toggleDescription = () => {
   showFullDescription.value = !showFullDescription.value;
@@ -346,10 +348,13 @@ const ApplyComSort = async () => {
 const applyChips = async () => {
   const chip = selectedChip.value;
   if (chip) {
+    ChipResults.value = null;
+    ischipselected.value = true;
     const nav = await yt.actions.execute('/next', { continuation: chip, parse: true });
-    Relatedresults.value = nav?.on_response_received_endpoints ? nav.on_response_received_endpoints : null;
+    ChipResults.value = nav?.on_response_received_endpoints ? nav.on_response_received_endpoints : null;
   } else {
-    Relatedresults.value = sourceresults?.watch_next_feed;
+    ischipselected.value = false;
+    ChipResults.value = null;
   }
 };
 
@@ -465,7 +470,7 @@ await fetchVideoData();
           @toggleDescription="toggleDescription" />
 
         <template v-if="isMobile">
-          <template v-if="Relatedresults">
+          <template v-if="Relatedresults && !ischipselected">
             <v-infinite-scroll v-if="Relatedresults.length" :key="infiniteScrollKey" :mode="mode" @load="LoadMore">
               <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="result in Relatedresults">
@@ -475,6 +480,20 @@ await fetchVideoData();
                 </template>
               </v-row>
             </v-infinite-scroll>
+          </template>
+          <template v-else-if="ChipResults && ischipselected">
+            <v-row style="width: 100%; margin-left: 0;">
+              <template v-for="result in ChipResults">
+                <template v-if="(result instanceof Helpers.YTNode)">
+                  <YTNode :data="result" :page="'Watch'" />
+                </template>
+              </template>
+            </v-row>
+          </template>
+          <template v-else-if="!ChipResults && ischipselected">
+            <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
+              <v-progress-circular indeterminate color="primary" />
+            </div>
           </template>
         </template>
         <template v-else>
@@ -563,7 +582,7 @@ await fetchVideoData();
           </template>
         </template>
         <template v-else>
-          <template v-if="Relatedresults">
+          <template v-if="Relatedresults && !ischipselected">
             <v-infinite-scroll v-if="Relatedresults.length" :key="infiniteScrollKey" mode="intersect" @load="LoadMore">
               <v-row style="width: 100%; margin-left: 0;">
                 <template v-for="result in Relatedresults">
@@ -573,6 +592,20 @@ await fetchVideoData();
                 </template>
               </v-row>
             </v-infinite-scroll>
+          </template>
+          <template v-else-if="ChipResults && ischipselected">
+            <v-row style="width: 100%; margin-left: 0;">
+              <template v-for="result in ChipResults">
+                <template v-if="(result instanceof Helpers.YTNode)">
+                  <YTNode :data="result" :page="'Watch'" />
+                </template>
+              </template>
+            </v-row>
+          </template>
+          <template v-else-if="!ChipResults && ischipselected">
+            <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
+              <v-progress-circular indeterminate color="primary" />
+            </div>
           </template>
         </template>
 
