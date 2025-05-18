@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import CastedVideoInfo from './CastedVideoInfo';
 export type VideoThumbnail = {
   quality: string;
   url: string;
@@ -87,9 +88,10 @@ export type RecommendedVideo = {
   lengthSeconds: number;
   viewCount?: any;
   viewCountText: string;
+  publishedText: string;
+  published: string;
 };
 
-// メイン型定義
 export type VideoInfoProps = {
   type?: string;
   title?: string;
@@ -133,9 +135,6 @@ export type VideoInfoProps = {
 };
 
 export default class VideoInfo {
-  static type = 'videoInfo';
-
-  // プロパティを型で宣言
   type?: string;
   title?: string;
   videoId?: string;
@@ -182,5 +181,10 @@ export default class VideoInfo {
         (this as any)[key] = rawdata[key];
       }
     }
+  }
+
+  async cast(): Promise<CastedVideoInfo> {
+    const videoInfo = new CastedVideoInfo(this);
+    return videoInfo;
   }
 }
