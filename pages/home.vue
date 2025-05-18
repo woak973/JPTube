@@ -58,8 +58,6 @@ const fetchData = async (chip?: string) => {
         return true;
       });
       sourceresults = new YT.HomeFeed(yt.actions, nav, true);
-
-      console.log(sourceresults);
     } else {
       const searchResults = await yt.getHomeFeed();
       results.value = await [searchResults.page_contents];

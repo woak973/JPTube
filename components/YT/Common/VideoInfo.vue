@@ -71,6 +71,11 @@
         <v-card-subtitle v-else>{{ data.primary_info.published?.text }}・{{
           data.primary_info.view_count?.view_count?.text
         }}</v-card-subtitle>
+        <v-card-subtitle v-if="data.primary_info?.super_title_link">
+          <template v-if="(data.primary_info?.super_title_link instanceof Misc.Text)">
+            <YTMiscText :data="data.primary_info?.super_title_link" />
+          </template>
+        </v-card-subtitle>
       </template>
       <template v-if="data.secondary_info">
         <v-card-text>
@@ -79,6 +84,12 @@
               <YTMiscText :data="data.secondary_info.description" />
             </template>
           </div>
+
+          <template v-if="data.basic_info && showFullDescription">
+            <v-chip-group>
+              <v-chip v-for="keyword in data.basic_info.keywords">{{ keyword }}</v-chip>
+            </v-chip-group>
+          </template>
 
           <template v-if="showFullDescription">
             <template v-for="result in data.secondary_info.metadata?.rows">
