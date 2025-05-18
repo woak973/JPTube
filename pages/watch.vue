@@ -9,6 +9,7 @@ const { share } = useShare();
 const goTo = useGoTo();
 
 const Relatedresults = ref<Helpers.ObservedArray<Helpers.YTNode> | null | undefined>();
+const chipOptions = ref<YTNodes.ChipCloud | null | undefined>();
 const HeaderResults = ref<YT.VideoInfo>();
 const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>();
 const Chatresults = ref<Array<Helpers.YTNode>>([]);
@@ -91,6 +92,7 @@ const errorMessage = ref<string>('');
 const fatalError = ref<boolean>(false);
 const showFullDescription = ref<boolean>(false);
 const autoplaySnackbar = ref<boolean>(false);
+const selectedChip = ref<string>();
 
 const toggleDescription = () => {
   showFullDescription.value = !showFullDescription.value;
@@ -172,6 +174,7 @@ const fetchVideoData = async () => {
     infiniteScrollKey.value = route.query.v as string;
 
     Relatedresults.value = await searchResults.watch_next_feed;
+    chipOptions.value = searchResults.related_chip_cloud;
     HeaderResults.value = searchResults;
     PLResults.value = searchResults.playlist;
     AutoPlayResults.value = searchResults.autoplay;
@@ -337,6 +340,16 @@ const ApplyComSort = async () => {
     } else {
       errorMessage.value = 'An unknown error occurred';
     }
+  }
+};
+
+const applyChips = async () => {
+  const chip = selectedChip.value;
+  if (chip) {
+    const nav = await yt.actions.execute('/next', { continuation: chip, parse: true });
+    Relatedresults.value = nav?.on_response_received_endpoints ? nav.on_response_received_endpoints : null;
+  } else {
+    Relatedresults.value = sourceresults?.watch_next_feed;
   }
 };
 
@@ -523,6 +536,12 @@ await fetchVideoData();
             </v-row>
           </div>
         </v-expand-transition>
+
+        <v-chip-group v-if="chipOptions" v-model="selectedChip" color="primary" @update:modelValue="applyChips">
+          <v-chip v-for="chip in chipOptions.chips" :key="chip.text" :value="chip.endpoint?.payload?.token">
+            {{ chip.text }}
+          </v-chip>
+        </v-chip-group>
 
         <template v-if="isMobile">
           <template v-if="Commentresults">
