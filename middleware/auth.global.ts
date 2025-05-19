@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware((to) => {
   if (enteredToken) {
     cookies.value = enteredToken;
   }
-  if (enteredToken !== validToken && !to.path.startsWith('/login')) {
+  if (enteredToken !== validToken && !to.path.startsWith('/login') && !to.path.startsWith('/embed')) {
     return navigateTo('/login');
   }
 });
