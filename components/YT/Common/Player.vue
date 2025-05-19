@@ -360,7 +360,9 @@ const handleKeydown = (event: KeyboardEvent) => {
 };
 
 const aspectRatioClass = computed(() => {
-  return props.aspectRatio === '9:16' ? 'aspect-9-16' : 'aspect-16-9';
+  if (props.aspectRatio === '9:16') return 'aspect-9-16';
+  if (props.aspectRatio === 'fullscreen') return 'aspect-fullscreen';
+  return 'aspect-16-9';
 });
 
 const destroyPlayer = async () => {
@@ -404,6 +406,18 @@ defineExpose({ seek });
 .aspect-9-16 {
     padding-top: 177.78%;
     /* 9:16 aspect ratio */
+}
+
+.aspect-fullscreen {
+    overflow: hidden !important;
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    padding-top: 0 !important;
+    z-index: 9999;
+    background: #000;
 }
 
 .videoel {
