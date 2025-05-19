@@ -32,6 +32,8 @@ watch(() => route.query.v, async (newVideoId) => {
   videoId.value = newVideoId as string;
   goTo(0);
   await fetchVideoData();
+  selectedChip.value = undefined;
+  ischipselected.value = false;
 });
 
 watch(() => route.query.list, async () => {
