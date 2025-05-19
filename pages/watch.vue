@@ -470,6 +470,11 @@ await fetchVideoData();
           @toggleDescription="toggleDescription" />
 
         <template v-if="isMobile">
+          <v-chip-group v-if="chipOptions" v-model="selectedChip" color="primary" @update:modelValue="applyChips">
+            <v-chip v-for="chip in chipOptions.chips" :key="chip.text" :value="chip.endpoint?.payload?.token">
+              {{ chip.text }}
+            </v-chip>
+          </v-chip-group>
           <template v-if="Relatedresults && !ischipselected">
             <v-infinite-scroll v-if="Relatedresults.length" :key="infiniteScrollKey" :mode="mode" @load="LoadMore">
               <v-row style="width: 100%; margin-left: 0;">
@@ -556,12 +561,6 @@ await fetchVideoData();
           </div>
         </v-expand-transition>
 
-        <v-chip-group v-if="chipOptions" v-model="selectedChip" color="primary" @update:modelValue="applyChips">
-          <v-chip v-for="chip in chipOptions.chips" :key="chip.text" :value="chip.endpoint?.payload?.token">
-            {{ chip.text }}
-          </v-chip>
-        </v-chip-group>
-
         <template v-if="isMobile">
           <template v-if="Commentresults">
             <template v-if="comsource.header">
@@ -582,6 +581,11 @@ await fetchVideoData();
           </template>
         </template>
         <template v-else>
+          <v-chip-group v-if="chipOptions" v-model="selectedChip" color="primary" @update:modelValue="applyChips">
+            <v-chip v-for="chip in chipOptions.chips" :key="chip.text" :value="chip.endpoint?.payload?.token">
+              {{ chip.text }}
+            </v-chip>
+          </v-chip-group>
           <template v-if="Relatedresults && !ischipselected">
             <v-infinite-scroll v-if="Relatedresults.length" :key="infiniteScrollKey" mode="intersect" @load="LoadMore">
               <v-row style="width: 100%; margin-left: 0;">
