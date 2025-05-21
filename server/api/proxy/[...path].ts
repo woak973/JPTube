@@ -46,6 +46,7 @@ const handler = async (event: H3Event): Promise<Response> => {
     url.port = '443';
     url.pathname = url.pathname.replace(/^\/api\/proxy\//, '/');
     url.searchParams.delete('__host');
+    url.searchParams.delete('__isSelf');
 
     const headersBase64 = url.searchParams.get('__headers');
     let parsedHeaders = {};
