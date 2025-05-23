@@ -508,7 +508,7 @@ await fetchVideoData();
           <v-expand-transition>
             <div v-if="ChatComponent" class="scrollable-component">
               <v-row justify="end">
-                <v-btn icon @click="toggleCommentComponent">
+                <v-btn icon @click="toggleChatComponent">
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
               </v-row>
