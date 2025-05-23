@@ -1,8 +1,8 @@
 <template>
-  <v-card title="Toggle Playlist" @click="$emit('togglePLComponent')">
+  <v-card title="Toggle Playlist" color="rgba(235,221,221,0.949)" @click="$emit('togglePLComponent')">
     <template #append>
-      <v-btn icon>
-        <v-icon>mdi-close</v-icon>
+      <v-btn icon color="rgba(235,221,221,0.949)">
+        <v-icon>mdi-chevron-down</v-icon>
       </v-btn>
     </template>
   </v-card>

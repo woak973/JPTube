@@ -184,7 +184,6 @@ const fetchVideoData = async () => {
     }
 
     const searchResults = await yt.getInfo(nav);
-    console.log('searchResults:', searchResults);
     infiniteScrollKey.value = route.query.v as string;
 
     Relatedresults.value = await searchResults.watch_next_feed;
@@ -196,7 +195,6 @@ const fetchVideoData = async () => {
 
     try {
       const searchcommentResults = await yt.getComments(route.query.v as string);
-      console.log('searchcommentResults:', searchcommentResults);
       for (const comment of searchcommentResults.contents) {
         if (comment.has_replies) {
           await comment.getReplies();
@@ -503,142 +501,151 @@ await fetchVideoData();
       </v-col>
       <v-col cols="12" md="4">
         <v-row>
-          <v-col v-if="ChatBtn" cols="12">
-            <v-btn @click="toggleChatComponent">Toggle Chat</v-btn>
+          <v-col v-if="ChatBtn && !ChatComponent" cols="12">
+            <YTCommonChatBtn @toggleChatComponent="toggleChatComponent" />
           </v-col>
+
+          <v-expand-transition>
+            <div v-if="ChatComponent" class="scrollable-component">
+              <v-row justify="end">
+                <v-btn icon @click="toggleCommentComponent">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </v-row>
+              <v-row>
+                <template v-for="BannerResult in ChatBannerResults">
+                  <template v-if="(BannerResult instanceof Helpers.YTNode)">
+                    <YTNode :data="BannerResult" />
+                  </template>
+                </template>
+              </v-row>
+              <v-row>
+                <template v-for="result in Chatresults">
+                  <template v-if="(result instanceof Helpers.YTNode)">
+                    <YTNode :data="result" />
+                  </template>
+                </template>
+              </v-row>
+            </div>
+          </v-expand-transition>
+
           <v-col v-if="PLBtn && !PLComponent" cols="12">
 
             <YTCommonPLBtn @togglePLComponent="togglePLComponent" />
           </v-col>
+
+          <v-expand-transition>
+            <div v-if="PLComponent" class="scrollable-component">
+              <template v-if="PLResults">
+                <YTCommonTwoColumnWatchNextResultsPlaylist :data="PLResults" @togglePLComponent="togglePLComponent" />
+              </template>
+              <v-row style="margin-top: 0;">
+                <template v-for="result in PLResults?.contents">
+                  <template v-if="(result instanceof Helpers.YTNode)">
+                    <YTNode :data="result" />
+                  </template>
+                </template>
+              </v-row>
+            </div>
+          </v-expand-transition>
+
           <v-col v-if="Commentresults && isMobile && mobilecom === 'related'" cols="12">
 
-            <YTCommonChatandCommentBtn @toggleChatComponent="toggleChatComponent" @toggleCommentComponent="toggleCommentComponent" />
+            <YTCommonCommentBtn :data="comsource.header" @toggleCommentComponent="toggleCommentComponent" />
           </v-col>
-        </v-row>
 
-        <v-expand-transition>
-          <div v-if="ChatComponent" class="scrollable-component">
-            <v-row>
-              <template v-for="BannerResult in ChatBannerResults">
-                <template v-if="(BannerResult instanceof Helpers.YTNode)">
-                  <YTNode :data="BannerResult" />
+          <template v-if="isMobile">
+            <v-window v-model="mobilecom">
+              <v-window-item value="related">
+                <v-chip-group v-if="chipOptions" v-model="selectedChip" color="primary" @update:modelValue="applyChips">
+                  <v-chip v-for="chip in chipOptions.chips" :key="chip.text" :value="chip.endpoint?.payload?.token">
+                    {{ chip.text }}
+                  </v-chip>
+                </v-chip-group>
+                <template v-if="Relatedresults && !ischipselected">
+                  <v-infinite-scroll v-if="Relatedresults.length" :key="infiniteScrollKey" mode="intersect" @load="LoadMore">
+                    <v-row style="width: 100%; margin-left: 0;">
+                      <template v-for="result in Relatedresults">
+                        <template v-if="(result instanceof Helpers.YTNode)">
+                          <YTNode :data="result" :page="'Watch'" />
+                        </template>
+                      </template>
+                    </v-row>
+                  </v-infinite-scroll>
                 </template>
-              </template>
-            </v-row>
-            <v-row>
-              <template v-for="result in Chatresults">
-                <template v-if="(result instanceof Helpers.YTNode)">
-                  <YTNode :data="result" />
-                </template>
-              </template>
-            </v-row>
-          </div>
-        </v-expand-transition>
-
-        <v-expand-transition>
-          <div v-if="PLComponent" class="scrollable-component">
-            <template v-if="PLResults">
-              <YTCommonTwoColumnWatchNextResultsPlaylist :data="PLResults" @togglePLComponent="togglePLComponent" />
-            </template>
-            <v-row style="margin-top: 0;">
-              <template v-for="result in PLResults?.contents">
-                <template v-if="(result instanceof Helpers.YTNode)">
-                  <YTNode :data="result" />
-                </template>
-              </template>
-            </v-row>
-          </div>
-        </v-expand-transition>
-
-        <template v-if="isMobile">
-          <v-window v-model="mobilecom">
-            <v-window-item value="related">
-              <v-chip-group v-if="chipOptions" v-model="selectedChip" color="primary" @update:modelValue="applyChips">
-                <v-chip v-for="chip in chipOptions.chips" :key="chip.text" :value="chip.endpoint?.payload?.token">
-                  {{ chip.text }}
-                </v-chip>
-              </v-chip-group>
-              <template v-if="Relatedresults && !ischipselected">
-                <v-infinite-scroll v-if="Relatedresults.length" :key="infiniteScrollKey" mode="intersect" @load="LoadMore">
+                <template v-else-if="ChipResults && ischipselected">
                   <v-row style="width: 100%; margin-left: 0;">
-                    <template v-for="result in Relatedresults">
+                    <template v-for="result in ChipResults">
                       <template v-if="(result instanceof Helpers.YTNode)">
                         <YTNode :data="result" :page="'Watch'" />
                       </template>
                     </template>
                   </v-row>
-                </v-infinite-scroll>
-              </template>
-              <template v-else-if="ChipResults && ischipselected">
+                </template>
+                <template v-else-if="!ChipResults && ischipselected">
+                  <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
+                    <v-progress-circular indeterminate color="primary" />
+                  </div>
+                </template>
+              </v-window-item>
+
+              <v-window-item value="comments">
+                <template v-if="Commentresults">
+                  <template v-if="comsource.header">
+                    <v-col cols="12">
+                      <YTCommonCommentsHeaderMobile
+                        :data="comsource.header"
+                        @update:selectedSort="selectedSort = $event" @apply-com-sort="ApplyComSort" @toggleCommentComponent="toggleCommentComponent" />
+                    </v-col>
+                  </template>
+
+                  <v-infinite-scroll v-if="Commentresults.length" :key="infiniteScrollKey" mode="intersect" @load="ComLoadMore">
+                    <v-row style="width: 100%; margin-left: 0;">
+                      <template v-for="result in Commentresults">
+                        <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
+                          <YTCommonCommentThread :data="result" :yt="yt" />
+                        </v-col>
+                      </template>
+                    </v-row>
+                  </v-infinite-scroll>
+                </template>
+              </v-window-item>
+            </v-window>
+          </template>
+
+          <template v-else>
+            <v-chip-group v-if="chipOptions" v-model="selectedChip" color="primary" @update:modelValue="applyChips">
+              <v-chip v-for="chip in chipOptions.chips" :key="chip.text" :value="chip.endpoint?.payload?.token">
+                {{ chip.text }}
+              </v-chip>
+            </v-chip-group>
+            <template v-if="Relatedresults && !ischipselected">
+              <v-infinite-scroll v-if="Relatedresults.length" :key="infiniteScrollKey" mode="intersect" @load="LoadMore">
                 <v-row style="width: 100%; margin-left: 0;">
-                  <template v-for="result in ChipResults">
+                  <template v-for="result in Relatedresults">
                     <template v-if="(result instanceof Helpers.YTNode)">
                       <YTNode :data="result" :page="'Watch'" />
                     </template>
                   </template>
                 </v-row>
-              </template>
-              <template v-else-if="!ChipResults && ischipselected">
-                <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
-                  <v-progress-circular indeterminate color="primary" />
-                </div>
-              </template>
-            </v-window-item>
-
-            <v-window-item value="comments">
-              <template v-if="Commentresults">
-                <template v-if="comsource.header">
-                  <YTCommonCommentsHeaderMobile
-                    :data="comsource.header"
-                    @update:selectedSort="selectedSort = $event" @apply-com-sort="ApplyComSort" @toggleCommentComponent="toggleCommentComponent" />
-                </template>
-
-                <v-infinite-scroll v-if="Commentresults.length" :key="infiniteScrollKey" mode="intersect" @load="ComLoadMore">
-                  <v-row style="width: 100%; margin-left: 0;">
-                    <template v-for="result in Commentresults">
-                      <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
-                        <YTCommonCommentThread :data="result" :yt="yt" />
-                      </v-col>
-                    </template>
-                  </v-row>
-                </v-infinite-scroll>
-              </template>
-            </v-window-item>
-          </v-window>
-        </template>
-
-        <template v-else>
-          <v-chip-group v-if="chipOptions" v-model="selectedChip" color="primary" @update:modelValue="applyChips">
-            <v-chip v-for="chip in chipOptions.chips" :key="chip.text" :value="chip.endpoint?.payload?.token">
-              {{ chip.text }}
-            </v-chip>
-          </v-chip-group>
-          <template v-if="Relatedresults && !ischipselected">
-            <v-infinite-scroll v-if="Relatedresults.length" :key="infiniteScrollKey" mode="intersect" @load="LoadMore">
+              </v-infinite-scroll>
+            </template>
+            <template v-else-if="ChipResults && ischipselected">
               <v-row style="width: 100%; margin-left: 0;">
-                <template v-for="result in Relatedresults">
+                <template v-for="result in ChipResults">
                   <template v-if="(result instanceof Helpers.YTNode)">
                     <YTNode :data="result" :page="'Watch'" />
                   </template>
                 </template>
               </v-row>
-            </v-infinite-scroll>
+            </template>
+            <template v-else-if="!ChipResults && ischipselected">
+              <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
+                <v-progress-circular indeterminate color="primary" />
+              </div>
+            </template>
           </template>
-          <template v-else-if="ChipResults && ischipselected">
-            <v-row style="width: 100%; margin-left: 0;">
-              <template v-for="result in ChipResults">
-                <template v-if="(result instanceof Helpers.YTNode)">
-                  <YTNode :data="result" :page="'Watch'" />
-                </template>
-              </template>
-            </v-row>
-          </template>
-          <template v-else-if="!ChipResults && ischipselected">
-            <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
-              <v-progress-circular indeterminate color="primary" />
-            </div>
-          </template>
-        </template>
+        </v-row>
       </v-col>
     </v-row>
 
