@@ -1,6 +1,10 @@
 <template>
-  <v-card v-if="data" flat link :to="`/playlist?list=${data?.id}`">
-    <v-card-title>{{ data?.title }}</v-card-title>
+  <v-card v-if="data" :title="data?.title" flat link :to="`/playlist?list=${data?.id}`">
+    <template #append>
+      <v-btn icon @click.stop.prevent ="$emit('togglePLComponent')">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </template>
     <v-card-subtitle>
       <template v-if="(data?.author instanceof Misc.Author)">
         <v-row>
@@ -41,4 +45,6 @@ import { Misc } from 'youtubei.js';
 defineProps<{
   data: YTNodes.TwoColumnWatchNextResults['playlist'];
 }>();
+
+defineEmits(['togglePLComponent']);
 </script>
