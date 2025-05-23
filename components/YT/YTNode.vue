@@ -23,7 +23,7 @@
         <v-col v-if="page === 'Search'" cols="12">
           <YTNodeChannel :data="(data as YTNodes.Channel)" />
         </v-col>
-        <v-col v-if="page === 'Watch'" cols="12">
+        <v-col v-else-if="page === 'Watch'" cols="12">
           <YTNodeChannelWatch :data="(data as YTNodes.Channel)" />
         </v-col>
         <v-col v-else cols="12" md="4" lg="3" sm="6">
