@@ -9,11 +9,11 @@ Nuxtの詳細については、[Nuxt documentation](https://nuxt.com/docs/gettin
 
 ## JPTubeについて
 ![JPTube UI](https://github.com/user-attachments/assets/42e33aae-992c-4dae-8067-ce707310d57b)
-JPTubeはYouTubeの代替フロントエンドです。[LuanRT/YouTube.js](https://github.com/LuanRT/YouTube.js)を使用して情報を取得します。JPTubeはNuxtとVuetifyを使用して構築されています。
+JPTubeはYouTubeの代替フロントエンドです。[LuanRT/YouTube.js](https://github.com/LuanRT/YouTube.js)を使用して情報を取得します。JPTubeはNuxt3とVuetifyを使用して構築されています。
 
 ### バックエンド
 
-JPTubeはバックエンドを使用して情報を取得させることもできます。[JPTube-server](https://github.com/woak973/JPTube-server)からDenoのバックエンドを、[JPTube-server-node](https://github.com/woak973/JPTube-server-node)からNode.jsのバックエンドをそれぞれデプロイできます。
+使用中のIPが禁止、または制限されている場合は、JPTubeはバックエンドを使用して情報を取得させることもできます。[JPTube-server](https://github.com/woak973/JPTube-server)からDenoのバックエンドを、[JPTube-server-node](https://github.com/woak973/JPTube-server-node)からNode.jsのバックエンドをそれぞれデプロイできます。
 
 ### 環境変数
 
@@ -21,10 +21,17 @@ JPTubeはバックエンドを使用して情報を取得させることもで�
 
 - `BACKEND_HOST`: 動画ストリーミング以外の情報を取得するために使用するバックエンドサーバーを指定します。
 - `PLAYER_BACKEND_HOST`: 動画ストリーミング情報、及びダウンロード時の情報を取得するために使用するバックエンドサーバーを指定します。
-- `COOKIE`: 情報の取得に使用するクッキーを指定します。
+- `COOKIE`: 情報の取得に使用するクッキーを指定します。詳細は[こちら](https://github.com/patrickkfkan?Volumio-YouTube.js/wiki/How-to-obtain-Cookie)をご覧ください。
 - `LOGIN_PASSWORD`: アクセス用のパスワードを指定します。
 
 デプロイ時に`BACKEND_HOST`および`PLAYER_BACKEND_HOST`環境変数が設定されていない場合、woak973がホストする公式バックエンドがデフォルトのバックエンドとして使用されます。また、`LOGIN_PASSWORD`環境変数が設定されていない場合、デフォルトのパスワード`20531`が使用されます。
+
+### トラブルシューティング
+
+#### streaming data not available または video is unplayable または video is login required と表示される場合
+
+使用中のインスタンスのIPが禁止、または制限されている可能性があります。  
+Cookieを使用してログインを試すか、バックエンドを指定して情報を取得してみてください。
 
 ## Setup JPTube
 
@@ -100,6 +107,8 @@ bun run preview
 
 ## JPTubeのデプロイ
 
+Nuxtアプリのデプロイについては、[Nuxt Deploy](https://nuxt.com/deploy)をご覧ください。
+
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/woak973/JPTube)
 [![Deploy to Vercel](https://binbashbanana.github.io/deploy-buttons/buttons/official/vercel.svg)](https://vercel.com/new/clone?repository-url=https://github.com/woak973/JPTube)
 [![Deploy to Netlify](https://binbashbanana.github.io/deploy-buttons/buttons/official/netlify.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/woak973/JPTube)
@@ -108,3 +117,5 @@ bun run preview
 [![Deploy to Heroku](https://binbashbanana.github.io/deploy-buttons/buttons/official/heroku.svg)](https://heroku.com/deploy/?template=https://github.com/woak973/JPTube)
 [![Run on Google Cloud](https://binbashbanana.github.io/deploy-buttons/buttons/official/googlecloud.svg)](https://deploy.cloud.run/?git_repo=https://github.com/woak973/JPTube)
 [![Deploy to Amplify Console](https://binbashbanana.github.io/deploy-buttons/buttons/remade/amplifyconsole.svg)](https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/woak973/JPTube)
+
+これらの他に、自身でリポジトリをフォークして [Deno Deploy](https://deno.com/deploy) などでデプロイすることもできます。

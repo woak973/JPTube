@@ -140,13 +140,14 @@
 
 <script setup lang="ts">
 import type { SupportedLangs } from '~/stores/lang';
+import type { SupportedLocations } from '~/stores/location';
 
 const dialog = ref<boolean>(false);
 const ResetConfirmDialog = ref<boolean>(false);
 const activeTab = ref<string>('Language/Region');
 
 const selectedLang = ref<SupportedLangs>('en');
-const selectedLocation = ref<string>('US');
+const selectedLocation = ref<SupportedLocations>('US');
 const selectedPlayer = ref<'shaka-player' | 'embed' | 'VideoJS'>('shaka-player');
 const selectedBackend = ref<string>('');
 const selectedPlayerBackend = ref<string>('');
