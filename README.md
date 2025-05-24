@@ -25,7 +25,7 @@ You can configure the following environment variables:
 
 - `BACKEND_HOST`: Specifies the backend server used to retrieve non-video-streaming information.
 - `PLAYER_BACKEND_HOST`: Specifies the backend server used to retrieve video-streaming information.
-- `COOKIE`: Specifies the cookie to retrieve information. For more details, see [here](https://github.com/patrickkfkan?Volumio-YouTube.js/wiki/How-to-obtain-Cookie).
+- `COOKIE`: Specifies the cookie to retrieve information. For more details, see [here](https://github.com/patrickkfkan/Volumio-YouTube.js/wiki/How-to-obtain-Cookie).
 - `LOGIN_PASSWORD`: Specifies the password for accessing.
 
 When deploying, if the `BACKEND_HOST` and `PLAYER_BACKEND_HOST`environment variable is not set, the official backend hosted by woak973 will be used as the server's default backend. Additionally, if the `LOGIN_PASSWORD` environment variable is not set, the default password `20531` will be used.
