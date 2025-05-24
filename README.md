@@ -13,11 +13,11 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 ## About JPTube
 ![JPTube UI](https://github.com/user-attachments/assets/42e33aae-992c-4dae-8067-ce707310d57b)
-JPTube is an alternative frontend for YouTube. It uses [LuanRT/YouTube.js](https://github.com/LuanRT/YouTube.js) to retrieve information. JPTube is built using Nuxt and Vuetify.
+JPTube is an alternative frontend for YouTube. It uses [LuanRT/YouTube.js](https://github.com/LuanRT/YouTube.js) to retrieve information. JPTube is built using Nuxt3 and Vuetify.
 
 ### Backend
 
-JPTube can also use a backend to retrieve information. You can deploy the Deno backend from [JPTube-server](https://github.com/woak973/JPTube-server) and Node.js backend from [JPTube-server-node](https://github.com/woak973/JPTube-server-node).
+If your current IP is banned or restricted, JPTube can also use a backend to retrieve information. You can deploy the Deno backend from [JPTube-server](https://github.com/woak973/JPTube-server) and Node.js backend from [JPTube-server-node](https://github.com/woak973/JPTube-server-node).
 
 ### Environment Variables
 
@@ -104,6 +104,8 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 ## Deploy JPTube
 
+Look at the [Nuxt Deploy](https://nuxt.com/deploy) to learn more about Deploying NuxtApp.
+
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/woak973/JPTube)
 [![Deploy to Vercel](https://binbashbanana.github.io/deploy-buttons/buttons/official/vercel.svg)](https://vercel.com/new/clone?repository-url=https://github.com/woak973/JPTube)
 [![Deploy to Netlify](https://binbashbanana.github.io/deploy-buttons/buttons/official/netlify.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/woak973/JPTube)
@@ -112,4 +114,6 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 [![Deploy to Heroku](https://binbashbanana.github.io/deploy-buttons/buttons/official/heroku.svg)](https://heroku.com/deploy/?template=https://github.com/woak973/JPTube)
 [![Run on Google Cloud](https://binbashbanana.github.io/deploy-buttons/buttons/official/googlecloud.svg)](https://deploy.cloud.run/?git_repo=https://github.com/woak973/JPTube)
 [![Deploy to Amplify Console](https://binbashbanana.github.io/deploy-buttons/buttons/remade/amplifyconsole.svg)](https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/woak973/JPTube)
+
+You can also fork the repository yourself and deploy it to platforms such as [Deno Deploy](https://deno.com/deploy).
 
