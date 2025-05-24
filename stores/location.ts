@@ -1,13 +1,17 @@
+export type SupportedLocations =
+  | 'AU' | 'BR' | 'CA' | 'FR' | 'DE' | 'IN' | 'ID' | 'IT'
+  | 'NL' | 'PT' | 'RU' | 'KR' | 'ES' | 'JP' | 'GB' | 'US';
+
 export const useLocationStore = defineStore('location', {
   state: () => ({
-    location: 'US',
+    location: 'US' as SupportedLocations,
   }),
   actions: {
-    setLocation(this: { location: string }, newLocation: string) {
+    setLocation(this: { location: SupportedLocations }, newLocation: SupportedLocations) {
       this.location = newLocation;
     },
-    resetLocation(this: { location: string }) {
-      this.location = 'US';
+    resetLocation(this: { location: SupportedLocations }) {
+      this.location = 'US' as SupportedLocations;
     },
   },
   persist: true,
