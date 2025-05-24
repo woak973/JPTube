@@ -195,6 +195,7 @@ const fetchData = async (bp?: string) => {
   try {
     yt = await useInnertube('common');
     const searchResults = await getSearchResults(yt, bp);
+    console.log(searchResults);
     if (searchResults instanceof YT.Channel) {
       HeaderResults.value = searchResults.header;
       MetaResults.value = searchResults.metadata as YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>;
