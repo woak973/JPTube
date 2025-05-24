@@ -640,9 +640,11 @@ await fetchVideoData();
               </v-row>
             </template>
             <template v-else-if="!ChipResults && ischipselected">
-              <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
-                <v-progress-circular indeterminate color="primary" />
-              </div>
+              <v-row justify="center">
+                <v-col cols="auto">
+                  <v-progress-circular indeterminate color="primary" />
+                </v-col>
+              </v-row>
             </template>
           </template>
         </v-row>
