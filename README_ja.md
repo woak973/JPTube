@@ -21,7 +21,7 @@ JPTubeはYouTubeの代替フロントエンドです。[LuanRT/YouTube.js](https
 
 - `BACKEND_HOST`: 動画ストリーミング以外の情報を取得するために使用するバックエンドサーバーを指定します。
 - `PLAYER_BACKEND_HOST`: 動画ストリーミング情報、及びダウンロード時の情報を取得するために使用するバックエンドサーバーを指定します。
-- `COOKIE`: 情報の取得に使用するクッキーを指定します。詳細は[こちら](https://github.com/patrickkfkan?Volumio-YouTube.js/wiki/How-to-obtain-Cookie)をご覧ください。
+- `COOKIE`: 情報の取得に使用するクッキーを指定します。詳細は[こちら](https://github.com/patrickkfkan/Volumio-YouTube.js/wiki/How-to-obtain-Cookie)をご覧ください。
 - `LOGIN_PASSWORD`: アクセス用のパスワードを指定します。
 
 デプロイ時に`BACKEND_HOST`および`PLAYER_BACKEND_HOST`環境変数が設定されていない場合、woak973がホストする公式バックエンドがデフォルトのバックエンドとして使用されます。また、`LOGIN_PASSWORD`環境変数が設定されていない場合、デフォルトのパスワード`20531`が使用されます。
