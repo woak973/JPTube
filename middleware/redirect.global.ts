@@ -13,6 +13,10 @@ export default defineNuxtRouteMiddleware((to) => {
     return navigateTo('/channel/UCYfdidRxbB8Qhf0Nx7ioOYw');
   } else if (to.path.startsWith('/feed/trending')) {
     return navigateTo('/');
+  } else if (to.path.startsWith('/learning')) {
+    return navigateTo('/channel/UCtFRv9O2AHqOZjjynzrv-xg');
+  } else if (to.path.startsWith('/fashion') || to.path.startsWith('/Fashion')) {
+    return navigateTo('/channel/UCrpQ4p1Ql_hG8rKXIKM1MOQ');
   } else if (to.path.startsWith('/feed/courses_destination')) {
     return navigateTo('/courses');
   } else if (to.path.startsWith('/feed/storefront')) {
