@@ -120,6 +120,17 @@
       </template>
     </template>
 
+    <template v-else-if="data.type === 'Message'">
+      <template v-if="attribute === 'slide'">
+        <YTNodeMessage :data="(data as YTNodes.Message)" />
+      </template>
+      <template v-else>
+        <v-col cols="12">
+          <YTNodeMessage :data="(data as YTNodes.Message)" />
+        </v-col>
+      </template>
+    </template>
+
     <template v-else-if="data.type === 'PlaylistVideo'">
       <template v-if="attribute === 'slide'">
         <YTNodePlaylistVideo :data="(data as YTNodes.PlaylistVideo)" />
