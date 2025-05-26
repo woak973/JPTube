@@ -8,9 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import type { EmptyProductDetails } from './CustomNode';
 
-defineProps<{
-  data: EmptyProductDetails;
-}>();
+defineProps({
+  data: CustomNodes.EmptyProductDetails,
+});
 </script>
