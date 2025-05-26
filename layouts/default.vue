@@ -93,7 +93,9 @@ const Refresh = (): void => {
       <v-list-item
         prepend-icon="mdi-trophy-variant" link title="Sports"
         to="/channel/UCEgdi0XIXXZ-qJOFPf4JSKw" />
+      <v-list-item prepend-icon="mdi-lightbulb-outline" link title="Learning" to="/channel/UCtFRv9O2AHqOZjjynzrv-xg" />
       <v-list-item prepend-icon="mdi-school" link title="Courses" to="/courses" />
+      <v-list-item prepend-icon="mdi-hanger" link title="Fashion & Beauty" to="/channel/UCrpQ4p1Ql_hG8rKXIKM1MOQ" />
       <v-divider />
       <v-list-item title="Other Services" subtitle="Welcome" />
       <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music" />

@@ -18,11 +18,10 @@
 </template>
 
 <script setup lang="ts">
-import type { VerticalProductCard } from './CustomNode';
 
-defineProps<{
-  data: VerticalProductCard;
-}>();
+defineProps({
+  data: CustomNodes.VerticalProductCard,
+});
 
 </script>
 
