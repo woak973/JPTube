@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build": "NODE_OPTIONS=--max_old_space_size=4096 nuxt build",
     "dev": "nuxt dev",
-    "generate": "nuxt generate",
+    "generate": "NODE_OPTIONS=--max_old_space_size=4096 nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "patch-package && nuxt prepare",
     "start": "node .output/server/index.mjs",
