@@ -194,7 +194,7 @@ await fetchData();
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" @click="applyFilters">Apply</v-btn>
+          <v-btn color="primary" @click="applyFilters">{{ $t('common.Apply') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
