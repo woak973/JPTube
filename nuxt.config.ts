@@ -13,11 +13,18 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate',
     '@nuxt/eslint',
+    '@nuxtjs/i18n',
   ],
   vite: {
     server: {
       hmr: false,
     },
+  },
+  i18n: {
+    locales: ['en', 'ja'],
+    defaultLocale: 'en',
+    strategy: 'no_prefix',
+    vueI18n: './i18n.config.ts',
   },
   runtimeConfig: {
     public: {
