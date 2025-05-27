@@ -68,7 +68,7 @@ const Refresh = (): void => {
       </router-link>
       <v-spacer />
       <v-combobox
-        v-model="searchQuery" :items="suggestions" label="Search" single-line hide-details clearable
+        v-model="searchQuery" :items="suggestions" :label="$t('guide.Search')" single-line hide-details clearable
         :filter="() => { return true; }" prepend-inner-icon="mdi-magnify" clear-icon="mdi-close-circle"
         @keyup.enter="search" @click:prepend-inner="search" @click:clear="clearSearch" />
       <v-btn icon @click="openLangDialog">
@@ -77,27 +77,27 @@ const Refresh = (): void => {
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" temporary>
-      <v-list-item title="JPTube" subtitle="Welcome" />
+      <v-list-item title="JPTube" :subtitle="$t('guide.Welcome')" />
       <v-divider />
-      <v-list-item prepend-icon="mdi-home" link title="Home(Trending)" to="/" />
-      <v-list-item prepend-icon="mdi-home-account" link title="HomeFeed" to="/home" />
-      <v-list-item prepend-icon="mdi-music" link title="Music" to="/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ" />
-      <v-list-item prepend-icon="mdi-movie-open" link title="Movies & TV" to="/channel/UClgRkhTL3_hImCAmdLfDE4g" />
+      <v-list-item prepend-icon="mdi-home" link :title="$t('guide.Home(Trending)')" to="/" />
+      <v-list-item prepend-icon="mdi-home-account" link :title="$t('guide.HomeFeed')" to="/home" />
+      <v-list-item prepend-icon="mdi-music" link :title="$t('guide.Music')" to="/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ" />
+      <v-list-item prepend-icon="mdi-movie-open" link :title="$t('guide.Movies&TV')" to="/channel/UClgRkhTL3_hImCAmdLfDE4g" />
       <v-list-item
-        prepend-icon="mdi-access-point" link title="Live"
+        prepend-icon="mdi-access-point" link :title="$t('guide.Live')"
         to="/channel/UC4R8DWoMoI7CAwX8_LjQHig" />
       <v-list-item
-        prepend-icon="mdi-gamepad-variant" link title="Gaming"
+        prepend-icon="mdi-gamepad-variant" link :title="$t('guide.Gaming')"
         to="/channel/UCOpNcN46UbXVtpKMrmU4Abg" />
-      <v-list-item prepend-icon="mdi-newspaper" link title="News" to="/channel/UCYfdidRxbB8Qhf0Nx7ioOYw" />
+      <v-list-item prepend-icon="mdi-newspaper" link :title="$t('guide.News')" to="/channel/UCYfdidRxbB8Qhf0Nx7ioOYw" />
       <v-list-item
-        prepend-icon="mdi-trophy-variant" link title="Sports"
+        prepend-icon="mdi-trophy-variant" link :title="$t('guide.Sports')"
         to="/channel/UCEgdi0XIXXZ-qJOFPf4JSKw" />
-      <v-list-item prepend-icon="mdi-lightbulb-outline" link title="Learning" to="/channel/UCtFRv9O2AHqOZjjynzrv-xg" />
-      <v-list-item prepend-icon="mdi-school" link title="Courses" to="/courses" />
-      <v-list-item prepend-icon="mdi-hanger" link title="Fashion & Beauty" to="/channel/UCrpQ4p1Ql_hG8rKXIKM1MOQ" />
+      <v-list-item prepend-icon="mdi-lightbulb-outline" link :title="$t('guide.Learning')" to="/channel/UCtFRv9O2AHqOZjjynzrv-xg" />
+      <v-list-item prepend-icon="mdi-school" link :title="$t('guide.Courses')" to="/courses" />
+      <v-list-item prepend-icon="mdi-hanger" link :title="$t('guide.Fashion&Beauty')" to="/channel/UCrpQ4p1Ql_hG8rKXIKM1MOQ" />
       <v-divider />
-      <v-list-item title="Other Services" subtitle="Welcome" />
+      <v-list-item :title="$t('guide.OtherServices')" :subtitle="$t('guide.Welcome')" />
       <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music" />
       <v-list-item prepend-icon="mdi-play-protected-content" link title="JPTube Kids" to="/kids" />
 

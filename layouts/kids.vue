@@ -77,11 +77,11 @@ const Refresh = (): void => {
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" temporary>
-      <v-list-item title="JPTube Kids" subtitle="Welcome" />
+      <v-list-item title="JPTube Kids" :subtitle="$t('guide.Welcome')" />
       <v-divider />
-      <v-list-item prepend-icon="mdi-home" link title="Home" to="/kids" />
+      <v-list-item prepend-icon="mdi-home" link :title="$t('guide.Home')" to="/kids" />
       <v-divider />
-      <v-list-item title="Other Services" subtitle="Welcome" />
+      <v-list-item :title="$t('guide.OtherServices')" :subtitle="$t('guide.Welcome')" />
       <v-list-item prepend-icon="mdi-play-box" link title="JPTube" to="/" />
       <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music" />
 

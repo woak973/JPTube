@@ -58,11 +58,11 @@ await fetchData();
     <div>
       <v-dialog v-model="alert" max-width="500">
         <v-card>
-          <v-card-title class="headline">Warning</v-card-title>
+          <v-card-title class="headline">{{ $t('common.Error') }}</v-card-title>
           <v-card-text>{{ errorMessage }}</v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="primary" @click="alert = false">Close</v-btn>
+            <v-btn color="primary" @click="alert = false">{{ $t('common.close') }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

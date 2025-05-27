@@ -146,7 +146,7 @@
         <v-card-text><v-icon>mdi-earth</v-icon>{{ about?.metadata?.country }}</v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" @click="dialog = false">Close</v-btn>
+          <v-btn color="primary" @click="dialog = false">{{ $t('common.close') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
