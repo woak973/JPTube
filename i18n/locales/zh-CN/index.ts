@@ -1,4 +1,4 @@
-import { en as $vuetify } from 'vuetify/locale';
+import { zhHans as $vuetify } from 'vuetify/locale';
 import guides from './guides.json';
 import settings from './settings.json';
 import common from './common.json';
@@ -13,7 +13,7 @@ const messages = {
   common: {
     ...common,
   },
-  currentlanguage: 'English',
+  currentlanguage: '中文 (简体)',
   $vuetify,
 };
 

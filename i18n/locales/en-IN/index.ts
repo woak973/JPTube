@@ -13,7 +13,7 @@ const messages = {
   common: {
     ...common,
   },
-  currentlanguage: 'English',
+  currentlanguage: 'English (India)',
   $vuetify,
 };
 
