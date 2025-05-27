@@ -2,7 +2,8 @@ import type { ClientType } from 'youtubei.js';
 import { Innertube, UniversalCache } from 'youtubei.js';
 
 export async function useInnertube(args: 'common' | 'player', client_type?: ClientType, unique_data?: { po_token: string | undefined; visitor_data: string }, isgenerate?: boolean) {
-  const lang = useLangStore().lang || 'en';
+  const { $i18n } = useNuxtApp();
+  const lang = $i18n.locale.value || 'en';
   const location = useLocationStore().location || 'US';
   const cookie = useCookieStore().cookie || (useRuntimeConfig().public.cookie as string) || '';
 

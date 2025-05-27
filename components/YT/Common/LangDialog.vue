@@ -5,44 +5,44 @@
         <v-btn icon @click="close">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>Settings</v-toolbar-title>
+        <v-toolbar-title>{{ $t('settings.Settings')}}</v-toolbar-title>
         <v-spacer />
       </v-toolbar>
       <v-card-text>
         <v-tabs v-model="activeTab" background-color="primary" dark>
-          <v-tab value="Language/Region">Language/Region</v-tab>
-          <v-tab value="Player">Player</v-tab>
-          <v-tab value="Backends">Backends</v-tab>
-          <v-tab value="Export/Import">Export/Import</v-tab>
-          <v-tab value="Experiment">Experiment</v-tab>
+          <v-tab value="Language/Region">{{ $t('settings.tabs.Language/Region') }}</v-tab>
+          <v-tab value="Player">{{ $t('settings.tabs.Player') }}</v-tab>
+          <v-tab value="Backends">{{ $t('settings.tabs.Backends') }}</v-tab>
+          <v-tab value="Export/Import">{{ $t('settings.tabs.Export/Import') }}</v-tab>
+          <v-tab value="Experiment">{{ $t('settings.tabs.Experimental')}}</v-tab>
           <v-tab value="Credits">Credits</v-tab>
         </v-tabs>
 
         <v-tabs-window v-model="activeTab">
           <!-- Language/Region Tab -->
           <v-tabs-window-item value="Language/Region">
-            <v-card-title><v-icon left>mdi-web</v-icon>Language</v-card-title>
-            <v-select v-model="selectedLang" :items="languages" label="Select Language" />
-            <v-card-title><v-icon left>mdi-earth</v-icon>Region</v-card-title>
-            <v-select v-model="selectedLocation" :items="regions" label="Select Region" />
+            <v-card-title><v-icon left>mdi-web</v-icon>{{ $t('settings.LanguageT') }}</v-card-title>
+            <v-select v-model="selectedLang" :items="languages" :label="$t('settings.SelectLanguage')" item-title="title" item-value="value" />
+            <v-card-title><v-icon left>mdi-earth</v-icon>{{ $t('settings.RegionT') }}</v-card-title>
+            <v-select v-model="selectedLocation" :items="regions" :label="$t('settings.SelectRegion')" item-title="title" item-value="value" />
           </v-tabs-window-item>
 
           <!-- Player Tab -->
           <v-tabs-window-item value="Player">
-            <v-card-title><v-icon left>mdi-play-box-multiple</v-icon>Player</v-card-title>
-            <v-select v-model="selectedPlayer" :items="players" label="Select Player" />
+            <v-card-title><v-icon left>mdi-play-box-multiple</v-icon>{{ $t('settings.PlayerT') }}</v-card-title>
+            <v-select v-model="selectedPlayer" :items="players" :label="$t('settings.SelectPlayer')" item-title="title" item-value="value" />
             <template v-if="selectedPlayer === 'shaka-player'">
-              <v-switch v-model="selectedAutoPlay" color="primary" label="Enable Auto Play" />
+              <v-switch v-model="selectedAutoPlay" color="primary" :label="$t('settings.EnableAP')" />
             </template>
           </v-tabs-window-item>
 
           <!-- Backends Tab -->
           <v-tabs-window-item value="Backends">
-            <v-card-title><v-icon left>mdi-server-network</v-icon>Backends</v-card-title>
-            <span>Choose whether to fetch directly from the Nuxt3 API server or from an external backend.</span>
-            <v-switch v-model="selectedSelf" color="primary" label="Enable Self Mode" />
+            <v-card-title><v-icon left>mdi-server-network</v-icon>{{ $t('settings.BackendsT') }}</v-card-title>
+            <span>{{ $t('settings.EnableSMD') }}</span>
+            <v-switch v-model="selectedSelf" color="primary" :label="$t('settings.EnableSM')" />
             <template v-if="!selectedSelf">
-              <v-combobox v-model="selectedBackend" label="Backend" :items="backendHistoryStore.history">
+              <v-combobox v-model="selectedBackend" :label="$t('settings.Backend')" :items="backendHistoryStore.history">
                 <template #item="{ props, item }">
                   <v-list-item @click="props.onClick!">
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -57,7 +57,7 @@
                 </template>
               </v-combobox>
               <v-combobox
-                v-model="selectedPlayerBackend" label="PlayerBackend"
+                v-model="selectedPlayerBackend" :label="$t('settings.PlayerBackend')"
                 :items="backendHistoryStore.history">
                 <template #item="{ props, item }">
                   <v-list-item @click="props.onClick!">
@@ -72,36 +72,35 @@
                   </v-list-item>
                 </template>
               </v-combobox>
-              <span>Choose whether to fetch directly from the backend or through the Nuxt3 API server.</span>
-              <v-switch v-model="selectedDirect" color="primary" label="Enable Direct Mode" />
-              <v-select v-model="selectedProtocol" :items="protocols" label="Protocol" />
+              <span>{{ $t('settings.EnableDMD') }}</span>
+              <v-switch v-model="selectedDirect" color="primary" :label="$t('settings.EnableDM')" />
+              <v-select v-model="selectedProtocol" :items="protocols" :label="$t('settings.Protocol')" item-title="title" item-value="value" />
               <v-card-actions>
-                <v-btn color="error" @click="backendHistoryStore.clearHistory();">Clear Backend
-                  History</v-btn>
+                <v-btn color="error" @click="backendHistoryStore.clearHistory();">{{ $t('settings.ClearBackendHistory') }}</v-btn>
               </v-card-actions>
             </template>
           </v-tabs-window-item>
 
           <!-- Export/Import Tab -->
           <v-tabs-window-item value="Export/Import">
-            <v-card-title><v-icon left>mdi-file-export</v-icon>Export/Import Settings</v-card-title>
+            <v-card-title><v-icon left>mdi-file-export</v-icon>{{ $t('settings.ExportImportST') }}</v-card-title>
             <v-card-actions>
-              <v-btn color="primary" @click="exportSettings">Export Current Settings</v-btn>
+              <v-btn color="primary" @click="exportSettings">{{ $t('settings.ExportCurrent') }}</v-btn>
             </v-card-actions>
-            <v-file-input label="Import Settings" accept=".json" @change="importSettings" />
+            <v-file-input :label="$t('settings.ImportSettings')" accept=".json" @change="importSettings" />
           </v-tabs-window-item>
 
           <v-tabs-window-item value="Experiment">
-            <v-card-title><v-icon left>mdi-cookie</v-icon>Cookie</v-card-title>
+            <v-card-title><v-icon left>mdi-cookie</v-icon>{{ $t('settings.CookieT') }}</v-card-title>
             <v-card-text>
               <v-textarea
                 v-model="selectedCookie"
-                label="CustomCookie"
+                :label="$t('settings.CustomCookie')"
                 outlined
                 rows="5"
               />
             </v-card-text>
-            <span>The items in this section will not be exported.</span>
+            <span>{{ $t('settings.CookieWarning') }}</span>
           </v-tabs-window-item>
 
           <!-- Credits Tab -->
@@ -119,20 +118,20 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="error" @click="openConfirmDialog">Reset</v-btn>
-        <v-btn color="primary" @click="save">Save</v-btn>
+        <v-btn color="error" @click="openConfirmDialog">{{ $t('common.reset') }}</v-btn>
+        <v-btn color="primary" @click="save">{{ $t('common.save') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 
   <v-dialog v-model="ResetConfirmDialog" max-width="400">
     <v-card>
-      <v-card-title class="headline">Warning</v-card-title>
-      <v-card-text>Are you sure you want to reset the settings?</v-card-text>
+      <v-card-title class="headline">{{ $t('common.Warning') }}</v-card-title>
+      <v-card-text>{{ $t('settings.ResetConfirm') }}</v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" @click="confirmReset">Yes</v-btn>
-        <v-btn color="error" @click="ResetConfirmDialog = false">No</v-btn>
+        <v-btn color="primary" @click="confirmReset">{{ $t('common.Yes') }}</v-btn>
+        <v-btn color="error" @click="ResetConfirmDialog = false">{{ $t('common.No') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -141,6 +140,8 @@
 <script setup lang="ts">
 import type { SupportedLangs } from '~/stores/lang';
 import type { SupportedLocations } from '~/stores/location';
+
+const { setLocale, t, getBrowserLocale, locale } = useI18n();
 
 const dialog = ref<boolean>(false);
 const ResetConfirmDialog = ref<boolean>(false);
@@ -182,26 +183,26 @@ const languages = [
 ];
 
 const regions = [
-  { title: 'Australia', value: 'AU' },
-  { title: 'Brazil', value: 'BR' },
-  { title: 'Canada', value: 'CA' },
-  { title: 'France', value: 'FR' },
-  { title: 'Germany', value: 'DE' },
-  { title: 'India', value: 'IN' },
-  { title: 'Indonesia', value: 'ID' },
-  { title: 'Italy', value: 'IT' },
-  { title: 'Netherlands', value: 'NL' },
-  { title: 'Portugal', value: 'PT' },
-  { title: 'Russia', value: 'RU' },
-  { title: 'South Korea', value: 'KR' },
-  { title: 'Spain', value: 'ES' },
-  { title: 'Japan', value: 'JP' },
-  { title: 'United Kingdom', value: 'GB' },
-  { title: 'United States', value: 'US' },
+  { title: t('settings.Regions.AU'), value: 'AU' },
+  { title: t('settings.Regions.BR'), value: 'BR' },
+  { title: t('settings.Regions.CA'), value: 'CA' },
+  { title: t('settings.Regions.FR'), value: 'FR' },
+  { title: t('settings.Regions.DE'), value: 'DE' },
+  { title: t('settings.Regions.IN'), value: 'IN' },
+  { title: t('settings.Regions.ID'), value: 'ID' },
+  { title: t('settings.Regions.IT'), value: 'IT' },
+  { title: t('settings.Regions.NL'), value: 'NL' },
+  { title: t('settings.Regions.PT'), value: 'PT' },
+  { title: t('settings.Regions.RU'), value: 'RU' },
+  { title: t('settings.Regions.KR'), value: 'KR' },
+  { title: t('settings.Regions.ES'), value: 'ES' },
+  { title: t('settings.Regions.JP'), value: 'JP' },
+  { title: t('settings.Regions.GB'), value: 'GB' },
+  { title: t('settings.Regions.US'), value: 'US' },
 ];
 
 const players = [
-  { title: 'embed', value: 'embed' },
+  { title: t('settings.PlayerItems.embed'), value: 'embed' },
   { title: 'shaka-player', value: 'shaka-player' },
   { title: 'VideoJS(Blob)', value: 'VideoJS' },
 ];
@@ -211,7 +212,6 @@ const protocols = [
   { title: 'https', value: 'https' },
 ];
 
-const langStore = useLangStore();
 const locationStore = useLocationStore();
 const playerStore = usePlayerStore();
 const backendStore = useBackendStore() as { backend: string; setBackend: (newBackend: string) => void; resetBackend: () => void };
@@ -242,8 +242,8 @@ const confirmReset = () => {
   reset();
 };
 
-const save = () => {
-  langStore.setLang(selectedLang.value);
+const save = async () => {
+  await setLocale(selectedLang.value);
   locationStore.setLocation(selectedLocation.value);
   playerStore.setPlayer(selectedPlayer.value);
   backendStore.setBackend(selectedBackend.value);
@@ -264,8 +264,13 @@ const save = () => {
   close();
 };
 
-const reset = () => {
-  langStore.resetLang();
+const reset = async () => {
+  const BL = getBrowserLocale();
+  if (languages.some(lang => lang.value === BL)) {
+    await setLocale(BL as SupportedLangs);
+  } else {
+    await setLocale('en');
+  }
   locationStore.resetLocation();
   playerStore.resetPlayer();
   backendStore.resetBackend();
@@ -281,7 +286,7 @@ const reset = () => {
 };
 
 const initialize = () => {
-  selectedLang.value = langStore.lang;
+  selectedLang.value = locale.value;
   selectedLocation.value = locationStore.location;
   selectedPlayer.value = playerStore.player;
   selectedBackend.value = backendStore.backend;
@@ -295,7 +300,7 @@ const initialize = () => {
 
 const exportSettings = () => {
   const settings = {
-    lang: langStore.lang,
+    lang: locale.value,
     location: locationStore.location,
     player: playerStore.player,
     selfmode: directStore.self,

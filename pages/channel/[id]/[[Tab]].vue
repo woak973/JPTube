@@ -15,6 +15,7 @@ const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>(
 let sourceresults: YT.Channel | YT.ChannelListContinuation;
 let sourcefilter: YT.Channel | undefined;
 let comsource: YT.Comments;
+let sourceTab: YT.Channel | undefined;
 let yt: Innertube;
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
@@ -196,6 +197,7 @@ const fetchData = async (bp?: string) => {
     yt = await useInnertube('common');
     const searchResults = await getSearchResults(yt, bp);
     if (searchResults instanceof YT.Channel) {
+      sourceTab = searchResults;
       HeaderResults.value = searchResults.header;
       MetaResults.value = searchResults.metadata as YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>;
       TabResults.value = await searchResults.page.contents_memo?.get('Tab');
@@ -482,26 +484,26 @@ await fetchData();
     <div>
       <v-dialog v-model="alert" max-width="500">
         <v-card>
-          <v-card-title class="headline">Warning</v-card-title>
+          <v-card-title class="headline">{{ $t('common.Error') }}</v-card-title>
           <v-card-text>{{ errorMessage }}</v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="primary" @click="alert = false">Close</v-btn>
+            <v-btn color="primary" @click="alert = false">{{ $t('common.close') }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
       <v-dialog v-model="searchDialog" max-width="500">
         <v-card>
-          <v-card-title class="headline">Search</v-card-title>
+          <v-card-title class="headline">{{ $t('common.Search') }}</v-card-title>
           <v-card-text>
             <v-text-field
-              v-model="searchQuery" label="SearchWord"
+              v-model="searchQuery" :label="$t('common.SearchWord')"
               @keyup.enter="performSearch" />
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="primary" @click="performSearch">Search</v-btn>
+            <v-btn color="primary" @click="performSearch">{{ $t('common.Search') }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -528,6 +530,9 @@ await fetchData();
             }}</v-tab>
           </template>
         </template>
+        <v-btn v-if="sourceTab && sourceTab.has_search" icon @click="searchDialog = true">
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
       </v-tabs>
     </template>
 

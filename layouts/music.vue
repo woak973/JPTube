@@ -62,7 +62,7 @@ const Refresh = (): void => {
       </router-link>
       <v-spacer />
       <v-combobox
-        v-model="searchQuery" :items="suggestions" label="Search" single-line hide-details clearable
+        v-model="searchQuery" :items="suggestions" :label="$t('guide.SearchMusic')" single-line hide-details clearable
         :filter="() => { return true; }" prepend-inner-icon="mdi-magnify" clear-icon="mdi-close-circle"
         @keyup.enter="search" @click:prepend-inner="search" @click:clear="clearSearch" />
       <v-btn icon @click="openLangDialog">
@@ -71,12 +71,12 @@ const Refresh = (): void => {
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" temporary>
-      <v-list-item title="JPTube Music" subtitle="Welcome" />
+      <v-list-item title="JPTube Music" :subtitle="$t('guide.Welcome')" />
       <v-divider />
-      <v-list-item prepend-icon="mdi-home" link title="Home" to="/music" />
-      <v-list-item prepend-icon="mdi-compass" link title="Explore" to="/music/explore" />
+      <v-list-item prepend-icon="mdi-home" link :title="$t('guide.Home')" to="/music" />
+      <v-list-item prepend-icon="mdi-compass" link :title="$t('guide.Explore')" to="/music/explore" />
       <v-divider />
-      <v-list-item title="Other Services" subtitle="Welcome" />
+      <v-list-item :title="$t('guide.OtherServices')" :subtitle="$t('guide.Welcome')" />
       <v-list-item prepend-icon="mdi-play-box" link title="JPTube" to="/" />
       <v-list-item prepend-icon="mdi-play-protected-content" link title="JPTube Kids" to="/kids" />
       <v-list-item prepend-icon="mdi-forum" link title="JPTube Forum" to="/firebase/" />

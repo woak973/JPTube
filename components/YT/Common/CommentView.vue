@@ -61,7 +61,7 @@
         </template>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" @click="detail = false">Close</v-btn>
+          <v-btn color="primary" @click="detail = false">{{ $t('common.close') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

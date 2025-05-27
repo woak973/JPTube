@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate',
     '@nuxt/eslint',
+    '@nuxtjs/i18n',
   ],
   plugins: [
     '~/plugins/firebase.ts',
@@ -20,6 +21,22 @@ export default defineNuxtConfig({
   vite: {
     server: {
       hmr: false,
+    },
+  },
+  i18n: {
+    locales: [
+      'af', 'da', 'de', 'en-IN', 'en-GB', 'en', 'es', 'es-419', 'es-US',
+      'fr', 'fr-CA', 'it', 'nl', 'pt-PT', 'pt', 'zh-CN', 'zh-TW', 'zh-HK',
+      'ja', 'ko',
+    ],
+    defaultLocale: 'en',
+    strategy: 'no_prefix',
+    vueI18n: './i18n.config.ts',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      alwaysRedirect: false,
+      fallbackLocale: 'en',
     },
   },
   runtimeConfig: {
