@@ -182,7 +182,7 @@ const languages = [
 
 ];
 
-const regions = [
+const regions = computed(() => [
   { title: t('settings.Regions.AU'), value: 'AU' },
   { title: t('settings.Regions.BR'), value: 'BR' },
   { title: t('settings.Regions.CA'), value: 'CA' },
@@ -199,13 +199,13 @@ const regions = [
   { title: t('settings.Regions.JP'), value: 'JP' },
   { title: t('settings.Regions.GB'), value: 'GB' },
   { title: t('settings.Regions.US'), value: 'US' },
-];
+]);
 
-const players = [
+const players = computed(() => [
   { title: t('settings.PlayerItems.embed'), value: 'embed' },
   { title: 'shaka-player', value: 'shaka-player' },
   { title: 'VideoJS(Blob)', value: 'VideoJS' },
-];
+]);
 
 const protocols = [
   { title: 'http', value: 'http' },
