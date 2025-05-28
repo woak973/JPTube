@@ -8,5 +8,8 @@
   "Error": "错误",
   "Search": "搜索",
   "SearchWord": "关键词",
-  "Apply": "应用"
+  "Apply": "应用",
+  "Login": "登录",
+  "Password": "密码",
+  "IncorrectPassword": "密码错误"
 }

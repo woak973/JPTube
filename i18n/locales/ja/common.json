@@ -8,5 +8,8 @@
   "Error": "エラー",
   "Search": "検索",
   "SearchWord": "検索する単語",
-  "Apply": "適用"
+  "Apply": "適用",
+  "Login": "ログイン",
+  "Password": "パスワード",
+  "IncorrectPassword": "パスワードが間違っています"
 }

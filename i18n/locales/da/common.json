@@ -8,5 +8,8 @@
   "Error": "Fejl",
   "Search": "Søg",
   "SearchWord": "Søgeord",
-  "Apply": "Anvend"
+  "Apply": "Anvend",
+  "Login": "Log ind",
+  "Password": "Adgangskode",
+  "IncorrectPassword": "Forkert adgangskode"
 }

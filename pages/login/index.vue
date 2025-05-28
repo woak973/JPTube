@@ -17,8 +17,8 @@
     </v-row>
     <v-dialog v-model="dialog" max-width="290">
       <v-card>
-        <v-card-title class="headline">Error</v-card-title>
-        <v-card-text>Incorrect password</v-card-text>
+        <v-card-title class="headline">{{ $t('common.Error') }}</v-card-title>
+        <v-card-text>{{ $t('common.IncorrectPassword') }}</v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn color="primary" @click="dialog = false">{{ $t('common.close') }}</v-btn>
