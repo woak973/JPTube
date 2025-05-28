@@ -8,5 +8,8 @@
   "Error": "오류",
   "Search": "검색",
   "SearchWord": "검색어",
-  "Apply": "적용"
+  "Apply": "적용",
+  "Login": "로그인",
+  "Password": "비밀번호",
+  "IncorrectPassword": "비밀번호가 틀렸습니다"
 }

@@ -138,7 +138,6 @@
 </template>
 
 <script setup lang="ts">
-import type { SupportedLangs } from '~/stores/lang';
 import type { SupportedLocations } from '~/stores/location';
 
 const { setLocale, t, getBrowserLocale, locale } = useI18n();
@@ -147,7 +146,7 @@ const dialog = ref<boolean>(false);
 const ResetConfirmDialog = ref<boolean>(false);
 const activeTab = ref<string>('Language/Region');
 
-const selectedLang = ref<SupportedLangs>('en');
+const selectedLang = ref<typeof locale.value>('en');
 const selectedLocation = ref<SupportedLocations>('US');
 const selectedPlayer = ref<'shaka-player' | 'embed' | 'VideoJS'>('shaka-player');
 const selectedBackend = ref<string>('');
@@ -267,7 +266,7 @@ const save = async () => {
 const reset = async () => {
   const BL = getBrowserLocale();
   if (languages.some(lang => lang.value === BL)) {
-    await setLocale(BL as SupportedLangs);
+    await setLocale(BL as typeof locale.value);
   } else {
     await setLocale('en');
   }

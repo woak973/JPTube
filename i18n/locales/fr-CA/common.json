@@ -8,5 +8,8 @@
   "Error": "Erreur",
   "Search": "Rechercher",
   "SearchWord": "Mot-clé",
-  "Apply": "Appliquer"
+  "Apply": "Appliquer",
+  "Login": "Connexion",
+  "Password": "Mot de passe",
+  "IncorrectPassword": "Mot de passe incorrect"
 }

@@ -8,5 +8,8 @@
   "Error": "錯誤",
   "Search": "搜尋",
   "SearchWord": "關鍵字",
-  "Apply": "套用"
+  "Apply": "套用",
+  "Login": "登入",
+  "Password": "密碼",
+  "IncorrectPassword": "密碼錯誤"
 }

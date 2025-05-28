@@ -8,5 +8,8 @@
   "Error": "Fout",
   "Search": "Soek",
   "SearchWord": "Soekwoord",
-  "Apply": "Toepas"
+  "Apply": "Toepas",
+  "Login": "Teken in",
+  "Password": "Wagwoord",
+  "IncorrectPassword": "Verkeerde wagwoord"
 }
