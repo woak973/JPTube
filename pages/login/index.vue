@@ -3,13 +3,13 @@
     <v-row align="center" justify="center">
       <v-col cols="12" sm="8" md="4">
         <v-card>
-          <v-card-title class="headline">Login</v-card-title>
+          <v-card-title class="headline">{{ $t('common.Login') }}</v-card-title>
           <v-card-text>
             <v-form @submit.prevent="login">
               <v-text-field
-                v-model="password" label="Password" type="password" outlined
+                v-model="password" :label="$t('common.Password')" type="password" outlined
                 dense />
-              <v-btn type="submit" color="primary" block>Login</v-btn>
+              <v-btn type="submit" color="primary" block>{{ $t('common.Login') }}</v-btn>
             </v-form>
           </v-card-text>
         </v-card>
@@ -29,9 +29,13 @@
 </template>
 
 <script setup lang="ts">
-
+const { t } = useI18n();
 definePageMeta({
-  layout: false,
+  layout: 'login',
+});
+
+useHead({
+  title: computed(() => t('common.Login')),
 });
 
 const password = ref('');
@@ -41,7 +45,7 @@ const config = useRuntimeConfig();
 
 const login = () => {
   if (password.value === config.public.loginPassword) {
-    const token = 'your-secure-token'; // ここに実際のトークンを設定
+    const token = 'your-secure-token';
     const authtoken = useCookie('authToken', { path: '/', maxAge: 2147483647 });
     authtoken.value = token;
     router.push('/');
