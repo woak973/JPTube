@@ -117,10 +117,12 @@ Look at the [Nuxt Deploy](https://nuxt.com/deploy) to learn more about Deploying
 [![Deploy to Vercel](https://binbashbanana.github.io/deploy-buttons/buttons/official/vercel.svg)](https://vercel.com/new/clone?repository-url=https://github.com/woak973/JPTube)
 [![Deploy to Netlify](https://binbashbanana.github.io/deploy-buttons/buttons/official/netlify.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/woak973/JPTube)
 [![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/official/koyeb.svg)](https://app.koyeb.com/deploy?type=git&repository=github.com/woak973/JPTube&branch=master&name=jptube)
+[![Run on Replit](https://binbashbanana.github.io/deploy-buttons/buttons/official/replit.svg)](https://replit.com/github/woak973/JPTube)
+[![Deploy on Railway](https://binbashbanana.github.io/deploy-buttons/buttons/official/railway.svg)](https://railway.app/new/template?template=https://github.com/woak973/JPTube)
 [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/import/github/woak973/JPTube)
 [![Deploy to Heroku](https://binbashbanana.github.io/deploy-buttons/buttons/official/heroku.svg)](https://heroku.com/deploy/?template=https://github.com/woak973/JPTube)
 [![Run on Google Cloud](https://binbashbanana.github.io/deploy-buttons/buttons/official/googlecloud.svg)](https://deploy.cloud.run/?git_repo=https://github.com/woak973/JPTube)
 [![Deploy to Amplify Console](https://binbashbanana.github.io/deploy-buttons/buttons/remade/amplifyconsole.svg)](https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/woak973/JPTube)
 
-You can also fork the repository yourself and deploy it to platforms such as [Deno Deploy](https://deno.com/deploy).
+You can also fork the repository yourself and deploy it to platforms such as [Deno Deploy](https://deno.com/deploy) and [Cloudflare Pages](https://pages.cloudflare.com/).
 
