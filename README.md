@@ -124,5 +124,5 @@ Look at the [Nuxt Deploy](https://nuxt.com/deploy) to learn more about Deploying
 [![Run on Google Cloud](https://binbashbanana.github.io/deploy-buttons/buttons/official/googlecloud.svg)](https://deploy.cloud.run/?git_repo=https://github.com/woak973/JPTube)
 [![Deploy to Amplify Console](https://binbashbanana.github.io/deploy-buttons/buttons/remade/amplifyconsole.svg)](https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/woak973/JPTube)
 
-You can also fork the repository yourself and deploy it to platforms such as [Deno Deploy](https://deno.com/deploy).
+You can also fork the repository yourself and deploy it to platforms such as [Deno Deploy](https://deno.com/deploy) and [Cloudflare Pages](https://pages.cloudflare.com/).
 

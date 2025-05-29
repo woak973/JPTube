@@ -120,4 +120,4 @@ Nuxtアプリのデプロイについては、[Nuxt Deploy](https://nuxt.com/dep
 [![Run on Google Cloud](https://binbashbanana.github.io/deploy-buttons/buttons/official/googlecloud.svg)](https://deploy.cloud.run/?git_repo=https://github.com/woak973/JPTube)
 [![Deploy to Amplify Console](https://binbashbanana.github.io/deploy-buttons/buttons/remade/amplifyconsole.svg)](https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/woak973/JPTube)
 
-これらの他に、自身でリポジトリをフォークして [Deno Deploy](https://deno.com/deploy) などでデプロイすることもできます。
+これらの他に、自身でリポジトリをフォークして [Deno Deploy](https://deno.com/deploy) や [Cloudflare Pages](https://pages.cloudflare.com/) などでデプロイすることもできます。
