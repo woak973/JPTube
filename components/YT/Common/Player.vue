@@ -98,7 +98,11 @@ onMounted(async () => {
           },
           fadeDelay: 0,
           preferDocumentPictureInPicture: false,
-          overflowMenuButtons: ['quality', 'language', 'captions', 'picture_in_picture', 'playback_rate', 'loop', 'statistics', 'save_video_frame'],
+          overflowMenuButtons: ['loop', 'language', 'picture_in_picture', 'playback_rate', 'quality', 'statistics', 'save_video_frame'],
+          controlPanelElements: [
+            'play_pause', 'time_and_duration', 'spacer', 'mute', 'volume',
+            'captions', 'fullscreen', 'overflow_menu',
+          ],
         };
 
         ui.configure(config);
