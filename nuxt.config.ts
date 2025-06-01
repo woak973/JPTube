@@ -38,6 +38,7 @@ export default defineNuxtConfig({
       alwaysRedirect: false,
       fallbackLocale: 'en',
     },
+    lazy: true,
   },
   runtimeConfig: {
     public: {
