@@ -78,22 +78,22 @@
 
     <template v-else-if="data.type === 'VerticalProductCard'">
       <template v-if="attribute === 'slide'">
-        <YTNodeVerticalProductCard :data="(data as CustomNodes.VerticalProductCard)" />
+        <YTNodeVerticalProductCard :data="(data as YTNodes.VerticalProductCard)" />
       </template>
       <template v-else>
         <v-col cols="12" md="4" lg="3" sm="6">
-          <YTNodeVerticalProductCard :data="(data as CustomNodes.VerticalProductCard)" />
+          <YTNodeVerticalProductCard :data="(data as YTNodes.VerticalProductCard)" />
         </v-col>
       </template>
     </template>
 
     <template v-else-if="data.type === 'EmptyProductDetails'">
       <template v-if="attribute === 'slide'">
-        <YTNodeEmptyProductDetails :data="(data as CustomNodes.EmptyProductDetails)" />
+        <YTNodeEmptyProductDetails :data="(data as YTNodes.EmptyProductDetails)" />
       </template>
       <template v-else>
         <v-col cols="12">
-          <YTNodeEmptyProductDetails :data="(data as CustomNodes.EmptyProductDetails)" />
+          <YTNodeEmptyProductDetails :data="(data as YTNodes.EmptyProductDetails)" />
         </v-col>
       </template>
     </template>
@@ -827,7 +827,6 @@
 <script setup lang="ts">
 import type { ItemSectionContinuation } from 'youtubei.js';
 import { Helpers, YTNodes, ReloadContinuationItemsCommand } from 'youtubei.js';
-import { CustomNodes } from '~/composables/useCustomNode';
 
 defineProps({
   data: Helpers.YTNode,

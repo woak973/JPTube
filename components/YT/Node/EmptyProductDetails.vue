@@ -8,8 +8,9 @@
 </template>
 
 <script setup lang="ts">
+import { YTNodes } from 'youtubei.js';
 
 defineProps({
-  data: CustomNodes.EmptyProductDetails,
+  data: YTNodes.EmptyProductDetails,
 });
 </script>
