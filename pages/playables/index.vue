@@ -53,6 +53,7 @@ const fetchData = async (chip?: string) => {
       nav = new YTNodes.NavigationEndpoint({ browseEndpoint: { browseId: 'FEmini_app_destination' } });
     }
     const result = new YT.Channel(yt.actions, await nav.call(yt.actions, { parse: true }), true);
+    console.log('result', result);
     if (result?.current_tab?.content && 'contents' in result.current_tab.content) {
       results.value = await result.current_tab?.content.contents;
     };
