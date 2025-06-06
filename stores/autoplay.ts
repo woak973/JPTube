@@ -10,5 +10,9 @@ export const useAutoPlayStore = defineStore('autoplay', {
       this.autoplay = false;
     },
   },
-  persist: true,
+  persist: {
+    storage: piniaPluginPersistedstate.cookies({
+      maxAge: 400 * 24 * 60 * 60,
+    }),
+  },
 });

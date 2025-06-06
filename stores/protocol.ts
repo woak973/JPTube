@@ -10,5 +10,9 @@ export const useProtocolStore = defineStore('protocol', {
       this.protocol = 'https';
     },
   },
-  persist: true,
+  persist: {
+    storage: piniaPluginPersistedstate.cookies({
+      maxAge: 400 * 24 * 60 * 60,
+    }),
+  },
 });

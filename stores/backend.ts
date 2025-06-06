@@ -14,5 +14,9 @@ export const useBackendStore = defineStore('backend', {
       this.backend = config.public.backendHost as string;
     },
   },
-  persist: true,
+  persist: {
+    storage: piniaPluginPersistedstate.cookies({
+      maxAge: 400 * 24 * 60 * 60,
+    }),
+  },
 });

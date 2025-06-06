@@ -14,5 +14,9 @@ export const useLocationStore = defineStore('location', {
       this.location = 'US' as SupportedLocations;
     },
   },
-  persist: true,
+  persist: {
+    storage: piniaPluginPersistedstate.cookies({
+      maxAge: 400 * 24 * 60 * 60,
+    }),
+  },
 });

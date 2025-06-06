@@ -14,5 +14,9 @@ export const usePlayerBackendStore = defineStore('playerbackend', {
       this.playerbackend = config.public.playerbackendHost as string;
     },
   },
-  persist: true,
+  persist: {
+    storage: piniaPluginPersistedstate.cookies({
+      maxAge: 400 * 24 * 60 * 60,
+    }),
+  },
 });
