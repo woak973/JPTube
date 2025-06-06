@@ -96,6 +96,7 @@ const Refresh = (): void => {
       <v-list-item prepend-icon="mdi-lightbulb-outline" link :title="$t('guide.Learning')" to="/channel/UCtFRv9O2AHqOZjjynzrv-xg" />
       <v-list-item prepend-icon="mdi-school" link :title="$t('guide.Courses')" to="/courses" />
       <v-list-item prepend-icon="mdi-hanger" link :title="$t('guide.Fashion&Beauty')" to="/channel/UCrpQ4p1Ql_hG8rKXIKM1MOQ" />
+      <v-list-item prepend-icon="mdi-dots-grid" link :title="$t('guide.Playables')" to="/playables" />
       <v-divider />
       <v-list-item :title="$t('guide.OtherServices')" :subtitle="$t('guide.Welcome')" />
       <v-list-item prepend-icon="mdi-music-circle" link title="JPTube Music" to="/music" />

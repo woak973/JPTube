@@ -3,10 +3,25 @@ import { Utils, YTNodes } from 'youtubei.js';
 import { BinaryWriter } from '@bufbuild/protobuf/wire';
 
 const route = useRoute();
+const { t } = useI18n();
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
-// const baseUrl = `/api/playables/v/assets/index.html?__host=${route.params.id}.playables.usercontent.goog&__isSelf=true`;
-const waitingMessage = ref<string>('Setting up...');
+const InitUrl = ref<string>('');
+const UrlHost = ref<string>('');
+const results = ref<YTNodes.MiniAppContainerView | undefined>();
+const waitingMessage = ref<string>(t('common.SetupGame'));
+
+useHead({
+  title: 'Playables - JPTube',
+});
+
+watch(results, (newVal) => {
+  if (newVal) {
+    useHead({
+      title: `${newVal.splash_screen?.title} - JPTube`,
+    });
+  }
+});
 
 const fetchData = async () => {
   try {
@@ -21,7 +36,12 @@ const fetchData = async () => {
 
     const nav = new YTNodes.NavigationEndpoint({ browseEndpoint: { browseId: 'FEmini_app_container', params: params } });
     const ParsedResults = await nav.call(yt.actions, { parse: true });
-    console.log('SearchResults', ParsedResults);
+    const AppContainer = ParsedResults.contents_memo?.get('MiniAppContainerView');
+    results.value = AppContainer?.[0] as YTNodes.MiniAppContainerView;
+    const GameUrl = (AppContainer?.[0] as YTNodes.MiniAppContainerView).url.private_do_not_access_or_else_trusted_resource_url_wrapped_value;
+    const basedUrl = new URL(GameUrl);
+    InitUrl.value = `/api/playables${basedUrl.pathname}?__host=${basedUrl.host}&__isSelf=true`;
+    UrlHost.value = basedUrl.host;
   } catch (error) {
     alert.value = true;
     if (error instanceof Error) {
@@ -32,16 +52,16 @@ const fetchData = async () => {
   }
 };
 
-/* onMounted(async () => {
+onMounted(async () => {
   if (!route.params.id) return;
 
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/api/playables' });
       if (registration && registration.active) {
-        registration.active.postMessage({ id: route.params.id });
-        waitingMessage.value = 'Loading game...';
-        window.location.href = baseUrl;
+        registration.active.postMessage({ id: UrlHost.value });
+        waitingMessage.value = t('common.LoadGame');
+        window.location.href = InitUrl.value;
       } else {
         navigator.serviceWorker.ready.then((reg) => {
           if (reg.active) {
@@ -59,14 +79,15 @@ const fetchData = async () => {
     }
   }
 });
-*/
+if (route.params.id) {
+  await fetchData();
+}
 
-await fetchData();
 </script>
 
 <template>
   <v-container>
-    <v-card v-if="route.query.id">
+    <v-card v-if="route.params.id">
       <v-card-title>{{ waitingMessage }}</v-card-title>
     </v-card>
     <v-card v-else>

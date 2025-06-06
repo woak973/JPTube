@@ -8,6 +8,8 @@ const errorMessage = ref<string>('');
 const HeaderResults = ref<YTNodes.C4TabbedHeader | YTNodes.CarouselHeader | YTNodes.InteractiveTabbedHeader | YTNodes.PageHeader | undefined>();
 const chipOptions = ref<Helpers.YTNode>();
 const selectedChip = ref<string>();
+const TabResults = ref<Array<Helpers.YTNode>>();
+const activeTabIndex = ref<number>(1);
 
 useHead({
   title: 'Playables - JPTube',
@@ -53,11 +55,13 @@ const fetchData = async (chip?: string) => {
       nav = new YTNodes.NavigationEndpoint({ browseEndpoint: { browseId: 'FEmini_app_destination' } });
     }
     const result = new YT.Channel(yt.actions, await nav.call(yt.actions, { parse: true }), true);
+    console.log('result', result);
     if (result?.current_tab?.content && 'contents' in result.current_tab.content) {
       results.value = await result.current_tab?.content.contents;
     };
     sourceresults = result;
     HeaderResults.value = result.header;
+    TabResults.value = result.page.contents_memo?.get('Tab');
     if (result?.current_tab?.content && 'header' in result.current_tab.content) {
       chipOptions.value = result.current_tab?.content.header;
     }
@@ -100,6 +104,16 @@ await fetchData();
         <YTCommonInteractiveTabbedHeader :data="HeaderResults" />
       </template>
 
+    </template>
+
+    <template v-if="TabResults">
+      <v-tabs v-model="activeTabIndex">
+        <template v-for="Tab in TabResults">
+          <template v-if="(Tab instanceof YTNodes.Tab)">
+            <v-tab @click="fetchData(Tab.endpoint?.payload?.params)">{{ Tab.title }}</v-tab>
+          </template>
+        </template>
+      </v-tabs>
     </template>
 
     <v-chip-group v-if="chipOptions && (chipOptions instanceof YTNodes.ChipBarView)" v-model="selectedChip" color="primary" @update:modelValue="applyChips">
