@@ -10,5 +10,9 @@ export const useCookieStore = defineStore('cookie', {
       this.cookie = '';
     },
   },
-  persist: true,
+  persist: {
+    storage: piniaPluginPersistedstate.cookies({
+      maxAge: 400 * 24 * 60 * 60,
+    }),
+  },
 });

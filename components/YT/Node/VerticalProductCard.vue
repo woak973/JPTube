@@ -18,9 +18,10 @@
 </template>
 
 <script setup lang="ts">
+import { YTNodes } from 'youtubei.js';
 
 defineProps({
-  data: CustomNodes.VerticalProductCard,
+  data: YTNodes.VerticalProductCard,
 });
 
 </script>

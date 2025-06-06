@@ -14,5 +14,9 @@ export const usePlayerStore = defineStore('player', {
       this.player = 'shaka-player';
     },
   },
-  persist: true,
+  persist: {
+    storage: piniaPluginPersistedstate.cookies({
+      maxAge: 400 * 24 * 60 * 60,
+    }),
+  },
 });

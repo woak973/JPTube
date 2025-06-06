@@ -11,5 +11,7 @@
   "Apply": "套用",
   "Login": "登入",
   "Password": "密碼",
-  "IncorrectPassword": "密碼錯誤"
+  "IncorrectPassword": "密碼錯誤",
+  "SetupGame": "正在設定遊戲……請重新載入此頁面。",
+  "LoadGame": "正在載入遊戲……"
 }

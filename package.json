@@ -22,7 +22,7 @@
     "video.js": "^8.21.0",
     "vue": "latest",
     "vue-router": "latest",
-    "youtubei.js": "^13.4.0"
+    "youtubei.js": "github:woak973/YouTube.js#JPTube"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.4.1",

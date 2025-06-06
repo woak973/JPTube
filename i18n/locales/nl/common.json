@@ -11,5 +11,7 @@
   "Apply": "Toepassen",
   "Login": "Inloggen",
   "Password": "Wachtwoord",
-  "IncorrectPassword": "Onjuist wachtwoord"
+  "IncorrectPassword": "Onjuist wachtwoord",
+  "SetupGame": "Bezig met instellen... Laad deze pagina opnieuw.",
+  "LoadGame": "Spel wordt geladen..."
 }

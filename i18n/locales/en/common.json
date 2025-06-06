@@ -11,5 +11,7 @@
   "Apply": "Apply",
   "Login": "Login",
   "Password": "Password",
-  "IncorrectPassword": "Incorrect password"
+  "IncorrectPassword": "Incorrect password",
+  "SetupGame": "Setting up... Please reload this page.",
+  "LoadGame": "Loading game..."
 }

@@ -22,5 +22,9 @@ export const useDirectStore = defineStore('direct', {
       this.self = typeof config.public.self === 'boolean' ? config.public.self : true;
     },
   },
-  persist: true,
+  persist: {
+    storage: piniaPluginPersistedstate.cookies({
+      maxAge: 400 * 24 * 60 * 60,
+    }),
+  },
 });
