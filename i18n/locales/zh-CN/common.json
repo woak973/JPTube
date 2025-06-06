@@ -11,5 +11,7 @@
   "Apply": "应用",
   "Login": "登录",
   "Password": "密码",
-  "IncorrectPassword": "密码错误"
+  "IncorrectPassword": "密码错误",
+  "SetupGame": "正在设置游戏……请重新加载此页面。",
+  "LoadGame": "正在加载游戏……"
 }

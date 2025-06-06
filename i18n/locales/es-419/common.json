@@ -11,5 +11,7 @@
   "Apply": "Aplicar",
   "Login": "Iniciar sesión",
   "Password": "Contraseña",
-  "IncorrectPassword": "Contraseña incorrecta"
+  "IncorrectPassword": "Contraseña incorrecta",
+  "SetupGame": "Configurando... Por favor, recargue esta página.",
+  "LoadGame": "Cargando juego..."
 }

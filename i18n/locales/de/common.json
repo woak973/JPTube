@@ -11,5 +11,7 @@
   "Apply": "Anwenden",
   "Login": "Anmelden",
   "Password": "Passwort",
-  "IncorrectPassword": "Falsches Passwort"
+  "IncorrectPassword": "Falsches Passwort",
+  "SetupGame": "Wird eingerichtet... Bitte laden Sie diese Seite neu.",
+  "LoadGame": "Spiel wird geladen..."
 }

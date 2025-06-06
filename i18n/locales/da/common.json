@@ -11,5 +11,7 @@
   "Apply": "Anvend",
   "Login": "Log ind",
   "Password": "Adgangskode",
-  "IncorrectPassword": "Forkert adgangskode"
+  "IncorrectPassword": "Forkert adgangskode",
+  "SetupGame": "Opsætter... Genindlæs venligst denne side.",
+  "LoadGame": "Indlæser spil..."
 }

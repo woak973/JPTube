@@ -11,5 +11,7 @@
   "Apply": "Aplicar",
   "Login": "Iniciar sessão",
   "Password": "Palavra-passe",
-  "IncorrectPassword": "Palavra-passe incorreta"
+  "IncorrectPassword": "Palavra-passe incorreta",
+  "SetupGame": "A configurar... Por favor, recarregue esta página.",
+  "LoadGame": "A carregar o jogo..."
 }

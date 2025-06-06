@@ -11,5 +11,7 @@
   "Apply": "Appliquer",
   "Login": "Connexion",
   "Password": "Mot de passe",
-  "IncorrectPassword": "Mot de passe incorrect"
+  "IncorrectPassword": "Mot de passe incorrect",
+  "SetupGame": "Configuration en cours... Veuillez recharger cette page.",
+  "LoadGame": "Chargement du jeu..."
 }
