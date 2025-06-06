@@ -225,6 +225,17 @@
       </template>
     </template>
 
+    <template v-else-if="data.type === 'MiniGameCardView'">
+      <template v-if="attribute === 'slide'">
+        <YTNodeMiniGameCardView :data="(data as YTNodes.MiniGameCardView)" />
+      </template>
+      <template v-else>
+        <v-col cols="6" md="3" lg="2" sm="4">
+          <YTNodeMiniGameCardView :data="(data as YTNodes.MiniGameCardView)" />
+        </v-col>
+      </template>
+    </template>
+
     <template v-else-if="data.type === 'ChannelVideoPlayer'">
       <template v-if="attribute === 'slide'">
         <YTNodeChannelVideoPlayer :data="(data as YTNodes.ChannelVideoPlayer)" />
