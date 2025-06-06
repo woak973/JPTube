@@ -109,11 +109,13 @@ await fetchData();
     </v-chip-group>
 
     <v-infinite-scroll v-if="results" mode="intersect" @load="LoadMore">
-      <template v-for="result in results">
-        <template v-if="(result instanceof Helpers.YTNode)">
-          <YTNode :data="result" />
+      <v-row>
+        <template v-for="result in results">
+          <template v-if="(result instanceof Helpers.YTNode)">
+            <YTNode :data="result" />
+          </template>
         </template>
-      </template>
+      </v-row>
     </v-infinite-scroll>
   </v-container>
 </template>
