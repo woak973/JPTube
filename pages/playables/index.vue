@@ -55,7 +55,6 @@ const fetchData = async (chip?: string) => {
       nav = new YTNodes.NavigationEndpoint({ browseEndpoint: { browseId: 'FEmini_app_destination' } });
     }
     const result = new YT.Channel(yt.actions, await nav.call(yt.actions, { parse: true }), true);
-    console.log('result', result);
     if (result?.current_tab?.content && 'contents' in result.current_tab.content) {
       results.value = await result.current_tab?.content.contents;
     };
@@ -109,7 +108,7 @@ await fetchData();
     <template v-if="TabResults">
       <v-tabs v-model="activeTabIndex">
         <template v-for="Tab in TabResults">
-          <template v-if="(Tab instanceof YTNodes.Tab)">
+          <template v-if="(Tab instanceof YTNodes.Tab) && Tab.title !== 'N/A'">
             <v-tab @click="fetchData(Tab.endpoint?.payload?.params)">{{ Tab.title }}</v-tab>
           </template>
         </template>
