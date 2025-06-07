@@ -1,6 +1,6 @@
 <template>
   <v-list-item v-if="data">
-    <v-row dense>
+    <v-row dense no-gutters>
       <v-col cols="auto">
         <v-list-item :to="data.author?.endpoint?.metadata?.url" style="padding: 0;" @click="handleClick">
           <v-avatar :image="getProxifiedUrl(data.author?.thumbnails[0].url || '')" />
@@ -38,13 +38,26 @@
     <v-dialog v-model="detail" max-width="500">
       <v-card elevation="16">
         <template v-if="popupdata">
-          <v-card-title>{{ popupdata.profile_identity_info?.channel_display_name }}</v-card-title>
-          <v-card-subtitle>{{ popupdata.profile_identity_info?.channel_handle }}</v-card-subtitle>
-          <v-card-subtitle>{{ popupdata.profile_identity_info?.left_of_bullet_info }}・{{ popupdata.profile_identity_info?.right_of_bullet_info }}</v-card-subtitle>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="primary" :to="popupdata?.profile_identity_info?.channel_access?.on_tap?.metadata.url">{{ popupdata.profile_identity_info?.channel_access?.title }}</v-btn>
-          </v-card-actions>
+          <v-row dense no-gutters>
+            <v-col cols="4" class="d-flex align-center justify-center">
+              <v-img :src="getProxifiedUrl(popupdata.profile_identity_info?.avatar?.image[0]?.url || '')" max-width="50%" style="border-radius: 50%;">
+                <template #placeholder>
+                  <div class="d-flex align-center justify-center fill-height">
+                    <v-progress-circular color="grey-lighten-4" indeterminate />
+                  </div>
+                </template>
+              </v-img>
+            </v-col>
+            <v-col cols="8">
+              <v-card-title>{{ popupdata.profile_identity_info?.channel_display_name }}</v-card-title>
+              <v-card-subtitle>{{ popupdata.profile_identity_info?.channel_handle }}</v-card-subtitle>
+              <v-card-subtitle>{{ popupdata.profile_identity_info?.left_of_bullet_info }}・{{ popupdata.profile_identity_info?.right_of_bullet_info }}</v-card-subtitle>
+              <v-card-actions>
+                <v-spacer />
+                <v-btn color="primary" :to="popupdata?.profile_identity_info?.channel_access?.on_tap?.metadata.url">{{ popupdata.profile_identity_info?.channel_access?.title }}</v-btn>
+              </v-card-actions>
+            </v-col>
+          </v-row>
           <v-card-title>{{ popupdata.profile_info?.profile_badge_info_channel_wide.profile_section_title }}</v-card-title>
           <v-card-subtitle>{{ popupdata.profile_info?.profile_badge_info_channel_wide.comment_badge.comment_desc }}</v-card-subtitle>
           <template v-if="Array.isArray(popupdata.profile_info?.profile_badge_info_channel_wide.badges)">
