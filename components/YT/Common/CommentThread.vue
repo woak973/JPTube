@@ -6,7 +6,7 @@
     <div v-if="data.has_replies && data.replies" class="reply-container">
       <details>
         <summary class="hover-blue">{{ data.comment_replies_data?.view_replies?.text }}</summary>
-        <v-row dense>
+        <v-row dense no-gutters>
           <v-col cols="12">
             <template v-for="reply in data.replies">
               <YTCommonCommentView :data="reply" :yt="yt" />
