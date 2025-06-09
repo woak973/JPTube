@@ -6,6 +6,7 @@ const route = useRoute();
 const { t } = useI18n();
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
+const basedUrl = ref<URL>();
 const InitUrl = ref<string>('');
 const UrlHost = ref<string>('');
 const results = ref<YTNodes.MiniAppContainerView | undefined>();
@@ -39,9 +40,9 @@ const fetchData = async () => {
     const AppContainer = ParsedResults.contents_memo?.get('MiniAppContainerView');
     results.value = AppContainer?.[0] as YTNodes.MiniAppContainerView;
     const GameUrl = (AppContainer?.[0] as YTNodes.MiniAppContainerView).url.private_do_not_access_or_else_trusted_resource_url_wrapped_value;
-    const basedUrl = new URL(GameUrl);
-    InitUrl.value = `/api/playables${basedUrl.pathname}?__host=${basedUrl.host}&__isSelf=true`;
-    UrlHost.value = basedUrl.host;
+    basedUrl.value = new URL(GameUrl);
+    InitUrl.value = `/api/playables/${basedUrl.value.host}${basedUrl.value.pathname}`;
+    UrlHost.value = basedUrl.value.host;
   } catch (error) {
     alert.value = true;
     if (error instanceof Error) {
@@ -57,7 +58,7 @@ onMounted(async () => {
 
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/api/playables' });
+      const registration = await navigator.serviceWorker.register('/sw.js', { scope: `/api/playables/${basedUrl.value?.host}` });
       if (registration && registration.active) {
         registration.active.postMessage({ id: UrlHost.value });
         waitingMessage.value = t('common.LoadGame');

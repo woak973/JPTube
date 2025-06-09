@@ -1,11 +1,5 @@
 importScripts('/proxify.js');
-let globalHost = null;
-
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.id) {
-    globalHost = event.data.id;
-  }
-});
+let globalHost = location.pathname;
 
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
@@ -47,11 +41,10 @@ self.addEventListener('fetch', (event) => {
       event.respondWith(
         (async () => {
           const reqUrl = new URL(event.request.url);
-          reqUrl.searchParams.set('__isSelf', 'true');
-          reqUrl.searchParams.set('__host', targetHost);
           if (!url.pathname.includes('/v/assets/')) {
             reqUrl.pathname = '/v/assets' + reqUrl.pathname;
           }
+          reqUrl.pathname =  '/' + targetHost + reqUrl.pathname;
           if (!url.pathname.includes('/api/playables/')) {
             reqUrl.pathname = '/api/playables' + reqUrl.pathname;
           }
