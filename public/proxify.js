@@ -1,4 +1,4 @@
-async function getProxifiedUrl(input, init, targetHost, isYouTube = false) {
+async function getProxifiedUrl(input, init) {
   if (!input) {
     return '';
   }
@@ -16,17 +16,9 @@ async function getProxifiedUrl(input, init, targetHost, isYouTube = false) {
     return '';
   }
 
+  url.pathname = `/api/playables/${url.host}${url.pathname}`;
   url.host = self.location.host;
   url.protocol = self.location.protocol;
-  if (!url.pathname.includes('/v/assets/') && !isYouTube) {
-    url.pathname = '/v/assets' + url.pathname;
-  }
-
-  if (url.pathname.includes('/v/assets/') && isYouTube){
-    url.pathname = url.pathname.replace('/v/assets', '');
-  }
-  url.pathname = '/' + targetHost + url.pathname;
-  url.pathname = `/api/playables${url.pathname}`;
 
   const headers = init?.headers
     ? new Headers(init.headers)
