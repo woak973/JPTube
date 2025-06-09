@@ -13,5 +13,6 @@
   "Password": "密码",
   "IncorrectPassword": "密码错误",
   "SetupGame": "正在设置游戏……请重新加载此页面。",
-  "LoadGame": "正在加载游戏……"
+  "LoadGame": "正在加载游戏……",
+  "NoID": "未提供ID。"
 }

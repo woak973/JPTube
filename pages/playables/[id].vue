@@ -54,11 +54,29 @@ const fetchData = async () => {
 };
 
 onMounted(async () => {
-  if (!route.params.id) return;
+  if (!route.params.id || !InitUrl.value) return;
 
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js', { scope: `/api/playables/${basedUrl.value?.host}` });
+
+      if (registration) {
+        registration.onupdatefound = () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.onstatechange = () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'activated') {
+                    window.location.reload();
+                  }
+                });
+              }
+            };
+          }
+        };
+      }
       if (registration && registration.active) {
         registration.active.postMessage({ id: UrlHost.value });
         waitingMessage.value = t('common.LoadGame');
@@ -92,7 +110,7 @@ if (route.params.id) {
       <v-card-title>{{ waitingMessage }}</v-card-title>
     </v-card>
     <v-card v-else>
-      <v-card-title>No id was provided</v-card-title>
+      <v-card-title>{{ $t('common.NoID') }}</v-card-title>
     </v-card>
     <div>
       <v-dialog v-model="alert" max-width="500">

@@ -13,5 +13,6 @@
   "Password": "Adgangskode",
   "IncorrectPassword": "Forkert adgangskode",
   "SetupGame": "Opsætter... Genindlæs venligst denne side.",
-  "LoadGame": "Indlæser spil..."
+  "LoadGame": "Indlæser spil...",
+  "NoID": "Intet id blev angivet."
 }

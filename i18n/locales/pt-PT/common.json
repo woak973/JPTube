@@ -13,5 +13,6 @@
   "Password": "Palavra-passe",
   "IncorrectPassword": "Palavra-passe incorreta",
   "SetupGame": "A configurar... Por favor, recarregue esta página.",
-  "LoadGame": "A carregar o jogo..."
+  "LoadGame": "A carregar o jogo...",
+  "NoID": "Nenhum ID fornecido."
 }

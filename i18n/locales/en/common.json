@@ -13,5 +13,6 @@
   "Password": "Password",
   "IncorrectPassword": "Incorrect password",
   "SetupGame": "Setting up... Please reload this page.",
-  "LoadGame": "Loading game..."
+  "LoadGame": "Loading game...",
+  "NoID": "No id was provided."
 }
