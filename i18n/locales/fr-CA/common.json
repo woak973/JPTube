@@ -13,5 +13,6 @@
   "Password": "Mot de passe",
   "IncorrectPassword": "Mot de passe incorrect",
   "SetupGame": "Configuration en cours... Veuillez recharger cette page.",
-  "LoadGame": "Chargement du jeu..."
+  "LoadGame": "Chargement du jeu...",
+  "NoID": "Aucun identifiant fourni."
 }

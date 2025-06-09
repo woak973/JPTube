@@ -1,6 +1,6 @@
 async function getProxifiedUrl(input, init, targetHost, isYouTube = false) {
   if (!input) {
-    return ''; // デフォルトのURLまたは空文字列を返す
+    return '';
   }
 
   let url;
@@ -13,11 +13,9 @@ async function getProxifiedUrl(input, init, targetHost, isYouTube = false) {
         : new URL(input.url);
   } catch (e) {
     console.error(e);
-    return ''; // 無効なURLの場合は空文字列を返す
+    return '';
   }
 
-  url.searchParams.set('__host', targetHost ? targetHost : url.host);
-  url.searchParams.set('__isSelf', 'true');
   url.host = self.location.host;
   url.protocol = self.location.protocol;
   if (!url.pathname.includes('/v/assets/') && !isYouTube) {
@@ -27,6 +25,7 @@ async function getProxifiedUrl(input, init, targetHost, isYouTube = false) {
   if (url.pathname.includes('/v/assets/') && isYouTube){
     url.pathname = url.pathname.replace('/v/assets', '');
   }
+  url.pathname = '/' + targetHost + url.pathname;
   url.pathname = `/api/playables${url.pathname}`;
 
   const headers = init?.headers
@@ -35,7 +34,6 @@ async function getProxifiedUrl(input, init, targetHost, isYouTube = false) {
       ? input.headers
       : new Headers();
 
-  // Base64エンコード
   const encodedHeaders = btoa(JSON.stringify([...headers]));
   url.searchParams.set('__headers', encodedHeaders);
 

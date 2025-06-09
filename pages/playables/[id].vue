@@ -6,6 +6,7 @@ const route = useRoute();
 const { t } = useI18n();
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
+const basedUrl = ref<URL>();
 const InitUrl = ref<string>('');
 const UrlHost = ref<string>('');
 const results = ref<YTNodes.MiniAppContainerView | undefined>();
@@ -39,9 +40,9 @@ const fetchData = async () => {
     const AppContainer = ParsedResults.contents_memo?.get('MiniAppContainerView');
     results.value = AppContainer?.[0] as YTNodes.MiniAppContainerView;
     const GameUrl = (AppContainer?.[0] as YTNodes.MiniAppContainerView).url.private_do_not_access_or_else_trusted_resource_url_wrapped_value;
-    const basedUrl = new URL(GameUrl);
-    InitUrl.value = `/api/playables${basedUrl.pathname}?__host=${basedUrl.host}&__isSelf=true`;
-    UrlHost.value = basedUrl.host;
+    basedUrl.value = new URL(GameUrl);
+    InitUrl.value = `/api/playables/${basedUrl.value.host}${basedUrl.value.pathname}`;
+    UrlHost.value = basedUrl.value.host;
   } catch (error) {
     alert.value = true;
     if (error instanceof Error) {
@@ -53,11 +54,29 @@ const fetchData = async () => {
 };
 
 onMounted(async () => {
-  if (!route.params.id) return;
+  if (!route.params.id || !InitUrl.value) return;
 
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/api/playables' });
+      const registration = await navigator.serviceWorker.register('/sw.js', { scope: `/api/playables/${basedUrl.value?.host}` });
+
+      if (registration) {
+        registration.onupdatefound = () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.onstatechange = () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'activated') {
+                    window.location.reload();
+                  }
+                });
+              }
+            };
+          }
+        };
+      }
       if (registration && registration.active) {
         registration.active.postMessage({ id: UrlHost.value });
         waitingMessage.value = t('common.LoadGame');
@@ -91,7 +110,7 @@ if (route.params.id) {
       <v-card-title>{{ waitingMessage }}</v-card-title>
     </v-card>
     <v-card v-else>
-      <v-card-title>No id was provided</v-card-title>
+      <v-card-title>{{ $t('common.NoID') }}</v-card-title>
     </v-card>
     <div>
       <v-dialog v-model="alert" max-width="500">
