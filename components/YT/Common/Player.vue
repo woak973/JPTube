@@ -20,6 +20,7 @@ const emit = defineEmits(['errors', 'complete']);
 const playerbackendStore = usePlayerBackendStore().playerbackend;
 const selfStore = useDirectStore().self;
 const directStore = useDirectStore().direct;
+const invidiousStore = useInvidiousStore();
 const proxyhost = typeof playerbackendStore === 'string' ? playerbackendStore : 'jptube-companion.deno.dev';
 const protocolStore = useProtocolStore().protocol;
 
@@ -54,8 +55,19 @@ onMounted(async () => {
     try {
       let uri;
       try {
-        const dash = await info.toDash(undefined, undefined, { captions_format: 'vtt', include_thumbnails: true });
-        uri = `data:application/dash+xml;charset=utf-8;base64,${btoa(unescape(encodeURIComponent(dash)))}`;
+        if (invidiousStore.invidious) {
+          const inv = new Invidious(invidiousStore.invURL);
+          const videoinfo = await inv.getInfo(props.videoId);
+          if (!videoinfo.dashUrl) {
+            throw new Error('DASH URL not found in Invidious response');
+          }
+          const dashURL = new URL(videoinfo.dashUrl);
+          const dash = await fetch(`/api/proxy${dashURL.pathname}?__host=${dashURL.host}&__isSelf=true`);
+          uri = `data:application/dash+xml;charset=utf-8;base64,${btoa(unescape(encodeURIComponent(await dash.text())))}`;
+        } else {
+          const dash = await info.toDash(undefined, undefined, { captions_format: 'vtt', include_thumbnails: true });
+          uri = `data:application/dash+xml;charset=utf-8;base64,${btoa(unescape(encodeURIComponent(dash)))}`;
+        }
       } catch (e) {
         if (info.streaming_data && info.streaming_data.hls_manifest_url) {
           uri = info.streaming_data.hls_manifest_url;

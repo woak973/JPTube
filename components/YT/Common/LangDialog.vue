@@ -33,6 +33,15 @@
             <v-select v-model="selectedPlayer" :items="players" :label="$t('settings.SelectPlayer')" item-title="title" item-value="value" />
             <template v-if="selectedPlayer === 'shaka-player'">
               <v-switch v-model="selectedAutoPlay" color="primary" :label="$t('settings.EnableAP')" />
+              <v-switch v-model="selectedInvidious" color="primary" :label="$t('settings.EnableInvidious')" />
+              <template v-if="selectedInvidious">
+                <v-text-field
+                  v-model="selectedInvidiousUrl"
+                  v-text-field
+                  :label="$t('settings.InvidiousUrl')"
+                  :placeholder="$t('settings.InvidiousUrlPlaceholder')"
+                  outlined />
+              </template>
             </template>
           </v-tabs-window-item>
 
@@ -153,6 +162,8 @@ const selectedBackend = ref<string>('');
 const selectedPlayerBackend = ref<string>('');
 const selectedProtocol = ref<'http' | 'https'>('https');
 const selectedAutoPlay = ref<boolean>(false);
+const selectedInvidious = ref<boolean>(false);
+const selectedInvidiousUrl = ref<string>('');
 const selectedDirect = ref<boolean>(false);
 const selectedSelf = ref<boolean>(true);
 const selectedCookie = ref<string>('');
@@ -217,6 +228,7 @@ const backendStore = useBackendStore() as { backend: string; setBackend: (newBac
 const playerBackendStore = usePlayerBackendStore() as { playerbackend: string; setPlayerBackend: (newPlayerBackend: string) => void; resetPlayerBackend: () => void };
 const protocolStore = useProtocolStore();
 const autoplayStore = useAutoPlayStore();
+const invidiousStore = useInvidiousStore();
 const backendHistoryStore = useBackendHistoryStore();
 const directStore = useDirectStore();
 const cookieStore = useCookieStore();
@@ -249,6 +261,8 @@ const save = async () => {
   playerBackendStore.setPlayerBackend(selectedPlayerBackend.value);
   protocolStore.setProtocol(selectedProtocol.value);
   autoplayStore.setAutoPlay(selectedAutoPlay.value);
+  invidiousStore.setInvidious(selectedInvidious.value);
+  invidiousStore.setInvURL(selectedInvidiousUrl.value);
   directStore.setDirect(selectedDirect.value);
   directStore.setSelf(selectedSelf.value);
   cookieStore.setCookie(selectedCookie.value);
@@ -276,6 +290,8 @@ const reset = async () => {
   playerBackendStore.resetPlayerBackend();
   protocolStore.resetProtocol();
   autoplayStore.resetAutoPlay();
+  invidiousStore.resetInvidious();
+  invidiousStore.resetInvURL();
   directStore.resetDirect();
   directStore.resetSelf();
   cookieStore.resetCookie();
@@ -292,6 +308,8 @@ const initialize = () => {
   selectedPlayerBackend.value = playerBackendStore.playerbackend;
   selectedProtocol.value = protocolStore.protocol;
   selectedAutoPlay.value = autoplayStore.autoplay;
+  selectedInvidious.value = invidiousStore.invidious;
+  selectedInvidiousUrl.value = invidiousStore.invURL;
   selectedDirect.value = directStore.direct;
   selectedSelf.value = directStore.self;
   selectedCookie.value = cookieStore.cookie;
@@ -308,6 +326,8 @@ const exportSettings = () => {
     directmode: directStore.direct,
     protocol: protocolStore.protocol,
     autoPlay: autoplayStore.autoplay,
+    invidious: invidiousStore.invidious,
+    invidiousUrl: invidiousStore.invURL,
     backendHistory: backendHistoryStore.history,
   };
   const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
@@ -338,6 +358,8 @@ const importSettings = (event: Event) => {
       if (settings.directmode !== undefined) selectedDirect.value = settings.directmode;
       if (settings.protocol !== undefined) selectedProtocol.value = settings.protocol;
       if (settings.autoPlay !== undefined) selectedAutoPlay.value = settings.autoPlay;
+      if (settings.invidious !== undefined) selectedInvidious.value = settings.invidious;
+      if (settings.invidiousUrl !== undefined) selectedInvidiousUrl.value = settings.invidiousUrl;
       if (settings.backendHistory !== undefined) {
         backendHistoryStore.history = settings.backendHistory;
       }
