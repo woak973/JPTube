@@ -58,7 +58,7 @@ onMounted(async () => {
 
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register(`/sw.js?globalhost=${basedUrl.value?.host}`, { scope: `/api/playables/${basedUrl.value?.host}` });
+      const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/api/playables/' });
 
       if (registration) {
         registration.onupdatefound = () => {
