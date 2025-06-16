@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     'pinia-plugin-persistedstate',
     '@nuxt/eslint',
     '@nuxtjs/i18n',
+    '@nuxt/content',
   ],
   vite: {
     server: {
@@ -45,6 +46,7 @@ export default defineNuxtConfig({
       cookie: process.env.COOKIE || '',
       self: process.env.SELF === 'false' ? false : true,
       direct: process.env.DIRECT === 'true' ? true : false,
+      openaiApiKey: process.env.OPENAI_API_KEY || '',
     },
   },
 });
