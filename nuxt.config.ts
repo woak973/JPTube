@@ -14,7 +14,6 @@ export default defineNuxtConfig({
     'pinia-plugin-persistedstate',
     '@nuxt/eslint',
     '@nuxtjs/i18n',
-    '@nuxt/content',
   ],
   vite: {
     server: {
