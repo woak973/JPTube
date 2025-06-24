@@ -43,6 +43,9 @@ const OPT = await Shiki({
                 <MarkDown :source="part.text" :plugins="[OPT, MarkdownItAnchor]" />
               </v-card-text>
             </div>
+            <div v-else-if="part.type === 'tool-invocation'">
+              <v-card-text>I'm invoking the tool</v-card-text>
+            </div>
           </div>
         </v-card>
       </v-sheet>
