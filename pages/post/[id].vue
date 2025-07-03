@@ -5,15 +5,20 @@ import { BinaryWriter } from '@bufbuild/protobuf/wire';
 const route = useRoute();
 const results = ref<Helpers.ObservedArray<Helpers.YTNode> | null>();
 const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>();
+const MetaResults = ref<Partial<YTNodes.MicroformatData>>();
 let sourceresults: YT.Channel | YT.ChannelListContinuation;
 let yt: Innertube;
 // const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
 const alert = ref<boolean>(false);
 const errorMessage = ref<string>('');
 
-useHead({
-  title: `Post - JPTube`,
-});
+watch(MetaResults, (newVal) => {
+  useHead({
+    title: `${newVal?.title ? newVal.title : 'Post'} - JPTube`,
+  });
+},
+
+);
 
 const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) => {
   try {
@@ -56,6 +61,7 @@ const fetchData = async () => {
 
     if (SearchResults.page_contents && 'contents' in SearchResults.page_contents) {
       results.value = SearchResults.page_contents.contents;
+      MetaResults.value = SearchResults.metadata;
       sourceresults = SearchResults;
     } else {
       results.value = null;
