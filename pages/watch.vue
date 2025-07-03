@@ -276,6 +276,7 @@ const fetchVideoData = async () => {
     }
     fatalError.value = false;
   } catch (error) {
+    console.error(error);
     alert.value = true;
     fatalError.value = true;
     if (error instanceof Error) {
@@ -301,6 +302,7 @@ const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => 
       done('empty');
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -331,6 +333,7 @@ const ComLoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') 
       done('empty');
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -347,6 +350,7 @@ const ApplyComSort = async () => {
     Commentresults.value = await SortResults.contents;
     comsource = SortResults;
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -397,6 +401,7 @@ const downloadVideo = async () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -409,6 +414,7 @@ const downloadVideo = async () => {
 };
 
 const handleError = (message: string) => {
+  console.error(message);
   alert.value = true;
   errorMessage.value = message;
 };

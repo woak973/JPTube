@@ -34,6 +34,7 @@ const fetchData = async (): Promise<void> => {
       throw new Error('No Contents Found');
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;

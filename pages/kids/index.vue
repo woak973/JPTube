@@ -42,6 +42,7 @@ const fetchData = async (Z?: number): Promise<void> => {
       });
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;

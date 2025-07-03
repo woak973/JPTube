@@ -31,6 +31,7 @@ const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => 
       done('empty');
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -54,6 +55,7 @@ const fetchData = async () => {
       throw new Error('No Contents Found');
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;

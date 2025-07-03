@@ -57,6 +57,7 @@ onBeforeRouteLeave(() => {
 });
 
 const handleError = (message: string): void => {
+  console.error(message);
   alert.value = true;
   errorMessage.value = message;
 };
@@ -111,6 +112,7 @@ const downloadVideo = async (): Promise<void> => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -186,6 +188,7 @@ const fetchData = async (): Promise<void> => {
 
     fatalError.value = false;
   } catch (error) {
+    console.error(error);
     alert.value = true;
     fatalError.value = true;
     if (error instanceof Error) {

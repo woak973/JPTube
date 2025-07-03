@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Innertube } from 'youtubei.js';
-import { YT, YTNodes, Mixins, Helpers, NavigateAction, ShowMiniplayerCommand } from 'youtubei.js';
+import { YT, YTNodes, Helpers, NavigateAction, ShowMiniplayerCommand } from 'youtubei.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -11,10 +11,8 @@ const HeaderResults = ref<YTNodes.C4TabbedHeader | YTNodes.CarouselHeader | YTNo
 const MetaResults = ref<YTNodes.ChannelMetadata & Partial<YTNodes.MicroformatData>>();
 const about = ref<YTNodes.ChannelAboutFullMetadata | YTNodes.AboutChannel>();
 const TabResults = ref<Array<Helpers.YTNode>>();
-const Commentresults = ref<Helpers.ObservedArray<YTNodes.CommentThread> | null>();
 let sourceresults: YT.Channel | YT.ChannelListContinuation;
 let sourcefilter: YT.Channel | undefined;
-let comsource: YT.Comments;
 let sourceTab: YT.Channel | undefined;
 let yt: Innertube;
 const alert = ref<boolean>(false);
@@ -24,7 +22,6 @@ const selectedTab = ref<string>(route.params.Tab as string || 'featured');
 const selectedFilters = ref<string>();
 const searchDialog = ref<boolean>(false);
 const searchQuery = ref<string>('');
-const selectedSort = ref<'TOP_COMMENTS' | 'NEWEST_FIRST'>('TOP_COMMENTS');
 
 const applyFilters = async (filter: string) => {
   try {
@@ -36,6 +33,7 @@ const applyFilters = async (filter: string) => {
       sourceresults = filteredResults;
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -119,6 +117,7 @@ const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => 
       done('empty');
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -129,58 +128,11 @@ const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => 
   }
 };
 
-const ComLoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) => {
-  try {
-    if (comsource && comsource.has_continuation) {
-      const continuationResults = await comsource.getContinuation();
-      for (const comment of continuationResults.contents) {
-        if (comment.has_replies) {
-          await comment.getReplies();
-        }
-      }
-      if (Commentresults.value) {
-        Commentresults.value.push(...await continuationResults.contents);
-      } else {
-        Commentresults.value = await continuationResults.contents;
-      }
-      comsource = continuationResults;
-      done('ok');
-    } else {
-      done('empty');
-    }
-  } catch (error) {
-    alert.value = true;
-    if (error instanceof Error) {
-      errorMessage.value = error.message;
-    } else {
-      errorMessage.value = 'An unknown error occurred';
-    }
-    done('error');
-  }
-};
-
-const ApplyComSort = async () => {
-  try {
-    const SortResults = await yt.getPostComments(route.query.lb as string, route.params.id as string, selectedSort.value);
-    Commentresults.value = await SortResults.contents;
-    comsource = SortResults;
-  } catch (error) {
-    alert.value = true;
-    if (error instanceof Error) {
-      errorMessage.value = error.message;
-    } else {
-      errorMessage.value = 'An unknown error occurred';
-    }
-  }
-};
-
-const getSearchResults = async (yt: Innertube, bp?: string): Promise<YT.Channel | Mixins.Feed> => {
+const getSearchResults = async (yt: Innertube, bp?: string): Promise<YT.Channel> => {
   if (bp) {
     const nav = new YTNodes.NavigationEndpoint({ browseEndpoint: { browseId: 'FEstorefront', params: bp } });
     const CallResults = await nav.call(yt.actions, { parse: true });
     return new YT.Channel(yt.actions, CallResults, true);
-  } else if (route.query.lb) {
-    return await yt.getPost(route.query.lb as string, route.params.id as string);
   } else {
     let getID: string = route.params.id as string;
     getID = getID.startsWith('@') ? `https://m.youtube.com/${getID}` : `https://m.youtube.com/channel/${getID}`;
@@ -231,9 +183,10 @@ const fetchData = async (bp?: string) => {
           }
           break;
 
-        case 'community':
-          if (searchResults.has_community) {
-            AddResults = await searchResults.getCommunity();
+        case 'posts':
+          if (searchResults.hasTabWithURL('posts')) {
+            const tab = await searchResults.getTabByURL('posts');
+            AddResults = new YT.Channel(yt.actions, tab.page, true);
           } else {
             has_contents.value = false;
           }
@@ -429,39 +382,9 @@ const fetchData = async (bp?: string) => {
         sourceresults = searchResults;
       }
       sourcefilter = AddResults;
-    } else if (searchResults instanceof Mixins.Feed) {
-      try {
-        const searchcommentResults = await yt.getPostComments(route.query.lb as string, route.params.id as string);
-        for (const comment of searchcommentResults.contents) {
-          if (comment.has_replies) {
-            await comment.getReplies();
-          }
-        }
-        Commentresults.value = await searchcommentResults.contents;
-        comsource = searchcommentResults;
-      } catch (error) {
-        Commentresults.value = null;
-        console.error('Error fetching comments:', error);
-        if (error instanceof Error) {
-          errorMessage.value = error.message;
-        } else {
-          errorMessage.value = 'An unknown error occurred';
-        }
-      }
-
-      if (searchResults.page_contents && 'contents' in searchResults.page_contents) {
-        results.value = searchResults.page_contents.contents;
-      } else {
-        results.value = null;
-      }
-      sourceresults = searchResults;
-      HeaderResults.value = undefined;
-      MetaResults.value = undefined;
-      TabResults.value = undefined;
-      about.value = undefined;
-      filter.value = undefined;
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -472,6 +395,7 @@ const fetchData = async (bp?: string) => {
 };
 
 const handleError = (message: string) => {
+  console.error(message);
   alert.value = true;
   errorMessage.value = message;
 };
@@ -553,23 +477,5 @@ await fetchData();
         </template>
       </v-row>
     </v-infinite-scroll>
-
-    <template v-if="Commentresults">
-      <template v-if="comsource.header">
-        <YTCommonCommentsHeader
-          :data="comsource.header" @update:selectedSort="selectedSort = $event"
-          @apply-com-sort="ApplyComSort" />
-      </template>
-
-      <v-infinite-scroll v-if="Commentresults.length" mode="intersect" @load="ComLoadMore">
-        <v-row style="width: 100%; margin-left: 0;">
-          <template v-for="result in Commentresults">
-            <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
-              <YTCommonCommentThread :data="result" :yt="yt" />
-            </v-col>
-          </template>
-        </v-row>
-      </v-infinite-scroll>
-    </template>
   </v-container>
 </template>

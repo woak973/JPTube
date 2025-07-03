@@ -44,6 +44,7 @@ const fetchData = async () => {
     InitUrl.value = `/api/playables/${basedUrl.value.host}${basedUrl.value.pathname}`;
     UrlHost.value = basedUrl.value.host;
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -89,6 +90,7 @@ onMounted(async () => {
         });
       }
     } catch (error) {
+      console.error(error);
       alert.value = true;
       if (error instanceof Error) {
         errorMessage.value = error.message;
