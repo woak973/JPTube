@@ -27,6 +27,7 @@ const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => 
       done('empty');
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -46,6 +47,7 @@ const fetchData = async () => {
     HeaderResults.value = searchResults;
     results.value = await searchResults.contents.contents;
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;

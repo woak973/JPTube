@@ -35,6 +35,7 @@ const fetchData = async (filter?: string): Promise<void> => {
     results.value = await searchResults.contents;
     HeaderResults.value = await searchResults.header;
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;

@@ -44,6 +44,7 @@ const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => 
       done('empty');
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -81,6 +82,7 @@ const fetchData = async () => {
       results.value = await SearchResults.current_tab.content.contents;
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;

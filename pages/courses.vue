@@ -27,6 +27,7 @@ const LoadMore = async ({ done }: { done: (status: 'ok' | 'empty' | 'error') => 
       done('empty');
     }
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -47,6 +48,7 @@ const fetchData = async () => {
     sourceresults = searchResults;
     HeaderResult.value = await searchResults.page.header_memo?.get('PageHeader');
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;

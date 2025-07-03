@@ -23,6 +23,7 @@ const fetchData = async (): Promise<void> => {
 
     results.value = await searchResults?.sections;
   } catch (error) {
+    console.error(error);
     alert.value = true;
     if (error instanceof Error) {
       errorMessage.value = error.message;
