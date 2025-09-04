@@ -586,24 +586,22 @@ await fetchVideoData();
                   </template>
                 </v-window-item>
 
-                <v-window-item value="comments">
-                  <template v-if="Commentresults">
-                    <template v-if="comsource.header">
-                      <YTCommonCommentsHeaderMobile
-                        :data="comsource.header"
-                        @update:selectedSort="selectedSort = $event" @apply-com-sort="ApplyComSort" @toggleCommentComponent="toggleCommentComponent" />
-                    </template>
-
-                    <v-infinite-scroll v-if="Commentresults.length" :key="infiniteScrollKey" mode="intersect" @load="ComLoadMore">
-                      <v-row style="width: 100%; margin-left: 0;">
-                        <template v-for="result in Commentresults">
-                          <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
-                            <YTCommonCommentThread :data="result" :yt="yt" />
-                          </v-col>
-                        </template>
-                      </v-row>
-                    </v-infinite-scroll>
+                <v-window-item v-if="Commentresults" value="comments">
+                  <template v-if="comsource.header">
+                    <YTCommonCommentsHeaderMobile
+                      :data="comsource.header"
+                      @update:selectedSort="selectedSort = $event" @apply-com-sort="ApplyComSort" @toggleCommentComponent="toggleCommentComponent" />
                   </template>
+
+                  <v-infinite-scroll v-if="Commentresults.length" :key="infiniteScrollKey" mode="intersect" @load="ComLoadMore">
+                    <v-row style="width: 100%; margin-left: 0;">
+                      <template v-for="result in Commentresults">
+                        <v-col v-if="(result instanceof YTNodes.CommentThread)" cols="12">
+                          <YTCommonCommentThread :data="result" :yt="yt" />
+                        </v-col>
+                      </template>
+                    </v-row>
+                  </v-infinite-scroll>
                 </v-window-item>
               </v-window>
             </v-col>
