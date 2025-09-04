@@ -379,28 +379,18 @@ const downloadVideo = async () => {
     const DLyt = await useInnertube('player');
     const DLResults = await DLyt.getInfo(route.query.v as string);
     const DLOption: Types.DownloadOptions = { quality: 'best' };
-    const stream = await DLResults.download(DLOption);
-    const reader = stream.getReader();
-    const chunks = [];
-    let receivedLength = 0;
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      chunks.push(value);
-      receivedLength += value.length;
-    }
-
-    const fixedChunks = chunks.map(chunk => new Uint8Array(chunk));
-    const blob = new Blob(fixedChunks);
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'videoplayback.mp4';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const Format = await DLResults.chooseFormat(DLOption);
+    const format_url = `${Format.decipher(DLResults.actions.session.player)}&cpn=${DLResults.cpn}`;
+    setTimeout(() => {
+      const a = document.createElement('a');
+      a.href = getProxifiedUrl(format_url);
+      a.download = 'videoplayback.mp4';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(format_url);
+      downloading.value = false;
+    }, 3500);
   } catch (error) {
     console.error(error);
     alert.value = true;
@@ -409,7 +399,6 @@ const downloadVideo = async () => {
     } else {
       errorMessage.value = 'An unknown error occurred';
     }
-  } finally {
     downloading.value = false;
   }
 };

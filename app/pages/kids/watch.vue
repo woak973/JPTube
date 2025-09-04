@@ -68,25 +68,18 @@ const downloadVideo = async (): Promise<void> => {
     const DLyt = await useInnertube('player');
     const DLResults = await DLyt.getInfo(route.query.v as string);
     const DLOption: Types.DownloadOptions = { quality: 'best' };
-    const stream = await DLResults.download(DLOption);
-    const reader = stream.getReader();
-    const chunks = [];
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      chunks.push(value);
-    }
-
-    const blob = new Blob(chunks);
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'videoplayback.mp4';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const Format = await DLResults.chooseFormat(DLOption);
+    const format_url = `${Format.decipher(DLResults.actions.session.player)}&cpn=${DLResults.cpn}`;
+    setTimeout(() => {
+      const a = document.createElement('a');
+      a.href = getProxifiedUrl(format_url);
+      a.download = 'videoplayback.mp4';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(format_url);
+      downloading.value = false;
+    }, 3500);
   } catch (error) {
     console.error(error);
     alert.value = true;
@@ -95,7 +88,6 @@ const downloadVideo = async (): Promise<void> => {
     } else {
       errorMessage.value = 'An unknown error occurred';
     }
-  } finally {
     downloading.value = false;
   }
 };

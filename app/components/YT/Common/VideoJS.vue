@@ -38,24 +38,15 @@ onMounted(async () => {
     const DLResults = await DLyt.getInfo(props.videoId);
     try {
       const DLOption: Types.DownloadOptions = { quality: 'best' };
-      const stream = await DLResults.download(DLOption);
-      const reader = stream.getReader();
-      const chunks = [];
+      const Format = await DLResults.chooseFormat(DLOption);
+      const format_url = `${Format.decipher(DLResults.actions.session.player)}&cpn=${DLResults.cpn}`;
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-      }
-
-      const fixedChunks = chunks.map(chunk => new Uint8Array(chunk));
-      const blob = new Blob(fixedChunks);
-      const url = URL.createObjectURL(blob);
-
-      player.src({
-        src: url,
-        type: 'video/webm',
-      });
+      setTimeout(() => {
+        player.src({
+          src: getProxifiedUrl(format_url),
+          type: 'video/webm',
+        });
+      }, 3500);
     } catch (e) {
       if (DLResults.streaming_data && DLResults.streaming_data.hls_manifest_url) {
         const uri = DLResults.streaming_data.hls_manifest_url;
