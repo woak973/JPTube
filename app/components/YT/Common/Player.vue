@@ -54,7 +54,7 @@ onMounted(async () => {
     try {
       let uri;
       try {
-        const dash = await info.toDash({ manifest_options: { include_thumbnails: true } });
+        const dash = await info.toDash({ manifest_options: { include_thumbnails: true, captions_format: 'vtt' } });
         uri = `data:application/dash+xml;charset=utf-8;base64,${btoa(unescape(encodeURIComponent(dash)))}`;
       } catch (e) {
         if (info.streaming_data && info.streaming_data.hls_manifest_url) {
