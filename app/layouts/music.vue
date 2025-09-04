@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const drawer = ref<boolean>(false);
 const searchQuery = ref<string>('');
 const value = ref<string>('');
-const suggestions = ref<string[]>([]);
+const suggestions = ref<string[] | undefined>([]);
 const langDialog = ref<HTMLElement | null>(null);
 const child = ref<string>(uuidv4());
 
@@ -33,7 +33,7 @@ const fetchSuggestions = async (query: string): Promise<void> => {
     const yt = await useInnertube('common');
     const music = await yt.music;
     const response = await music.getSearchSuggestions(query);
-    suggestions.value = response[0].contents
+    suggestions.value = response[0]?.contents
       .filter((suggestion: Helpers.YTNode) => suggestion instanceof YTNodes.SearchSuggestion)
       .map(suggestion => suggestion.suggestion.text)
       .filter((text): text is string => text !== undefined);

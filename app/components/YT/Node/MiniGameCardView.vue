@@ -1,6 +1,6 @@
 <template>
   <v-card v-if="data" elevation="16" :to="data.on_tap.innertube_command.metadata.url" link>
-    <v-img :src="getProxifiedUrl(data.image.sources[0]?.url)">
+    <v-img :src="getProxifiedUrl(data.image.sources[0]?.url || '')">
       <template #placeholder>
         <div class="d-flex align-center justify-center fill-height">
           <v-progress-circular color="grey-lighten-4" indeterminate />

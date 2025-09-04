@@ -1,6 +1,6 @@
 <template>
   <v-card v-if="data" elevation="16" :href="data.endpoint?.payload?.commands?.[1]?.urlEndpoint?.url" link>
-    <v-img :src="getProxifiedUrl(data.thumbnail[0]?.url)">
+    <v-img :src="getProxifiedUrl(data.thumbnail[0]?.url || '')">
       <template #placeholder>
         <div class="d-flex align-center justify-center fill-height">
           <v-progress-circular color="grey-lighten-4" indeterminate />

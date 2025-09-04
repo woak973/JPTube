@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="4" class="d-flex align-center justify-center">
         <v-img
-          :src="getProxifiedUrl(data.hashtag_thumbnail[0].url)" max-width="50%"
+          :src="getProxifiedUrl(data.hashtag_thumbnail[0]?.url || '')" max-width="50%"
           style="background-color: rgb(175, 58, 0); max-width: 128px;" rounded>
           <template #placeholder>
             <div class="d-flex align-center justify-center fill-height">

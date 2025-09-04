@@ -391,7 +391,8 @@ const downloadVideo = async () => {
       receivedLength += value.length;
     }
 
-    const blob = new Blob(chunks);
+    const fixedChunks = chunks.map(chunk => new Uint8Array(chunk));
+    const blob = new Blob(fixedChunks);
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -425,7 +426,7 @@ const AutoPlay = () => {
       autoplaySnackbar.value = true;
       setTimeout(() => {
         if (autoplaySnackbar.value && AutoPlayResults.value) {
-          navigateTo(AutoPlayResults.value.sets[0].autoplay_video.metadata.url);
+          navigateTo(AutoPlayResults.value.sets[0]?.autoplay_video.metadata.url);
         }
       }, (AutoPlayResults.value.count_down_secs ?? 5) * 1000);
     } else {

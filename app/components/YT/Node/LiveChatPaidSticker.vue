@@ -5,7 +5,7 @@
         <v-row dense>
           <v-col cols="auto">
             <v-list-item :to="data.author.endpoint?.metadata?.url" style="padding: 0;">
-              <v-avatar :image="getProxifiedUrl(data.author.thumbnails[0]?.url)" class="mr-2" />
+              <v-avatar :image="getProxifiedUrl(data.author.thumbnails[0]?.url || '')" class="mr-2" />
             </v-list-item>
           </v-col>
           <v-col>
@@ -21,7 +21,7 @@
             <v-row>
               <v-col cols="4">
                 <v-img
-                  :src="getProxifiedUrl(data.sticker[0]?.url)"
+                  :src="getProxifiedUrl(data.sticker[0]?.url || '')"
                   :alt="data.sticker_accessibility_label">
                   <template #placeholder>
                     <div class="d-flex align-center justify-center fill-height">

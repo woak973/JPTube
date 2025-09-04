@@ -1,6 +1,6 @@
 <template>
   <v-card v-if="data" elevation="16">
-    <v-img :src="getProxifiedUrl(data.info.thumbnails[0]?.url)" aspect-ratio="16/9" rounded>
+    <v-img :src="getProxifiedUrl(data.info.thumbnails[0]?.url || '')" aspect-ratio="16/9" rounded>
       <template #placeholder>
         <div class="d-flex align-center justify-center fill-height">
           <v-progress-circular color="grey-lighten-4" indeterminate />
@@ -12,7 +12,7 @@
     <v-card-actions>
       <v-list-item :to="data.info.author.endpoint?.metadata?.url" link>
         <template #prepend>
-          <v-avatar :image="getProxifiedUrl(data.info.author?.thumbnails[0]?.url)" size="24" />
+          <v-avatar :image="getProxifiedUrl(data.info.author?.thumbnails[0]?.url || '')" size="24" />
         </template>
         <v-list-item-title>{{ data.info.author.name }}</v-list-item-title>
       </v-list-item>

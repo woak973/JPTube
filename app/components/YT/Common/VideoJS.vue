@@ -48,7 +48,8 @@ onMounted(async () => {
         chunks.push(value);
       }
 
-      const blob = new Blob(chunks);
+      const fixedChunks = chunks.map(chunk => new Uint8Array(chunk));
+      const blob = new Blob(fixedChunks);
       const url = URL.createObjectURL(blob);
 
       player.src({

@@ -2,12 +2,12 @@
   <template v-if="data">
     <v-card
       v-if="data" elevation="16"
-      :image="data.header_overlay_image && data.header_overlay_image.length > 0 ? getProxifiedUrl(data.header_overlay_image[0].url) : ''">
+      :image="data.header_overlay_image && data.header_overlay_image.length > 0 ? getProxifiedUrl(data.header_overlay_image[0]?.url || '') : ''">
       <v-list-item>
         <v-row dense>
           <v-col cols="auto">
             <v-list-item :to="data.author.endpoint?.metadata?.url" style="padding: 0;">
-              <v-avatar :image="getProxifiedUrl(data.author.thumbnails[0].url)" class="mr-2" />
+              <v-avatar :image="getProxifiedUrl(data.author.thumbnails[0]?.url || '')" class="mr-2" />
             </v-list-item>
           </v-col>
           <v-col>

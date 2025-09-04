@@ -2,7 +2,7 @@
   <v-card v-if="data" elevation="16" :to="data.endpoint?.metadata?.url" link>
     <v-row>
       <v-col cols="4" class="d-flex align-center justify-center image">
-        <v-img :src="getProxifiedUrl(data.thumbnails[0].url)" aspect-ratio="16/9" rounded>
+        <v-img :src="getProxifiedUrl(data.thumbnails[0]?.url || '')" aspect-ratio="16/9" rounded>
           <template #placeholder>
             <div class="d-flex align-center justify-center fill-height">
               <v-progress-circular color="grey-lighten-4" indeterminate />

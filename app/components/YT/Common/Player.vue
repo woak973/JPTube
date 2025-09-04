@@ -49,12 +49,12 @@ onMounted(async () => {
       console.error('Video ID is undefined');
       return;
     }
-    const info = await yt.getInfo(props.videoId, 'WEB_EMBEDDED');
+    const info = await yt.getInfo(props.videoId, { client: 'WEB_EMBEDDED' });
 
     try {
       let uri;
       try {
-        const dash = await info.toDash(undefined, undefined, { captions_format: 'vtt', include_thumbnails: true });
+        const dash = await info.toDash({ manifest_options: { include_thumbnails: true } });
         uri = `data:application/dash+xml;charset=utf-8;base64,${btoa(unescape(encodeURIComponent(dash)))}`;
       } catch (e) {
         if (info.streaming_data && info.streaming_data.hls_manifest_url) {
@@ -84,7 +84,7 @@ onMounted(async () => {
       shaka.polyfill.installAll();
 
       if (shaka.Player.isBrowserSupported()) {
-        videoEl.poster = getProxifiedUrl(info.basic_info.thumbnail![0].url);
+        videoEl.poster = getProxifiedUrl(info.basic_info.thumbnail![0]?.url || '');
 
         player = new shaka.Player();
         await player.attach(videoEl);
@@ -143,7 +143,7 @@ onMounted(async () => {
 
         networkingEngine.registerRequestFilter(async (type, request) => {
           const uri = request.uris[0];
-          const url = new URL(uri);
+          const url = new URL(uri || '');
           const headers = request.headers;
 
           // For local development.
@@ -173,7 +173,7 @@ onMounted(async () => {
           if (type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {
             if (url.pathname.includes('videoplayback')) {
               if (headers.Range) {
-                url.searchParams.set('range', headers.Range.split('=')[1]);
+                url.searchParams.set('range', headers.Range.split('=')[1] || '');
                 url.searchParams.set('ump', '1');
                 url.searchParams.set('srfvp', '1');
                 url.searchParams.set('pot', (poToken ?? coldStartToken) ?? '');
@@ -224,11 +224,16 @@ onMounted(async () => {
                 const data = part.data.chunks[0];
                 switch (part.type) {
                   case PART.MEDIA: {
-                    handleMediaData(part.data.split(1).remainingBuffer.chunks[0]);
+                    const chunk = part.data.split(1).remainingBuffer.chunks[0];
+                    if (chunk) {
+                      handleMediaData(chunk);
+                    }
                     break;
                   }
                   case PART.SABR_REDIRECT: {
-                    redirect = Protos.SabrRedirect.decode(data);
+                    if (data) {
+                      redirect = Protos.SabrRedirect.decode(data);
+                    }
                     break;
                   }
                 }

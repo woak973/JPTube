@@ -3,7 +3,7 @@
     <v-row dense no-gutters>
       <v-col cols="auto">
         <v-list-item :to="data.author?.endpoint?.metadata?.url" style="padding: 0;" @click="handleClick">
-          <v-avatar :image="getProxifiedUrl(data.author?.thumbnails[0].url || '')" />
+          <v-avatar :image="getProxifiedUrl(data.author?.thumbnails[0]?.url || '')" />
         </v-list-item>
       </v-col>
       <v-col>

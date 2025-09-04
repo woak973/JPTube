@@ -1,7 +1,7 @@
 <template>
   <v-carousel v-if="data" hide-delimiters>
     <v-carousel-item v-for="img in data.images">
-      <v-img :src="getProxifiedUrl(img.image[0]?.url)" />
+      <v-img :src="getProxifiedUrl(img.image[0]?.url || '')" />
     </v-carousel-item>
   </v-carousel>
   <div v-else>

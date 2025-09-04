@@ -5,7 +5,7 @@
       <v-row dense>
         <v-col cols="auto">
           <v-list-item style="padding: 0;">
-            <v-avatar :image="getProxifiedUrl(data.author_photo[0].url)" class="mr-2" />
+            <v-avatar :image="getProxifiedUrl(data.author_photo[0]?.url || '')" class="mr-2" />
           </v-list-item>
         </v-col>
         <v-col>
