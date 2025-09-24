@@ -19,6 +19,7 @@ export async function useInnertube(args: 'common' | 'player', client_type?: Clie
     visitor_data: unique_data?.visitor_data,
     generate_session_locally: isgenerate,
     cookie: cookie,
+    player_id: '0004de42',
   });
 
   return yt;
